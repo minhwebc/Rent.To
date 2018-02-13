@@ -2,7 +2,6 @@ package to.rent.rentto.Utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Camera;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
@@ -10,13 +9,10 @@ import android.view.MenuItem;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import java.net.Inet4Address;
-
-import to.rent.rentto.CameraActivity;
-import to.rent.rentto.HomeActivity;
-import to.rent.rentto.ProfileActivity;
+import to.rent.rentto.Camera.CameraActivity;
+import to.rent.rentto.Home.HomeActivity;
+import to.rent.rentto.Profile.ProfileActivity;
 import to.rent.rentto.R;
-import to.rent.rentto.SearchActivity;
 
 /**
  * Created by iguest on 2/11/18.
