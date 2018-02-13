@@ -1,11 +1,14 @@
 package to.rent.rentto.Home;
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -26,6 +29,22 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Log.d(TAG, "onCreate: Starting. ");
         setupBottomNavigationView();
+        setupViewPager();
+    }
+
+
+    /**
+     * Responsible for adding the camera and messages tbas to home
+     */
+    private void setupViewPager() {
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new CameraFragment());
+        adapter.addFragment(new MessagesFragment());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void setupBottomNavigationView(){

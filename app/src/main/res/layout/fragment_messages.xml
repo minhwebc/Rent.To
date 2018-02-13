@@ -8,8 +8,9 @@
         android:layout_height="wrap_content"
         android:text="Messages Fragment"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:textColor="@color/grey"/>
+
 
 
 
