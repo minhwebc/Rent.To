@@ -13,15 +13,6 @@
         android:layout_height="match_parent">
 
 
-        <!-- top toolbar -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/relLayout1">
-
-            <include layout="@layout/layout_top_tabs"/>
-
-        </RelativeLayout>
 
         <!-- Middle section (body) -->
         <RelativeLayout
@@ -31,15 +22,23 @@
             android:layout_below="@+id/relLayout1">
 
             <include layout="@layout/layout_center_viewpager"/>
+            
+            <ImageView
+                android:id="@+id/cameraImageView"
+                android:layout_weight="9"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:background="@android:color/background_dark"/>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/buttonCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="72dp"
-                android:text="Button" />
+                android:onClick="launchCamera"
+                android:text="OPEN CAMERA" />
 
 
         </RelativeLayout>
