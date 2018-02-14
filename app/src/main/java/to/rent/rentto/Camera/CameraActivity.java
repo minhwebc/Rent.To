@@ -2,6 +2,7 @@ package to.rent.rentto.Camera;
 
 import android.content.Context;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import android.provider.MediaStore;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.net.URI;
+
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
@@ -32,6 +35,9 @@ public class CameraActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUM = 1;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_CAMERA_ROLL = 2;
+
+    Uri imgaegUri;
     ImageView imageView;
 
 
@@ -43,6 +49,7 @@ public class CameraActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Started.");
 
         Button cameraButton = (Button) findViewById(R.id.buttonCamera);
+        Button cameraRollButton = (Button) findViewById(R.id.buttonCameraRoll);
         imageView = (ImageView) findViewById(R.id.cameraImageView);
 
         setupBottomNavigationView();
@@ -58,6 +65,12 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
+    public void launchCameraRoll(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+
+        startActivityForResult(intent, REQUEST_CAMERA_ROLL);
+    }
+
     // if you want to return the image taken
 
 
@@ -69,6 +82,9 @@ public class CameraActivity extends AppCompatActivity {
             Bitmap photo = (Bitmap) extras.get("data");
             imageView.setImageBitmap(photo);
 
+        } else if(requestCode == REQUEST_CAMERA_ROLL && resultCode == RESULT_OK) {
+            imgaegUri = data.getData();
+            imageView.setImageURI(imgaegUri);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
