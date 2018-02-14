@@ -5,6 +5,8 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +23,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.net.URI;
 
+import to.rent.rentto.Home.*;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
@@ -36,6 +39,10 @@ public class CameraActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_CAMERA_ROLL = 2;
+    Button confirmButton;
+    Button cameraRollButton;
+    Button cameraButton;
+    Button cancelButton;
 
     Uri imgaegUri;
     ImageView imageView;
@@ -48,9 +55,14 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         Log.d(TAG, "onCreate: Started.");
 
-        Button cameraButton = (Button) findViewById(R.id.buttonCamera);
-        Button cameraRollButton = (Button) findViewById(R.id.buttonCameraRoll);
+        cameraButton = (Button) findViewById(R.id.buttonCamera);
+        cameraRollButton = (Button) findViewById(R.id.buttonCameraRoll);
+        confirmButton = (Button) findViewById(R.id.buttonConfirmPicture);
+        cancelButton = (Button) findViewById(R.id.buttonCancel);
         imageView = (ImageView) findViewById(R.id.cameraImageView);
+
+        confirmButton.setVisibility(View.GONE); // hides on start, only after picture is selected
+        cancelButton.setVisibility(View.GONE);
 
         setupBottomNavigationView();
 
@@ -71,6 +83,19 @@ public class CameraActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CAMERA_ROLL);
     }
 
+    // When the confirm button is pressed, uses picture for new posting screen
+    public void launchConfirm(View view) {
+        //for now, just launch cancel to show that it works.
+        launchCancel(view);
+    }
+
+    public void launchCancel(View view) {
+        confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
+        cancelButton.setVisibility(View.GONE);
+        cameraRollButton.setVisibility(View.VISIBLE); // since no pic is selected
+        cameraButton.setVisibility(View.VISIBLE);
+        imageView.setImageResource(0);
+    }
 
 
     @Override
@@ -85,6 +110,12 @@ public class CameraActivity extends AppCompatActivity {
             imgaegUri = data.getData();
             imageView.setImageURI(imgaegUri);
         }
+        if(resultCode == RESULT_OK) {
+            confirmButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
+            cameraButton.setVisibility(View.GONE);
+            cameraRollButton.setVisibility(View.GONE);
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -97,4 +128,9 @@ public class CameraActivity extends AppCompatActivity {
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);
     }
+
+
+
+
+
 }
