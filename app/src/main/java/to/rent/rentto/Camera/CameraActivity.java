@@ -71,7 +71,6 @@ public class CameraActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CAMERA_ROLL);
     }
 
-    // if you want to return the image taken
 
 
     @Override
