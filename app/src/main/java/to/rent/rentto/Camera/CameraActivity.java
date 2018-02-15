@@ -1,5 +1,6 @@
 package to.rent.rentto.Camera;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
@@ -63,7 +64,6 @@ public class CameraActivity extends AppCompatActivity {
 
         confirmButton.setVisibility(View.GONE); // hides on start, only after picture is selected
         cancelButton.setVisibility(View.GONE);
-
         setupBottomNavigationView();
 
 
@@ -85,8 +85,14 @@ public class CameraActivity extends AppCompatActivity {
 
     // When the confirm button is pressed, uses picture for new posting screen
     public void launchConfirm(View view) {
-        //for now, just launch cancel to show that it works.
-        launchCancel(view);
+        ConfirmPictureFragment confirmPictureFragment = new ConfirmPictureFragment();
+        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        Bundle bundle = new Bundle();
+        //bundle.putString("uri", imgaegUri.toString());
+        transaction.replace(R.id.relLayout2, confirmPictureFragment).commit();
+        imageView.setVisibility(View.GONE);
+
     }
 
     public void launchCancel(View view) {
@@ -127,6 +133,12 @@ public class CameraActivity extends AppCompatActivity {
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);
+    }
+
+
+    // When user presses submit after entering in text to form
+    public void submit(View view) {
+        Log.d(TAG, "inside of submit");
     }
 
 

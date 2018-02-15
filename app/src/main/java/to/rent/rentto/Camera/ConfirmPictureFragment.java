@@ -24,4 +24,5 @@ public class ConfirmPictureFragment extends Fragment {
         Log.d(TAG, "inside of ConfirmPictureFragment.java onCreateView");
         return view;
     }
+
 }
