@@ -19,7 +19,7 @@ import to.rent.rentto.R;
  */
 
 public class BottomNavigationViewHelper {
-    private static final String TAG = "BottomNavigationViewHelper";
+    private static final String TAG = "BottomNavHelper";
 
     public static void setupBottomNavigationView(BottomNavigationViewEx bottomNavigationViewEx) {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");

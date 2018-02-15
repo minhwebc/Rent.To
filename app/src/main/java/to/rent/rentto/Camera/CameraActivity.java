@@ -92,7 +92,8 @@ public class CameraActivity extends AppCompatActivity {
         //bundle.putString("uri", imgaegUri.toString());
         transaction.replace(R.id.relLayout2, confirmPictureFragment).commit();
         imageView.setVisibility(View.GONE);
-
+        confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
+        cancelButton.setVisibility(View.GONE);
     }
 
     public void launchCancel(View view) {

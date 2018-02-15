@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         if(currentUser != null) {
             Log.d(TAG, "user sign in");
             Log.d(TAG, "user is: " + currentUser.getDisplayName());
+            Log.d(TAG, "email: " + currentUser.getEmail());
         } else {
             Log.d(TAG, "user not sign in");
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
