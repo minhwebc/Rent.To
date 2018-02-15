@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Rent.To</string>
+    <string name="submit_listing">Submit Listing</string>
+
 </resources>
