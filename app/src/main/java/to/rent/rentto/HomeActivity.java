@@ -31,6 +31,7 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
             Log.d(TAG, "user sign in");
+            Log.d(TAG, "user is: " + currentUser.getDisplayName());
         } else {
             Log.d(TAG, "user not sign in");
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
