@@ -23,8 +23,7 @@
             android:layout_below="@+id/relLayout1"
             android:orientation="horizontal"
             android:id="@+id/rellayout2"
-
-            android:background="@drawable/white_grey_border_bottom">
+            android:background="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
