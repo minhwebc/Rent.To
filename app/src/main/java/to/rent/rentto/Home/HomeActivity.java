@@ -37,6 +37,7 @@ public class  HomeActivity extends AppCompatActivity {
      */
     private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new SearchFragment());
         adapter.addFragment(new HomeFragment());
         adapter.addFragment(new MessagesFragment());
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
@@ -45,8 +46,9 @@ public class  HomeActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_arrow);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_search);
+        tabLayout.getTabAt(1).setText("Rent.To");
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_arrow);
 
     }
 
