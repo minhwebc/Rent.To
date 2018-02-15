@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.HomeActivity;
+import to.rent.rentto.Listing.ItemsListActivity;
 import to.rent.rentto.Listing.ListingActivity;
 import to.rent.rentto.R;
 
@@ -41,6 +42,11 @@ public class BottomNavigationViewHelper {
                     case R.id.ic_circle:
                         Intent intent2 = new Intent(context, ListingActivity.class); //ACTIVITY_NUM = 2
                         context.startActivity(intent2);
+                        break;
+
+                    case R.id.ic_shopping:
+                        Intent intent3 = new Intent(context, ItemsListActivity.class); //ACTIVITY_NUM = 2
+                        context.startActivity(intent3);
                         break;
                 }
                 return false;

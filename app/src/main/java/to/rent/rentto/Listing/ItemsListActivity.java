@@ -10,26 +10,24 @@ import android.widget.ImageView;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import java.util.ArrayList;
 
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 /**
- * Created by Sora on 2/14/2018.
+ * Created by Sora on 2/15/2018.
  */
 
-public class ListingActivity extends AppCompatActivity {
-    private static final String TAG = "ListingActivity";
+public class ItemsListActivity extends AppCompatActivity {
+    private static final String TAG = "ItemsListActivity";
     private Context mContext;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listing);
-        mContext = ListingActivity.this;
+        setContentView(R.layout.activity_items_list);
+        mContext = ItemsListActivity.this;
         Log.d(TAG, "onCreate: Started.");
-
 
         setupBottomNavigationView();
 

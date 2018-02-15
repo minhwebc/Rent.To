@@ -35,5 +35,5 @@ dependencies {
     //Universal Image Loader
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
-
+    compile 'com.android.support:recyclerview-v7:26.1.0+'
 }
