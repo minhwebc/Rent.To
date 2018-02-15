@@ -32,4 +32,12 @@ dependencies {
     //BottomNavigationViewEx Library
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.9'
 
+    compile 'com.google.firebase:firebase-auth:11.8.0'
+    //firebase database
+    compile 'com.google.firebase:firebase-database:11.8.0'
+    //firebase storage
+    compile 'com.google.firebase:firebase-storage:11.8.0'
+    compile 'com.google.firebase:firebase-core:11.8.0'
 }
+apply plugin: 'com.google.gms.google-services'
+

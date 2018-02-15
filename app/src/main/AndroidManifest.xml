@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="to.rent.rentto">
 
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,15 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Home.HomeActivity">
+        <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Home.HomeActivity"></activity>
         <activity android:name=".Camera.CameraActivity"></activity>
         <activity android:name=".Profile.ProfileActivity"></activity>
+        <activity android:name=".Login.LoginActivity"></activity>
+        <activity android:name=".Login.RegisterActivity"></activity>
     </application>
 
 </manifest>
