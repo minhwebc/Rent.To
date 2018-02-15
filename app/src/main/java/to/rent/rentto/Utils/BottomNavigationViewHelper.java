@@ -9,8 +9,10 @@ import android.view.MenuItem;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import to.rent.rentto.HomeActivity;
+import to.rent.rentto.Home.HomeActivity;
+import to.rent.rentto.Profile.ProfileActivity;
 import to.rent.rentto.R;
+import to.rent.rentto.Share.ShareActivity;
 
 /**
  * Created by iguest on 2/11/18.

@@ -1,4 +1,4 @@
-package to.rent.rentto.Utils;
+package to.rent.rentto.Profile;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.view.MenuItem;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import to.rent.rentto.HomeActivity;
 import to.rent.rentto.R;
+import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 /**
  * Created by allencho on 2/14/18.
