@@ -1,0 +1,74 @@
+<merge xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/linLayout"
+            android:paddingLeft="20dp"
+            android:padding="10dp"
+            android:id="@+id/linLayout2">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/display_name"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:text="Mitch"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/description"
+                android:textColor="@color/black"
+                android:text="I live in Vancouver, BC"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/website"
+                android:textColor="@color/link_blue"
+                android:text="https://codingwithmitch.com"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                />
+
+        <TextView
+            android:id="@+id/textEditProfile"
+            android:layout_width="169dp"
+            android:layout_height="22dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:text="Edit your Profile"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textFollowers"
+            app:layout_constraintVertical_bias="0.0"
+            android:textAlignment="center"
+            android:background="@drawable/grey_border"/>
+
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+
+</merge>
