@@ -15,4 +15,11 @@
         android:title="">
 
     </item>
+
+    <item android:id="@+id/ic_shopping"
+        android:icon="@drawable/ic_shopping"
+        android:title="">
+    </item>
+
+
 </menu>

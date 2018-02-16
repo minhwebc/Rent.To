@@ -1,10 +1,12 @@
 package to.rent.rentto;
 
 import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,10 +20,9 @@ import to.rent.rentto.Utils.BottomNavigationViewHelper;
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "HomeActivity";
+    private Context mContext = HomeActivity.this;
     private FirebaseAuth mAuth;
     private static final int ACTIVITY_NUM = 0;
-
-    Context mContext = HomeActivity.this;
 
     @Override
     public void onStart() {
