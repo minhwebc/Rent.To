@@ -19,7 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import to.rent.rentto.HomeActivity;
+import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.R;
 
 public class LoginActivity extends AppCompatActivity {

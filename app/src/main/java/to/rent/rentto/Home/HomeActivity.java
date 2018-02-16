@@ -50,13 +50,13 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Log.d(TAG, "onCreate: Starting. ");
         setupBottomNavigationView();
-        setupViewPager();
+//        setupViewPager();
     }
 
 
     /**
      * Responsible for adding the camera and messages tbas to home
-     */
+     *
     private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CameraFragment());
@@ -70,6 +70,7 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_camera);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_arrow);
     }
+     */
 
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");

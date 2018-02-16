@@ -42,8 +42,8 @@ public class BottomNavigationViewHelper {
                         Intent intent1 = new Intent(context, HomeActivity.class); //ACTIVITY_NUM = 0
                         context.startActivity(intent1);
                         break;
-                    case R.id.ic_circle:
-                        Intent intent2 = new Intent(context, ListingActivity.class); //ACTIVITY_NUM = 2
+                    case R.id.ic_listing:
+                        Intent intent2 = new Intent(context, ListingActivity.class); //ACTIVITY_NUM = 1
                         context.startActivity(intent2);
                         break;
 
@@ -52,12 +52,12 @@ public class BottomNavigationViewHelper {
                         context.startActivity(intent3);
                         break;
                     case R.id.ic_search:
-                        Intent intent4 = new Intent(context, CameraActivity.class); //ACTIVITY_NUM = 1
+                        Intent intent4 = new Intent(context, CameraActivity.class); //ACTIVITY_NUM = 3
                         context.startActivity(intent4);
                         break;
 
                     case R.id.ic_circle:
-                        Intent intent5 = new Intent(context, ProfileActivity.class); //ACTIVITY_NUM = 2
+                        Intent intent5 = new Intent(context, ProfileActivity.class); //ACTIVITY_NUM = 4
                         context.startActivity(intent5);
                         break;
                 }
