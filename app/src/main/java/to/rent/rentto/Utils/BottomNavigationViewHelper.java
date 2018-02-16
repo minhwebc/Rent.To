@@ -40,24 +40,29 @@ public class BottomNavigationViewHelper {
                 switch(item.getItemId()) {
                     case R.id.ic_house:
                         Intent intent1 = new Intent(context, HomeActivity.class); //ACTIVITY_NUM = 0
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent1);
                         break;
                     case R.id.ic_listing:
                         Intent intent2 = new Intent(context, ListingActivity.class); //ACTIVITY_NUM = 1
+                        intent2.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent2);
                         break;
 
                     case R.id.ic_shopping:
                         Intent intent3 = new Intent(context, ItemsListActivity.class); //ACTIVITY_NUM = 2
+                        intent3.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent3);
                         break;
                     case R.id.ic_search:
                         Intent intent4 = new Intent(context, CameraActivity.class); //ACTIVITY_NUM = 3
+                        intent4.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent4);
                         break;
 
                     case R.id.ic_circle:
                         Intent intent5 = new Intent(context, ProfileActivity.class); //ACTIVITY_NUM = 4
+                        intent5.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent5);
                         break;
                 }
