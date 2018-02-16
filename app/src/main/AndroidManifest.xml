@@ -18,6 +18,7 @@
         </activity>
         <activity android:name=".Profile.ProfileActivity"/>
         <activity android:name=".Share.ShareActivity"/>
+        <activity android:name=".Profile.AccountSettingsActivity"/>
     </application>
 
 </manifest>
