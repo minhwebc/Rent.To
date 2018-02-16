@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import to.rent.rentto.Utils.SectionsPagerAdapter;
 
 public class  HomeActivity extends AppCompatActivity {
 
