@@ -9,9 +9,12 @@ import android.view.MenuItem;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import to.rent.rentto.HomeActivity;
 import to.rent.rentto.Listing.ItemsListActivity;
 import to.rent.rentto.Listing.ListingActivity;
+
+import to.rent.rentto.Camera.CameraActivity;
+import to.rent.rentto.Home.HomeActivity;
+import to.rent.rentto.Profile.ProfileActivity;
 import to.rent.rentto.R;
 
 /**
@@ -19,7 +22,7 @@ import to.rent.rentto.R;
  */
 
 public class BottomNavigationViewHelper {
-    private static final String TAG = "BottomNavigationViewHel";
+    private static final String TAG = "BottomNavHelper";
 
     public static void setupBottomNavigationView(BottomNavigationViewEx bottomNavigationViewEx) {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
@@ -29,7 +32,8 @@ public class BottomNavigationViewHelper {
         bottomNavigationViewEx.setTextVisibility(false);
     }
 
-    public static void enableNavigation(final Context context, BottomNavigationViewEx view){
+
+    public static void enableNavigation(final Context context, BottomNavigationViewEx view) {
         view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -38,7 +42,6 @@ public class BottomNavigationViewHelper {
                         Intent intent1 = new Intent(context, HomeActivity.class); //ACTIVITY_NUM = 0
                         context.startActivity(intent1);
                         break;
-
                     case R.id.ic_circle:
                         Intent intent2 = new Intent(context, ListingActivity.class); //ACTIVITY_NUM = 2
                         context.startActivity(intent2);
@@ -48,10 +51,20 @@ public class BottomNavigationViewHelper {
                         Intent intent3 = new Intent(context, ItemsListActivity.class); //ACTIVITY_NUM = 2
                         context.startActivity(intent3);
                         break;
+                    case R.id.ic_search:
+                        Intent intent4 = new Intent(context, CameraActivity.class); //ACTIVITY_NUM = 1
+                        context.startActivity(intent4);
+                        break;
+
+                    case R.id.ic_circle:
+                        Intent intent5 = new Intent(context, ProfileActivity.class); //ACTIVITY_NUM = 2
+                        context.startActivity(intent5);
+                        break;
                 }
+
+
                 return false;
             }
         });
-
     }
 }
