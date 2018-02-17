@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Rent.To.iml" filepath="$PROJECT_DIR$/Rent.To.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Rent.To.iml" filepath="$PROJECT_DIR$/Rent.To.iml" />
       <module fileurl="file://$PROJECT_DIR$/RentTo.iml" filepath="$PROJECT_DIR$/RentTo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
