@@ -1,6 +1,5 @@
 package to.rent.rentto.Profile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,14 +13,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
-
-/**
- * Created by allencho on 2/14/18.
- */
 
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
@@ -54,9 +50,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-    /**
-     * BottomNavigationView setup
-     */
+
+
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
@@ -66,5 +61,4 @@ public class ProfileActivity extends AppCompatActivity {
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);
     }
-
 }
