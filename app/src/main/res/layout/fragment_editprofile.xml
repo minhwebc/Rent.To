@@ -19,14 +19,15 @@
 
 
 
-
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/relLayout2">
+            android:id="@+id/relLayout2"
+            android:layout_below="@+id/relLayout1">
 
+            <include layout="@layout/snippet_center_editprofile"/>
 
 
 
