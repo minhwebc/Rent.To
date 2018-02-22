@@ -149,6 +149,11 @@ public class CameraActivity extends AppCompatActivity {
         menuItem.setChecked(true);
     }
 
+    public void changeFragment(String oldTag, android.support.v4.app.Fragment fragment, String newTag) {
+        android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
+        fragmentManager.beginTransaction().remove(oldFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.relLayout2, fragment, newTag).commit();
+    }
 
     // When user presses submit after entering in text to form
     public void submitTitle(View view) {
@@ -156,10 +161,11 @@ public class CameraActivity extends AppCompatActivity {
         EditText editTextTitle = (EditText) findViewById(R.id.editTextTitle);
         title = editTextTitle.getText().toString();
         Log.d(TAG, "The title is " + title + " inside cameraActivity");
-        android.support.v4.app.Fragment titleFragment = fragmentManager.findFragmentByTag("title");
+
+
+        // Replace title fragment with category fragment
         CategoryFragment categoryFragment = new CategoryFragment();
-        fragmentManager.beginTransaction().remove(titleFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.relLayout2, categoryFragment, "category").commit();
+        changeFragment("title", categoryFragment, "category");
     }
 
     public void submitCategory(View view) {
@@ -172,13 +178,32 @@ public class CameraActivity extends AppCompatActivity {
 
         Log.d(TAG, "The category is " + category + " inside cameraActivity");
         Log.d(TAG, "The description is " + description + " inside cameraActivity");
-        //android.support.v4.app.Fragment titleFragment = fragmentManager.findFragmentByTag("title");
-        //CategoryFragment categoryFragment = new CategoryFragment();
-        //fragmentManager.beginTransaction().remove(titleFragment).commit();
-        //fragmentManager.beginTransaction().add(R.id.relLayout2, categoryFragment, "category").commit();
+
+
+        // Replace category fragment with price fragment
+        PriceFragment priceFragment = new PriceFragment();
+        changeFragment("category", priceFragment, "price");
     }
 
+    public void submitPrice(View view) {
+        Log.d(TAG, "inside of submitPrice, cameraAcitivity");
 
+
+        // Replace price fragment with location fragment
+        LocationFragment locationFragment = new LocationFragment();
+        changeFragment("price", locationFragment, "location");
+    }
+
+    public void submitLocation(View view) {
+        Log.d(TAG, "inside of submitLocation, cameraAcitivity");
+
+        // All details gathered, may now post
+        post();
+    }
+
+    public void post() {
+        Log.d("TAG", "inside of post method");
+    }
 
 
 

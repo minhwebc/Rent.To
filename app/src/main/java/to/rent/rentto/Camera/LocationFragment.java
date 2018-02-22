@@ -7,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import to.rent.rentto.R;
 
-public class AddTitleFragment extends android.support.v4.app.Fragment {
-    private static final String TAG = "AddTitleFragment";
+public class LocationFragment extends android.support.v4.app.Fragment {
+    private static final String TAG = "LocationFragment";
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_title, container, false);
-        Log.d(TAG, "inside of AddTitleFragment.java onCreateView");
+        View view = inflater.inflate(R.layout.fragment_add_location, container, false);
+        Log.d(TAG, "inside of LocationFragment.java onCreateView");
         return view;
     }
 }
