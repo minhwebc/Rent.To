@@ -10,7 +10,7 @@ import to.rent.rentto.R;
 
 public class CategoryFragment extends android.support.v4.app.Fragment {
     private static final String TAG = "AddTitleFragment";
-    final String[] values= {"Red","Green", "Blue", "Yellow", "Magenta"};
+    final String[] values= {"Manual Tools","Sports Equipment", "Cookware", "Electronics", "Other"};
 
     @Nullable
     @Override

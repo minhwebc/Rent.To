@@ -11,7 +11,7 @@ android:layout_height="match_parent">
     >
 
     <EditText
-        android:id="@+id/editTextTitle"
+        android:id="@+id/editTextLocation"
         android:layout_width="320dp"
         android:layout_height="85dp"
         android:layout_above="@+id/button_send"
