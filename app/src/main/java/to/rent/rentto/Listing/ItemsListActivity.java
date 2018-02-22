@@ -4,30 +4,51 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
 
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import to.rent.rentto.Utils.UniversalImageLoader;
 
 /**
  * Created by Sora on 2/15/2018.
  */
 
 public class ItemsListActivity extends AppCompatActivity {
-    private static final String TAG = "ItemsListActivity";
-    private Context mContext;
 
+    private static final String TAG = "ItemsListActivity";
+    private static final int NUM_COLUMNS = 2;
+
+    private Context mContext;
+    private ArrayList<String> mImageUrls = new ArrayList<>();
+    private ArrayList<String> iDs = new ArrayList<>();
+    private DatabaseReference mReference;
+    private RecyclerViewAdapter staggeredRecyclerViewAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
+        Log.d(TAG, "onCreate: Started.");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items_list);
         mContext = ItemsListActivity.this;
-        Log.d(TAG, "onCreate: Started.");
+        mReference = FirebaseDatabase.getInstance().getReference();
+
 
         setupBottomNavigationView();
 
@@ -39,12 +60,68 @@ public class ItemsListActivity extends AppCompatActivity {
                 finish();
             }
         });
+        initImageLoader();
+        initRecyclerView();
+        initImageBitMaps();
     }
+
+    private void initImageBitMaps(){
+        //grabs all the photos back
+        Query query = mReference.child(mContext.getString(R.string.dbname_photos));
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    String keyID = singleSnapshot.getKey(); //photoIDs
+                    iDs.add(keyID);
+                    Query photoPath = mReference.child(mContext.getString(R.string.dbname_photos)).child(keyID);
+                    photoPath.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                                String photo_path = (String) singleSnapshot.getValue();
+                                mImageUrls.add(photo_path);
+                            }
+                            staggeredRecyclerViewAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void initImageLoader(){
+        UniversalImageLoader universalImageLoader = new UniversalImageLoader(mContext);
+        ImageLoader.getInstance().init(universalImageLoader.getConfig());
+    }
+
 
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+    }
+
+    private void initRecyclerView() {
+        Log.d(TAG, "initRecyclerView staggered view");
+        RecyclerView recyclerView = findViewById(R.id.recylerView);
+        staggeredRecyclerViewAdapter =
+                new RecyclerViewAdapter(this, iDs, mImageUrls);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        recyclerView.setAdapter(staggeredRecyclerViewAdapter);
     }
 }
