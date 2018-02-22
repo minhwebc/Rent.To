@@ -18,14 +18,23 @@ import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.UUID;
 
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 public class CameraActivity extends AppCompatActivity {
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageReference = FirebaseStorage.getInstance("gs://rentto-117b2.appspot.com").getReference();
     private static final String TAG = "CameraActivity";
     private Context mContext = CameraActivity.this;
     private static final int ACTIVITY_NUM = 1;
@@ -247,12 +256,37 @@ public class CameraActivity extends AppCompatActivity {
 
     /**
      * Posts the post details and post picture to firebase
+     * Pictures will be in items/UUID
+     * Posts will be sorted by City -> UUID -> Post [title, description, category, price, duration]
      */
     private void post() {
         Log.d(TAG, "inside of post method");
         String result = "";
         result += String.format("title=%s;category=%s;description=%s;price=%s;duration=%s,location=%s", title, category, description, price, duration, city);
         Log.d(TAG,result);
+
+        StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = postRef.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUri = taskSnapshot.getDownloadUrl();
+                Log.d(TAG, "Success, uploaded, downloadUri: " + downloadUri.toString());
+            }
+        });
+
+
+
+
+
+
+
         Toast.makeText(mContext, "Post Submitted!", Toast.LENGTH_SHORT).show();
     }
 }
