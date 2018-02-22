@@ -10,21 +10,29 @@
         android:layout_height="fill_parent"
         >
 
-        <EditText
-            android:id="@+id/editTextTitle"
+        <NumberPicker
+            android:id="@+id/categoryPicker"
             android:layout_width="320dp"
-            android:layout_height="85dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/editTextDescription"
+            android:layout_alignStart="@+id/editTextDescription"
+            android:layout_marginBottom="17dp" />
+
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="320dp"
+            android:layout_height="125dp"
             android:layout_above="@+id/button_send"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="23dp"
             android:layout_weight="10"
-            android:hint="Name of Item"
+            android:hint="Description "
             android:textAlignment="center" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Confirm Picture Fragment"
+            android:text="Add Category Fragment"
             android:layout_marginTop="50px"
             android:layout_centerHorizontal="false"
             android:textSize="20sp"
@@ -37,7 +45,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="119dp"
-            android:onClick="submit"
+            android:onClick="submitCategory"
             android:text="Next" />
 
 

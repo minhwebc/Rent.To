@@ -1,6 +1,9 @@
 package to.rent.rentto.Camera;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
@@ -14,10 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
+import android.widget.NumberPicker;
 
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -34,19 +39,26 @@ import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 public class CameraActivity extends AppCompatActivity {
     private static final String TAG = "CameraActivity";
-
     private Context mContext = CameraActivity.this;
     private static final int ACTIVITY_NUM = 1;
-
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_CAMERA_ROLL = 2;
+    android.support.v4.app.FragmentManager fragmentManager;
     Button confirmButton;
     Button cameraRollButton;
     Button cameraButton;
     Button cancelButton;
 
-    Uri imgaegUri;
+
+    Uri imgaegUri;  // the uri, for the image (for uploading)
     ImageView imageView;
+
+    String title; // the title, for post
+    String description; // the description, for post
+    String category; // the category, for post
+    int price; // the price, for post
+    String duration; // the duration, for post
+    int zipcode; // the zipcode, for post
 
 
 
@@ -85,12 +97,13 @@ public class CameraActivity extends AppCompatActivity {
 
     // When the confirm button is pressed, uses picture for new posting screen
     public void launchConfirm(View view) {
-        ConfirmPictureFragment confirmPictureFragment = new ConfirmPictureFragment();
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        AddTitleFragment addTitleFragment = new AddTitleFragment();
+        fragmentManager= getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         Bundle bundle = new Bundle();
         //bundle.putString("uri", imgaegUri.toString());
-        transaction.replace(R.id.relLayout2, confirmPictureFragment).commit();
+        transaction.add(R.id.relLayout2, addTitleFragment, "title").commit();
         imageView.setVisibility(View.GONE);
         confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
         cancelButton.setVisibility(View.GONE);
@@ -138,9 +151,33 @@ public class CameraActivity extends AppCompatActivity {
 
 
     // When user presses submit after entering in text to form
-    public void submit(View view) {
-        Log.d(TAG, "inside of submit");
+    public void submitTitle(View view) {
+        Log.d(TAG, "inside of submitTitle, cameraAcitivity");
+        EditText editTextTitle = (EditText) findViewById(R.id.editTextTitle);
+        title = editTextTitle.getText().toString();
+        Log.d(TAG, "The title is " + title + " inside cameraActivity");
+        android.support.v4.app.Fragment titleFragment = fragmentManager.findFragmentByTag("title");
+        CategoryFragment categoryFragment = new CategoryFragment();
+        fragmentManager.beginTransaction().remove(titleFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.relLayout2, categoryFragment, "category").commit();
     }
+
+    public void submitCategory(View view) {
+        Log.d(TAG, "inside of submitCategory, cameraAcitivity");
+
+        NumberPicker categoryPicker = (NumberPicker) findViewById(R.id.categoryPicker);
+        category = categoryPicker.getDisplayedValues()[categoryPicker.getValue()];
+        EditText editTextDescription = (EditText) findViewById(R.id.editTextDescription);
+        description = editTextDescription.getText().toString();
+
+        Log.d(TAG, "The category is " + category + " inside cameraActivity");
+        Log.d(TAG, "The description is " + description + " inside cameraActivity");
+        //android.support.v4.app.Fragment titleFragment = fragmentManager.findFragmentByTag("title");
+        //CategoryFragment categoryFragment = new CategoryFragment();
+        //fragmentManager.beginTransaction().remove(titleFragment).commit();
+        //fragmentManager.beginTransaction().add(R.id.relLayout2, categoryFragment, "category").commit();
+    }
+
 
 
 
