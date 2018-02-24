@@ -10,7 +10,8 @@ import to.rent.rentto.R;
 
 public class CategoryFragment extends android.support.v4.app.Fragment {
     private static final String TAG = "AddTitleFragment";
-    final String[] values= {"Manual Tools","Sports Equipment", "Cookware", "Electronics", "Other"};
+    final String[] categoryValues= {"Manual Tools","Sports Equipment", "Cookware", "Videogames", "Electronics", "Movies", "Parking Spot", "Party Supplies", "Other"};
+    final String[] conditionValues= {"New", "Used - Like New", "Used - Very Good", "Used - Good", "Used - Acceptable", "Bad", "Other"};
 
     @Nullable
     @Override
@@ -20,19 +21,26 @@ public class CategoryFragment extends android.support.v4.app.Fragment {
 
 
         // Hooks up to category picker
-        NumberPicker np = view.findViewById(R.id.categoryPicker);
+        NumberPicker categoryNP = view.findViewById(R.id.categoryPicker);
+        NumberPicker conditionNP = view.findViewById(R.id.conditionPicker);
+
 
         //Populate NumberPicker values from String array values
         //Set the minimum value of NumberPicker
-        np.setMinValue(0); //from array first value
+        categoryNP.setMinValue(0); //from array first value
+        conditionNP.setMinValue(0); //from array first value
         //Specify the maximum value/number of NumberPicker
-        np.setMaxValue(values.length-1); //to array last value
+        categoryNP.setMaxValue(categoryValues.length-1); //to array last value
+        conditionNP.setMaxValue(conditionValues.length-1); //to array last value
 
         //Specify the NumberPicker data source as array elements
-        np.setDisplayedValues(values);
+        categoryNP.setDisplayedValues(categoryValues);
+        conditionNP.setDisplayedValues(conditionValues);
+
 
         //Gets whether the selector wheel wraps when reaching the min/max value.
-        np.setWrapSelectorWheel(true);
+        categoryNP.setWrapSelectorWheel(true);
+        conditionNP.setWrapSelectorWheel(true);
         return view;
     }
 }

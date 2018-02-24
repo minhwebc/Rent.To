@@ -13,10 +13,18 @@
         <NumberPicker
             android:id="@+id/categoryPicker"
             android:layout_width="320dp"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
+            android:layout_alignStart="@+id/editTextDescription"
+            android:layout_below="@+id/textView"
+            android:layout_marginTop="16dp" />
+
+        <NumberPicker
+            android:id="@+id/conditionPicker"
+            android:layout_width="320dp"
+            android:layout_height="120dp"
             android:layout_above="@+id/editTextDescription"
             android:layout_alignStart="@+id/editTextDescription"
-            android:layout_marginBottom="17dp" />
+            android:layout_marginBottom="9dp" />
 
         <EditText
             android:id="@+id/editTextDescription"

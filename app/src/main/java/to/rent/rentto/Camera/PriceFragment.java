@@ -1,19 +1,12 @@
 package to.rent.rentto.Camera;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-//import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.NumberPicker;
-
 import to.rent.rentto.R;
-
 
 public class PriceFragment extends android.support.v4.app.Fragment {
     private static final String TAG = "PriceFragment";
@@ -24,7 +17,7 @@ public class PriceFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_add_price, container, false);
         Log.d(TAG, "inside of PriceFragment.java onCreateView");
 
-        String[] values = {"Days", "Weeks", "Months", "Years"};
+        String[] values = {"Hour", "Day", "Week", "Month", "Year"};
 
         // Hooks up to category picker
         NumberPicker np = view.findViewById(R.id.timePicker);
@@ -37,7 +30,7 @@ public class PriceFragment extends android.support.v4.app.Fragment {
 
         //Specify the NumberPicker data source as array elements
         np.setDisplayedValues(values);
-
+        np.setValue(1); // starts at first index (day)
         //Gets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
         return view;

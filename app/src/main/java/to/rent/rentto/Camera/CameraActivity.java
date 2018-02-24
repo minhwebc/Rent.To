@@ -39,6 +39,7 @@ public class CameraActivity extends AppCompatActivity {
     private Context mContext = CameraActivity.this;
     private static final int ACTIVITY_NUM = 1;
     static final int REQUEST_IMAGE_CAPTURE = 1; // the request code number assigned to image capture
+    static final int MAX_PRICE = 10000;
     static final int REQUEST_CAMERA_ROLL = 2;   // the request code number assigned to camera roll
     android.support.v4.app.FragmentManager fragmentManager;  // handles fragment switching
     Button confirmButton;
@@ -51,8 +52,8 @@ public class CameraActivity extends AppCompatActivity {
     String description; // the description, for post
     String category; // the category, for post
     double price; // the price, for post
-    String duration; // the duration, for post, Examples: ["31 days", "2 weeks", "1 months", "2 years"]
-    String condition = "Condition - Change This later";
+    String timeType; // the type of time: hour, day, week, month, year
+    String condition;
     String city; // the zipcode, for post
 
     /**
@@ -116,6 +117,7 @@ public class CameraActivity extends AppCompatActivity {
         cameraRollButton.setVisibility(View.VISIBLE); // since no pic is selected
         cameraButton.setVisibility(View.VISIBLE);
         imageView.setImageResource(0);
+        imageView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -196,9 +198,8 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets category and description from user input, switches to price and duration fragment
+     * Gets category, condition, and description from user input, switches to price fragment
      * Description may be empty
-     * Duration is never empty
      * @param view
      */
     public void submitCategory(View view) {
@@ -206,38 +207,37 @@ public class CameraActivity extends AppCompatActivity {
         category = categoryPicker.getDisplayedValues()[categoryPicker.getValue()];
         EditText editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         description = editTextDescription.getText().toString();
+        NumberPicker conditionPicker = (NumberPicker) findViewById(R.id.conditionPicker);
+        condition = conditionPicker.getDisplayedValues()[conditionPicker.getValue()];
         // Replace category fragment with price fragment
         PriceFragment priceFragment = new PriceFragment();
         changeFragment("category", priceFragment, "price");
     }
 
     /**
-     * Gets price and duration from user input, switches to location fragment
-     * Price is a nonnegative double
-     * Duration is a nonnegative int for days, weeks, months, or years.
+     * Gets price from user input, switches to location fragment
+     * Price is nonnegative, and must not exceed 10000
      * @param view
      */
     public void submitPrice(View view) {
         EditText editTextPrice = (EditText) findViewById(R.id.editTextPrice);
         NumberPicker timePicker = (NumberPicker) findViewById(R.id.timePicker);
-        EditText editTextDuration = (EditText) findViewById(R.id.editTextDuration);
-        String timeType = "";
-        int timeNumber = 0;
-        //if(editTextDuration.getText().toString().matches("") || editTextPrice.getText().toString().matches("")) {
-        if(checkEditTextNonEmpty(editTextDuration) && checkEditTextNonEmpty(editTextPrice)) {
+        if(checkEditTextNonEmpty(editTextPrice)) {
             try {
-                timeNumber = Integer.parseInt(editTextDuration.getText().toString());
                 timeType = timePicker.getDisplayedValues()[timePicker.getValue()];
-                price = Double.parseDouble(editTextPrice.getText().toString());
-                duration = "" + timeNumber + " " + timeType;
-                // Replace price fragment with location fragment
-                LocationFragment locationFragment = new LocationFragment();
-                changeFragment("price", locationFragment, "location");
+                price = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.0)/ 100.0;
+                if(price > MAX_PRICE) {
+                    Toast.makeText(mContext, "That price is too high (Max is " + MAX_PRICE + ")", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Replace price fragment with location fragment
+                    LocationFragment locationFragment = new LocationFragment();
+                    changeFragment("price", locationFragment, "location");
+                }
             } catch (Exception e) {
                 Toast.makeText(mContext, "Please Check Your Inputs", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(mContext, "Please Check Your Inputs: One or More Fields are Empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Please Check Your Inputs. Something is Empty", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -255,12 +255,10 @@ public class CameraActivity extends AppCompatActivity {
 
     /**
      * Posts the post details and post picture to firebase
-     * Pictures will be in items/UUID
-     * Posts will be posted in database as
-     * City -> UUID -> Post [userUID, pictureURL, title, description, category, price, duration]
+     * Pictures will be in items/[UUID]
      */
     private void post() {
-        String result = String.format("title=%s;category=%s;description=%s;price=%s;duration=%s,location=%s", title, category, description, price, duration, city);
+        String result = String.format("title=%s;category=%s;description=%s;price=%s,location=%s", title, category, description, price, city);
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
         imageView.setDrawingCacheEnabled(true);
@@ -280,8 +278,9 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     * Adds a new posting to database, including:
-     * city(all lowercase), Picture Url, Title, category, description, price, duration, condition
+     * Adds a new posting to database,
+     * posts -> cityName -> postUID[category, condition, description, imageURL, rate, title, userUID]
+     * user_items-> userUID-> postUID[city, imageURL]
      * @param downloadUri   The url of the image that accompanies this post.
      */
     private void addDatabasePost(Uri downloadUri) {
@@ -289,16 +288,14 @@ public class CameraActivity extends AppCompatActivity {
         Map<String, Object>  postValues = new HashMap<>();
         postValues.put("userUID", userUid);
         postValues.put("title", title);
-        postValues.put("rate", "" + price + " per Day");
+        postValues.put("rate", "" + price + " per " + timeType);
         postValues.put("imageURL", downloadUri.toString());
-        //postValues.put("Duration", duration);
         postValues.put("description", description);
         postValues.put("condition", condition);
         postValues.put("category", category);
         DatabaseReference myRef = mReference.child("posts/" + city.toLowerCase());
         String key = myRef.push().getKey();           //this returns the unique key generated by firebase
         myRef.child(key).setValue(postValues);
-
         DatabaseReference userItemsRef = mReference.child("user_items");
         Map<String, Object> userItemsPostValues = new HashMap<>();
         userItemsPostValues.put("city", "seattle");
@@ -309,5 +306,6 @@ public class CameraActivity extends AppCompatActivity {
         android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag("location");
         fragmentManager.beginTransaction().remove(oldFragment).commit();
         launchCancel(null);
+        imageView.setVisibility(View.VISIBLE);
     }
 }
