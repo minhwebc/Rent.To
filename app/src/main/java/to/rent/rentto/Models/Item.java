@@ -5,18 +5,24 @@ package to.rent.rentto.Models;
  */
 
 public class Item {
-    public String photo_path;
-    public Long price;
+    public String imageURL;
+    public String rate;
+    public String title;
+    public String category;
+    public String condition;
     public String description;
-    public String item_name;
+    public String userUID;
     public Item() {
 
     }
 
-    public Item(String photo_path, Long price, String description, String item_name) {
-        this.photo_path = photo_path;
-        this.price = price;
+    public Item(String imageURL, String rate, String description, String title, String category, String condition, String userUID) {
+        this.rate = rate;
+        this.imageURL = imageURL;
         this.description = description;
-        this.item_name = item_name;
+        this.title = title;
+        this.category = category;
+        this.condition = condition;
+        this.userUID = userUID;
     }
 }

@@ -43,6 +43,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         mImageUrls = imageUrls;
     }
 
+    //To-do here find the current city
+    private String findCurrentCity(){
+        return "seattle";
+    };
+
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup par, int viewType){
         View view = mInflater.inflate(R.layout.recyclerview_item, par, false);
@@ -68,6 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, ListingActivity.class);
                 intent.putExtra("ITEM_ID", mIDs.get(position));
+                intent.putExtra("CITY", findCurrentCity());
                 mContext.startActivity(intent);
             }
         });

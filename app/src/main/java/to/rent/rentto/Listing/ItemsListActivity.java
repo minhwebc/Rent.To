@@ -65,24 +65,31 @@ public class ItemsListActivity extends AppCompatActivity {
         initImageBitMaps();
     }
 
+    //To-do here find the current city
+    private String findCurrentCity(){
+        return "seattle";
+    };
+
     private void initImageBitMaps(){
         //grabs all the photos back
-        Query query = mReference.child(mContext.getString(R.string.dbname_photos));
+        Log.d(TAG, "initimagebitmaps");
+        Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(findCurrentCity());
+
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     String keyID = singleSnapshot.getKey(); //photoIDs
                     iDs.add(keyID);
-                    Query photoPath = mReference.child(mContext.getString(R.string.dbname_photos)).child(keyID);
+                    Query photoPath = mReference.child(mContext.getString(R.string.dbname_items)).child(findCurrentCity()).child(keyID).child("imageURL");
                     photoPath.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                                String photo_path = (String) singleSnapshot.getValue();
-                                mImageUrls.add(photo_path);
-                            }
+                            Log.d(TAG, dataSnapshot.getValue()+"");
+                            String photo_path = (String) dataSnapshot.getValue();
+                            mImageUrls.add(photo_path);
                             staggeredRecyclerViewAdapter.notifyDataSetChanged();
+
                         }
 
                         @Override
