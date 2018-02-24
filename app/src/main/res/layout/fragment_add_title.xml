@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="320dp"
+        android:layout_height="85dp"
+        android:layout_above="@+id/button_send"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"
+        android:layout_weight="10"
+        android:hint="Name of Item"
+        android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Title Fragment"
+        android:layout_marginTop="50px"
+        android:layout_centerHorizontal="false"
+        android:textSize="20sp"
+        android:id="@+id/textView" />
+
+    <Button
+        android:id="@+id/button_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="119dp"
+        android:onClick="submitTitle"
+        android:text="Next" />
+
+
+</RelativeLayout>
+
+
+
+</RelativeLayout>
