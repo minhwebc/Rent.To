@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.Models.Item;
+import to.rent.rentto.Models.User;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
@@ -31,6 +32,7 @@ public class ListingActivity extends AppCompatActivity {
     private static final String TAG = "ListingActivity";
     private Context mContext;
     private String ITEM_ID;
+    private String CITY;
     private Item mItem;
     private DatabaseReference mReference;
 
@@ -42,6 +44,8 @@ public class ListingActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Started.");
 
         ITEM_ID = getIntent().getStringExtra("ITEM_ID");
+        CITY = getIntent().getStringExtra("CITY");
+
         mReference = FirebaseDatabase.getInstance().getReference();
 
         setupBottomNavigationView();
@@ -57,7 +61,7 @@ public class ListingActivity extends AppCompatActivity {
     }
 
     private void grabTheItem(){
-        Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(ITEM_ID);
+        Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
         query.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -70,14 +74,30 @@ public class ListingActivity extends AppCompatActivity {
                 ImageView post_image = findViewById(R.id.imageView);
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
-
                 Glide.with(mContext)
-                        .load(mItem.photo_path)
+                        .load(mItem.imageURL)
                         .apply(requestOptions)
                         .into(post_image);
-                item_name.setText(mItem.item_name);
+                item_name.setText(mItem.title);
                 description.setText(mItem.description);
-                price.setText(mItem.price+"");
+                price.setText(mItem.rate+"");
+                post_image.setScaleType(ImageView.ScaleType.FIT_XY);
+
+                Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
+                query.addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        TextView userField = findViewById(R.id.textView5);
+                        userField.setText(user.getUsername());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -86,6 +106,7 @@ public class ListingActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
