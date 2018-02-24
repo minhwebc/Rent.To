@@ -7,6 +7,7 @@
   
     <!-- Firebase database tables -->
     <string name="dbname_users">users</string>
-
+    <string name="dbname_photos">photos</string>
     <string name="field_username">username</string>
+    <string name="dbname_items">items</string>
 </resources>
