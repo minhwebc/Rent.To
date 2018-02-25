@@ -2,20 +2,11 @@ package to.rent.rentto.Home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import to.rent.rentto.Home.HomeFragment;
-import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-
-import to.rent.rentto.R;
-import to.rent.rentto.Utils.BottomNavigationViewHelper;
-import to.rent.rentto.Utils.SectionsPagerAdapter;
-import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,6 +15,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import to.rent.rentto.Login.LoginActivity;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import to.rent.rentto.Utils.SectionsPagerAdapter;
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "HomeActivity";
@@ -69,6 +61,8 @@ public class HomeActivity extends AppCompatActivity {
         setupBottomNavigationView();
 //        setupViewPager();
     }
+
+
 
 
     private void setupBottomNavigationView(){

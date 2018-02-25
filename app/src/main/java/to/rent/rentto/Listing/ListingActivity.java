@@ -107,7 +107,6 @@ public class ListingActivity extends AppCompatActivity {
         });
     }
 
-
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);

@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -22,6 +24,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.UniversalImageLoader;
@@ -81,24 +84,11 @@ public class ItemsListActivity extends AppCompatActivity {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     String keyID = singleSnapshot.getKey(); //photoIDs
                     iDs.add(keyID);
-                    Query photoPath = mReference.child(mContext.getString(R.string.dbname_items)).child(findCurrentCity()).child(keyID).child("imageURL");
-                    photoPath.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Log.d(TAG, dataSnapshot.getValue()+"");
-                            String photo_path = (String) dataSnapshot.getValue();
-                            mImageUrls.add(photo_path);
-                            staggeredRecyclerViewAdapter.notifyDataSetChanged();
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
+                    Item mItem = singleSnapshot.getValue(Item.class);
+                    String photo_path = mItem.imageURL;
+                    mImageUrls.add(photo_path);
                 }
+                staggeredRecyclerViewAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -107,6 +97,13 @@ public class ItemsListActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.top_bar, menu);
+        return true; //we've provided a menu!
     }
 
     private void initImageLoader(){
