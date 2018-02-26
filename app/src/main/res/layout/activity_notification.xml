@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="to.rent.rentto.Camera.CameraActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <!-- Middle section (body) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/relLayout2"
+            android:layout_below="@+id/relLayout1">
+            <include layout="@layout/layout_center_viewpager"/>
+
+            <TextView
+                android:id="@+id/NotificationTextView"
+                android:text="Messages"
+                android:textSize="45dp"
+                android:layout_width="250dp"
+                android:layout_height="100dp" />
+
+            <ListView
+                android:id="@+id/msgview"
+                android:layout_below="@+id/NotificationTextView"
+                android:layout_marginTop="10dp"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:transcriptMode="alwaysScroll"></ListView>
+
+        </RelativeLayout>
+
+
+        <!-- bottom navigation -->
+        <include layout="@layout/layout_bottom_navigation_view"/>
+
+
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

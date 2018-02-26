@@ -21,10 +21,10 @@
         android:title="">
     </item>
 
-    <!--<item android:id="@+id/ic_listing"-->
-        <!--android:icon="@drawable/ic_listing"-->
-        <!--android:title="">-->
-    <!--</item>-->
+    <item android:id="@+id/ic_messages"
+        android:icon="@drawable/ic_messages"
+        android:title="">
+    </item>
 
 
 </menu>
