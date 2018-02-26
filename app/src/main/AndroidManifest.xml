@@ -24,6 +24,7 @@
         <activity android:name=".Camera.CameraActivity"></activity>
         <activity android:name=".Login.LoginActivity"></activity>
         <activity android:name=".Login.RegisterActivity"></activity>
+        <activity android:name=".Messages.NotificationActivity"></activity>
     </application>
 
 </manifest>

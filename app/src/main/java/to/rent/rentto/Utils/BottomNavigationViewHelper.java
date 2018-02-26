@@ -12,6 +12,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import to.rent.rentto.Camera.CameraActivity;
 import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.Listing.ItemsListActivity;
+import to.rent.rentto.Messages.NotificationActivity;
 import to.rent.rentto.Profile.ProfileActivity;
 import to.rent.rentto.R;
 
@@ -62,8 +63,13 @@ public class BottomNavigationViewHelper {
                         intent5.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent5);
                         break;
-                }
 
+                    case R.id.ic_messages:
+                        Intent intent6 = new Intent(context, NotificationActivity.class); // Activity_NUM = 5
+                        intent6.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        context.startActivity(intent6);
+                        break;
+                }
                 return false;
             }
         });
