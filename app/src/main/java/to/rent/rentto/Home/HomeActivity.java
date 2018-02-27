@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.Login.LoginActivity;
@@ -34,6 +37,10 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "user sign in");
             Log.d(TAG, "user is: " + currentUser.getDisplayName());
             Log.d(TAG, "email: " + currentUser.getEmail());
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Log.d(TAG, "Token : " + token);
+            Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
+            FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid()).child("notificationTokens").setValue(token);
         } else {
             Log.d(TAG, "user not sign in");
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
