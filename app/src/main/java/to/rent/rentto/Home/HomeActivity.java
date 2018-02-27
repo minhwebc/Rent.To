@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
             String token = FirebaseInstanceId.getInstance().getToken();
             Log.d(TAG, "Token : " + token);
             Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
-            FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid()).child("notificationTokens").setValue(token);
+            FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid()).child("notificationTokens").child(token).setValue(true);
         } else {
             Log.d(TAG, "user not sign in");
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
