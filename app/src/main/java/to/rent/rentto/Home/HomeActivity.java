@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import to.rent.rentto.Listing.ItemsListActivity;
+import to.rent.rentto.Listing.ListingActivity;
 import to.rent.rentto.Login.LoginActivity;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
@@ -34,6 +36,8 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "user sign in");
             Log.d(TAG, "user is: " + currentUser.getDisplayName());
             Log.d(TAG, "email: " + currentUser.getEmail());
+            Intent intent = new Intent(getApplicationContext(), ItemsListActivity.class);
+            startActivity(intent);
         } else {
             Log.d(TAG, "user not sign in");
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

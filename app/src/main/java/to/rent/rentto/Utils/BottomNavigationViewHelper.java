@@ -37,7 +37,7 @@ public class BottomNavigationViewHelper {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()) {
                     case R.id.ic_home:
-                        Intent intent1 = new Intent(context, HomeActivity.class); //ACTIVITY_NUM = 0
+                        Intent intent1 = new Intent(context, ItemsListActivity.class); //ACTIVITY_NUM = 0
                         intent1.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent1);
                         break;
@@ -47,11 +47,12 @@ public class BottomNavigationViewHelper {
 //                        context.startActivity(intent2);
 //                        break;
 
-                    case R.id.ic_shopping:
+                    /*case R.id.ic_shopping:
                         Intent intent3 = new Intent(context, ItemsListActivity.class); //ACTIVITY_NUM = 2
                         intent3.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent3);
                         break;
+                        */
                     case R.id.ic_addImage:
                         Intent intent4 = new Intent(context, CameraActivity.class); //ACTIVITY_NUM = 3
                         intent4.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

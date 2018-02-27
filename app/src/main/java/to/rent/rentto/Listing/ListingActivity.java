@@ -81,7 +81,7 @@ public class ListingActivity extends AppCompatActivity {
                 item_name.setText(mItem.title);
                 description.setText(mItem.description);
                 price.setText(mItem.rate+"");
-                post_image.setScaleType(ImageView.ScaleType.FIT_XY);
+                //post_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                 Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
                 query.addValueEventListener(new ValueEventListener() {
