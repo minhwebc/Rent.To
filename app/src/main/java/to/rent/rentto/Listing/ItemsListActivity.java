@@ -1,6 +1,7 @@
 package to.rent.rentto.Listing;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -36,7 +38,7 @@ import to.rent.rentto.Utils.UniversalImageLoader;
 public class ItemsListActivity extends AppCompatActivity {
 
     private static final String TAG = "ItemsListActivity";
-    private static final int NUM_COLUMNS = 2;
+    private static final int NUM_COLUMNS = 3;
 
     private Context mContext;
     private ArrayList<String> mImageUrls = new ArrayList<>();
@@ -63,8 +65,10 @@ public class ItemsListActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        int width = getScreenSizeX();
         initImageLoader();
-        initRecyclerView();
+        initRecyclerView(width);
         initImageBitMaps();
     }
 
@@ -119,13 +123,29 @@ public class ItemsListActivity extends AppCompatActivity {
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
     }
 
-    private void initRecyclerView() {
+    private void initRecyclerView(int width) {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recylerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls);
+                new RecyclerViewAdapter(this, iDs, mImageUrls, width);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);
+    }
+
+    private int getScreenSizeX () {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
+    }
+
+    private int getScreenSizeY () {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        return height;
     }
 }

@@ -2,20 +2,23 @@ package to.rent.rentto.Listing;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
 import to.rent.rentto.R;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -27,15 +30,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private ArrayList<String> mIDs = new ArrayList<>();
     private ArrayList<String> mImageUrls = new ArrayList<>();
-
     private String[] mData = new String[0];
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context mContext;
+    private int width;
 
-    public RecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls){
+    public RecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width){
         Log.d(TAG, "constructor: called.");
 
+        this.width = width;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
         Log.d(TAG, mIDs.size()+"");
@@ -51,7 +55,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup par, int viewType){
         View view = mInflater.inflate(R.layout.recyclerview_item, par, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, this.width);
     }
 
     @Override
@@ -88,9 +92,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
 
-        ViewHolder(View itemView) {
+        ViewHolder(View itemView, int width) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
+            int newWidth = width / 3;
+            if(imageView.getLayoutParams().width > newWidth) {
+                int ratio = newWidth / imageView.getLayoutParams().width;
+                imageView.getLayoutParams().width = newWidth;
+                imageView.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
+            }
             itemView.setOnClickListener(this);
         }
 
@@ -100,6 +110,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 mClickListener.onItemClick(view, getAdapterPosition());
             }
         }
+
     }
 
     // convenience method for getting data at click position
