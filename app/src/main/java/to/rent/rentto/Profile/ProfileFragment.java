@@ -28,8 +28,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import to.rent.rentto.Models.User;
+import to.rent.rentto.Models.UserAccountSettings;
+import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import to.rent.rentto.Utils.FirebaseMethods;
+import to.rent.rentto.Utils.UniversalImageLoader;
 
 /**
  * Created by allencho on 2/27/18.
@@ -45,6 +50,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
+    private FirebaseMethods mFirebaseMethods;
 
     private TextView mPosts, mDisplayName, mUsername, mWebsite, mDescription;
     private ProgressBar mProgressBar;
@@ -71,14 +77,32 @@ public class ProfileFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
+        mFirebaseMethods = new FirebaseMethods(getActivity());
         mContext = getActivity();
         Log.d(TAG, "onCreateView: stared.");
 
 
         setupBottomNavigationView();
         setupToolbar();
+        setupFirebaseAuth();
 
         return view;
+    }
+
+    private void setProfileWidgets(UserSettings userSettings) {
+        Log.d(TAG, "setProfileWidgets: settings widgets with data retrieving from firebase database: " + userSettings.toString());
+        Log.d(TAG, "setProfileWidgets: settings widgets with data retrieving from firebase database: " + userSettings.getSettings().getUsername());
+        User user = userSettings.getUser();
+        UserAccountSettings settings = userSettings.getSettings();
+        UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+        mDisplayName.setText(settings.getDisplay_name());
+        mUsername.setText(settings.getUsername());
+        mWebsite.setText(settings.getWebsite());
+        mDescription.setText(settings.getDescription());
+        mPosts.setText(String.valueOf(settings.getPosts()));
+        mProgressBar.setVisibility(View.GONE);
+
+
     }
 
     private void setupToolbar(){
@@ -144,7 +168,7 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //retrieve user information from the database
-
+                setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
 
                 //retrieve images for the user in question
 
