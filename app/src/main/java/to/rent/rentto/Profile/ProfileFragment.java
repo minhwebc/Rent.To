@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +35,6 @@ import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.FirebaseMethods;
-import to.rent.rentto.Utils.UniversalImageLoader;
 
 /**
  * Created by allencho on 2/27/18.
@@ -94,12 +94,15 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "setProfileWidgets: settings widgets with data retrieving from firebase database: " + userSettings.getSettings().getUsername());
         User user = userSettings.getUser();
         UserAccountSettings settings = userSettings.getSettings();
-        UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
-        mDisplayName.setText(settings.getDisplay_name());
+        //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+        Glide.with(getActivity())
+                .load(settings.getProfile_photo())
+                .into(mProfilePhoto);
+        mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
-        mWebsite.setText(settings.getWebsite());
-        mDescription.setText(settings.getDescription());
-        mPosts.setText(String.valueOf(settings.getPosts()));
+        mWebsite.setText("Some website");
+        mDescription.setText("Description");
+        //mPosts.setText(String.valueOf(settings.getPosts()));
         mProgressBar.setVisibility(View.GONE);
 
 
