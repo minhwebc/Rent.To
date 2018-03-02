@@ -54,6 +54,13 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        // does nothing
+        // Because user should not be able to go back
+        // when not authenticated
+    }
+
     public boolean validate() {
         boolean valid = true;
 
@@ -99,13 +106,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 String email = mEmail.getText().toString();
                 String password = mPassword.getText().toString();
-
-                Log.d(TAG, "email " + email);
-                Log.d(TAG, "password " + password);
-
-                if(!validate() && !isStringNull(email) && !isStringNull(password)){
+                if(isStringNull(email) || isStringNull(password) || !validate()){
                     Toast.makeText(mContext, "There are incorrect or unfilled fields", Toast.LENGTH_SHORT).show();
                 }else{
+                    Log.d(TAG, "email " + email);
+                    Log.d(TAG, "password " + password);
                     mProgressBar.setVisibility(View.VISIBLE);
                     mPleaseWait.setVisibility(View.VISIBLE);
 

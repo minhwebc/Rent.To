@@ -37,35 +37,25 @@ public class BottomNavigationViewHelper {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()) {
                     case R.id.ic_home:
-                        Intent intent1 = new Intent(context, HomeActivity.class); //ACTIVITY_NUM = 0
+                        Intent intent1 = new Intent(context, ItemsListActivity.class); //ACTIVITY_NUM = 0
                         intent1.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent1);
                         break;
-//                    case R.id.ic_listing:
-//                        Intent intent2 = new Intent(context, ListingActivity.class); //ACTIVITY_NUM = 1
-//                        intent2.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//                        context.startActivity(intent2);
-//                        break;
 
-                    case R.id.ic_shopping:
-                        Intent intent3 = new Intent(context, ItemsListActivity.class); //ACTIVITY_NUM = 2
-                        intent3.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        context.startActivity(intent3);
-                        break;
                     case R.id.ic_addImage:
-                        Intent intent4 = new Intent(context, CameraActivity.class); //ACTIVITY_NUM = 3
+                        Intent intent4 = new Intent(context, CameraActivity.class); //ACTIVITY_NUM = 1
                         intent4.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent4);
                         break;
 
                     case R.id.ic_profile:
-                        Intent intent5 = new Intent(context, ProfileActivity.class); //ACTIVITY_NUM = 4
+                        Intent intent5 = new Intent(context, ProfileActivity.class); //ACTIVITY_NUM = 2
                         intent5.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent5);
                         break;
 
                     case R.id.ic_messages:
-                        Intent intent6 = new Intent(context, NotificationActivity.class); // Activity_NUM = 5
+                        Intent intent6 = new Intent(context, NotificationActivity.class); // Activity_NUM = 3
                         intent6.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent6);
                         break;

@@ -6,11 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,18 +38,36 @@ public class ListingActivity extends AppCompatActivity {
     private String CITY;
     private Item mItem;
     private DatabaseReference mReference;
+    private FirebaseAuth mAuth;
+    private User currentUser;
+    Button requestButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listing);
         mContext = ListingActivity.this;
+        requestButton = (Button) findViewById(R.id.requestButton);
+        mAuth = FirebaseAuth.getInstance();
         Log.d(TAG, "onCreate: Started.");
 
         ITEM_ID = getIntent().getStringExtra("ITEM_ID");
         CITY = getIntent().getStringExtra("CITY");
 
         mReference = FirebaseDatabase.getInstance().getReference();
+        Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currentUser = dataSnapshot.getValue(User.class);
+                Log.d(TAG, currentUser.getUsername());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         setupBottomNavigationView();
         grabTheItem();
@@ -68,9 +89,10 @@ public class ListingActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.getValue()+"");
                 mItem = dataSnapshot.getValue(Item.class);
-                TextView item_name = findViewById(R.id.textView2);
-                TextView description = findViewById(R.id.textView3);
-                TextView price = findViewById(R.id.textView4);
+                TextView item_name = findViewById(R.id.textView1);
+                TextView description = findViewById(R.id.textView2);
+                TextView condition = findViewById(R.id.textView3);
+                TextView price = findViewById(R.id.textView5);
                 ImageView post_image = findViewById(R.id.imageView);
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
@@ -81,7 +103,8 @@ public class ListingActivity extends AppCompatActivity {
                 item_name.setText(mItem.title);
                 description.setText(mItem.description);
                 price.setText(mItem.rate+"");
-                post_image.setScaleType(ImageView.ScaleType.FIT_XY);
+                condition.setText(mItem.condition);
+                //post_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                 Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
                 query.addValueEventListener(new ValueEventListener() {
@@ -89,8 +112,34 @@ public class ListingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        TextView userField = findViewById(R.id.textView5);
+                        TextView userField = findViewById(R.id.textView4);
                         userField.setText(user.getUsername());
+                        Button mButton = findViewById(R.id.requestButton);
+                        mButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                DatabaseReference renterUIDRef = mReference.child("notificationMessages").child(mItem.userUID);
+                                DatabaseReference pushedKey = renterUIDRef.push();
+
+                                pushedKey.setValue(currentUser.getUsername() + " have made you an offer", new DatabaseReference.CompletionListener() {
+
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        mReference.child("notifications").child(mItem.userUID).child(currentUser.getUser_id()).setValue(true, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                if(databaseError == null) {
+                                                    CharSequence text = "Offer Sent!";
+                                                    int duration = Toast.LENGTH_SHORT;
+                                                    Toast toast = Toast.makeText(mContext, text, duration);
+                                                    toast.show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
                     }
 
                     @Override
@@ -98,6 +147,7 @@ public class ListingActivity extends AppCompatActivity {
 
                     }
                 });
+
             }
 
             @Override

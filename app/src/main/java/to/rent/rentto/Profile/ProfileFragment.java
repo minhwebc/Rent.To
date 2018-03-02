@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +35,6 @@ import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.FirebaseMethods;
-import to.rent.rentto.Utils.UniversalImageLoader;
 
 /**
  * Created by allencho on 2/27/18.
@@ -42,8 +42,8 @@ import to.rent.rentto.Utils.UniversalImageLoader;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
-    private static final int ACTIVITY_NUM = 2;
 
+    private static final int ACTIVITY_NUM = 2;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -59,7 +59,6 @@ public class ProfileFragment extends Fragment {
     private Toolbar toolbar;
     private ImageView profileMenu;
     private BottomNavigationViewEx bottomNavigationView;
-
     private Context mContext;
 
     @Nullable
@@ -86,6 +85,16 @@ public class ProfileFragment extends Fragment {
         setupToolbar();
         setupFirebaseAuth();
 
+//        TextView editProfile = (TextView) view.findViewById(R.id.textEditProfile);
+//        editProfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
+//                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+//                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
+//                startActivity(intent);
+//            }
+//        });
         return view;
     }
 
@@ -94,12 +103,15 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "setProfileWidgets: settings widgets with data retrieving from firebase database: " + userSettings.getSettings().getUsername());
         User user = userSettings.getUser();
         UserAccountSettings settings = userSettings.getSettings();
-        UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
-        mDisplayName.setText(settings.getDisplay_name());
+        //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+        Glide.with(getActivity())
+                .load(settings.getProfile_photo())
+                .into(mProfilePhoto);
+        mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
-        mWebsite.setText(settings.getWebsite());
-        mDescription.setText(settings.getDescription());
-        mPosts.setText(String.valueOf(settings.getPosts()));
+        mWebsite.setText("Some website");
+        mDescription.setText("Description");
+        //mPosts.setText(String.valueOf(settings.getPosts()));
         mProgressBar.setVisibility(View.GONE);
 
 
@@ -149,8 +161,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-
-
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
@@ -168,6 +178,7 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //retrieve user information from the database
+
                 setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
 
                 //retrieve images for the user in question
@@ -181,4 +192,17 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 }

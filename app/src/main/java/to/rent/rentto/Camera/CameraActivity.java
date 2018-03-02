@@ -26,18 +26,19 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 public class CameraActivity extends AppCompatActivity {
+    private static final int ACTIVITY_NUM = 1; // the second case in bottomnav (0 index)
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();
     private static final String TAG = "CameraActivity";
     private Context mContext = CameraActivity.this;
-    private static final int ACTIVITY_NUM = 1;
     static final int REQUEST_IMAGE_CAPTURE = 1; // the request code number assigned to image capture
     static final int MAX_PRICE = 10000;
     static final int REQUEST_CAMERA_ROLL = 2;   // the request code number assigned to camera roll
@@ -46,15 +47,16 @@ public class CameraActivity extends AppCompatActivity {
     Button cameraRollButton;
     Button cameraButton;
     Button cancelButton;
-    Uri imgaegUri;  // the uri, for the image (for uploading)
+    Uri imageUri;  // the uri, for the image (for uploading)
     ImageView imageView;  // Where the selected image will be displayed
     String title; // the title, for post
     String description; // the description, for post
     String category; // the category, for post
-    double price; // the price, for post
+    String price; // the price, for post
     String timeType; // the type of time: hour, day, week, month, year
     String condition;
     String city; // the zipcode, for post
+    Bitmap uploadable;
 
     /**
      * Hooks up buttons from camera fragment
@@ -101,7 +103,7 @@ public class CameraActivity extends AppCompatActivity {
         AddTitleFragment addTitleFragment = new AddTitleFragment();
         fragmentManager= getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.relLayout2, addTitleFragment, "title").commit();
+        transaction.replace(R.id.relLayout2, addTitleFragment, "title").addToBackStack(null).commit();
         imageView.setVisibility(View.GONE);
         confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
         cancelButton.setVisibility(View.GONE);
@@ -118,6 +120,8 @@ public class CameraActivity extends AppCompatActivity {
         cameraButton.setVisibility(View.VISIBLE);
         imageView.setImageResource(0);
         imageView.setVisibility(View.VISIBLE);
+        imageUri = null;
+        uploadable = null;
     }
 
     /**
@@ -133,10 +137,10 @@ public class CameraActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap) extras.get("data");
             imageView.setImageBitmap(photo);
-
+            uploadable = photo;
         } else if(requestCode == REQUEST_CAMERA_ROLL && resultCode == RESULT_OK) {
-            imgaegUri = data.getData();
-            imageView.setImageURI(imgaegUri);
+            imageUri = data.getData();
+            imageView.setImageURI(imageUri);
         }
         if(resultCode == RESULT_OK) {
             confirmButton.setVisibility(View.VISIBLE);
@@ -166,9 +170,9 @@ public class CameraActivity extends AppCompatActivity {
      * @param newTag    The tag for the new fragment
      */
     private void changeFragment(String oldTag, android.support.v4.app.Fragment fragment, String newTag) {
-        android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
-        fragmentManager.beginTransaction().remove(oldFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.relLayout2, fragment, newTag).commit();
+        //android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
+        //fragmentManager.beginTransaction().remove(oldFragment).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.relLayout2, fragment, newTag).addToBackStack(null).commit();
     }
 
     /**
@@ -225,8 +229,10 @@ public class CameraActivity extends AppCompatActivity {
         if(checkEditTextNonEmpty(editTextPrice)) {
             try {
                 timeType = timePicker.getDisplayedValues()[timePicker.getValue()];
-                price = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.0)/ 100.0;
-                if(price > MAX_PRICE) {
+                double rate = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.00)/ 100.00;
+                price = String.format("%.2f", rate);
+
+                if(rate > MAX_PRICE) {
                     Toast.makeText(mContext, "That price is too high (Max is " + MAX_PRICE + ")", Toast.LENGTH_SHORT).show();
                 } else {
                     // Replace price fragment with location fragment
@@ -250,6 +256,8 @@ public class CameraActivity extends AppCompatActivity {
         // For now, just assume location is seattle
         city = "seattle";
         // All details gathered, may now post
+        Button submitPostButton = (Button) findViewById(R.id.button_send);
+        submitPostButton.setEnabled(false); // prevent spam clicking
         post();
     }
 
@@ -261,13 +269,16 @@ public class CameraActivity extends AppCompatActivity {
         String result = String.format("title=%s;category=%s;description=%s;price=%s,location=%s", title, category, description, price, city);
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = imageView.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        UploadTask uploadTask = postRef.putBytes(data);
+        UploadTask uploadTask;
+        if(uploadable != null) { // photo was from camera
+            Bitmap bitmap = uploadable;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            uploadTask = postRef.putBytes(data);
+        } else { // photo was from camera roll
+            uploadTask = postRef.putFile(imageUri);
+        }
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

@@ -1,73 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@drawable/texturebackground"
         android:paddingTop="55dp"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="75dp"
-            android:src="@drawable/tobias"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="40dp"/>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="Email"
-                android:id="@+id/input_email"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Password"
-                android:id="@+id/input_password"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="Login"/>
-
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/logo"
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:text="No account yet? Create one"
-            android:gravity="center"
-            android:textSize="16dp"
+            android:text="Don't buy, Just Rent"
+            android:textSize="25dp"
+            android:textColor="@color/justRent"
+            android:layout_marginBottom="60dp"
+            android:textAlignment="center"
+            />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:id="@+id/input_email"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+
+        >
+
+        <Button
+            android:layout_width="match_parent"
+            android:id="@+id/btn_login"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textColor="@color/white"
+            android:background="@color/cyon"
+            android:layout_weight="1"
+            android:text="Sign In"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textColor="@color/white"
+            android:background="@color/register"
             android:id="@+id/link_signup"
-            android:textColor="@color/colorAccent"/>
+            android:text="Register" />
 
     </LinearLayout>
 
@@ -75,12 +93,13 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:id="@+id/progressBar"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please wait..."
+        android:text=""
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:layout_alignBottom="@+id/progressBar"

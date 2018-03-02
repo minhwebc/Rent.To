@@ -2,12 +2,15 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#36C3D9</color>
 
     <color name="grey">#bfbfbf</color>
     <color name="white">#fff</color>
     <color name="cyon">#36C3D9</color>
     <color name="link_blue">#005ce6</color>
     <color name="black">#000</color>
+    <color name="navigationBar">#009AB2</color>
+    <color name="justRent">#98A5A6</color>
+    <color name="register">#4A4A4A</color>
 
 </resources>

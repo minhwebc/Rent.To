@@ -6,12 +6,12 @@ package to.rent.rentto.Models;
 
 public class UserAccountSettings {
 
-    private String description;
-    private String display_name;
-    private long posts;
-    private String profile_photo;
-    private String username;
-    private String website;
+    public String description;
+    public String display_name;
+    public long posts;
+    public String profile_photo;
+    public String username;
+    public String website;
 
     public UserAccountSettings(String description, String display_name,
                                long posts, String profile_photo, String username, String website) {
@@ -43,7 +43,7 @@ public class UserAccountSettings {
     }
 
     public long getPosts() {
-        return posts;
+        return 1;
     }
 
     public void setPosts(long posts) {
@@ -51,7 +51,7 @@ public class UserAccountSettings {
     }
 
     public String getProfile_photo() {
-        return profile_photo;
+        return "https://firebasestorage.googleapis.com/v0/b/rentto-f0093.appspot.com/o/flat%2C800x800%2C075%2Cf.u1.jpg?alt=media&token=d77b3c5b-7355-4e77-a3f9-6b5c92a1b167";
     }
 
     public void setProfile_photo(String profile_photo) {
