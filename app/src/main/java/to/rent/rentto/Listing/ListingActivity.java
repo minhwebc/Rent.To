@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,11 +40,23 @@ public class ListingActivity extends AppCompatActivity {
     private Item mItem;
     private DatabaseReference mReference;
 
+    Button requestButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listing);
         mContext = ListingActivity.this;
+        requestButton = (Button) findViewById(R.id.requestButton);
+//        requestButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CharSequence text = "Offer Sent!";
+//                int duration = Toast.LENGTH_SHORT;
+//                Toast toast = Toast.makeText(mContext, text, duration);
+//                toast.show();
+//            }
+//        });
         Log.d(TAG, "onCreate: Started.");
 
         ITEM_ID = getIntent().getStringExtra("ITEM_ID");
@@ -73,7 +86,8 @@ public class ListingActivity extends AppCompatActivity {
                 mItem = dataSnapshot.getValue(Item.class);
                 TextView item_name = findViewById(R.id.textView2);
                 TextView description = findViewById(R.id.textView3);
-                TextView price = findViewById(R.id.textView4);
+                TextView condition = findViewById(R.id.textView4);
+                TextView price = findViewById(R.id.textView6);
                 ImageView post_image = findViewById(R.id.imageView);
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
@@ -84,6 +98,7 @@ public class ListingActivity extends AppCompatActivity {
                 item_name.setText(mItem.title);
                 description.setText(mItem.description);
                 price.setText(mItem.rate+"");
+                condition.setText(mItem.condition);
                 //post_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                 Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
@@ -94,14 +109,17 @@ public class ListingActivity extends AppCompatActivity {
                         User user = dataSnapshot.getValue(User.class);
                         TextView userField = findViewById(R.id.textView5);
                         userField.setText(user.getUsername());
-                        ImageButton mButton = findViewById(R.id.imageButton);
+                        Button mButton = findViewById(R.id.requestButton);
                         mButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                String token = FirebaseInstanceId.getInstance().getToken();
-                                Log.d(TAG, "Token : " + token);
-                                Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
-
+//                                String token = FirebaseInstanceId.getInstance().getToken();
+//                                Log.d(TAG, "Token : " + token);
+//                                Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
+                                CharSequence text = "Offer Sent!";
+                                int duration = Toast.LENGTH_SHORT;
+                                Toast toast = Toast.makeText(mContext, text, duration);
+                                toast.show();
                             }
                         });
                     }
