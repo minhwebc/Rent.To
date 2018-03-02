@@ -57,15 +57,6 @@ public class ItemsListActivity extends AppCompatActivity {
 
         setupBottomNavigationView();
 
-        ImageView backarrow = (ImageView) findViewById(R.id.backArrow);
-        backarrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: Navigating back to 'HomeActivity'");
-                finish();
-            }
-        });
-
         int width = getScreenSizeX();
         initImageLoader();
         initRecyclerView(width);

@@ -14,14 +14,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/backArrow"
-                    android:src="@drawable/ic_backarrow"/>
 
                 <TextView
                     android:layout_toRightOf="@+id/backArrow"
