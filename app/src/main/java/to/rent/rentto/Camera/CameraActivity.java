@@ -46,7 +46,7 @@ public class CameraActivity extends AppCompatActivity {
     Button cameraRollButton;
     Button cameraButton;
     Button cancelButton;
-    Uri imgaegUri;  // the uri, for the image (for uploading)
+    Uri imageUri;  // the uri, for the image (for uploading)
     ImageView imageView;  // Where the selected image will be displayed
     String title; // the title, for post
     String description; // the description, for post
@@ -55,6 +55,7 @@ public class CameraActivity extends AppCompatActivity {
     String timeType; // the type of time: hour, day, week, month, year
     String condition;
     String city; // the zipcode, for post
+    Bitmap uploadable;
 
     /**
      * Hooks up buttons from camera fragment
@@ -118,6 +119,8 @@ public class CameraActivity extends AppCompatActivity {
         cameraButton.setVisibility(View.VISIBLE);
         imageView.setImageResource(0);
         imageView.setVisibility(View.VISIBLE);
+        imageUri = null;
+        uploadable = null;
     }
 
     /**
@@ -133,10 +136,10 @@ public class CameraActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap) extras.get("data");
             imageView.setImageBitmap(photo);
-
+            uploadable = photo;
         } else if(requestCode == REQUEST_CAMERA_ROLL && resultCode == RESULT_OK) {
-            imgaegUri = data.getData();
-            imageView.setImageURI(imgaegUri);
+            imageUri = data.getData();
+            imageView.setImageURI(imageUri);
         }
         if(resultCode == RESULT_OK) {
             confirmButton.setVisibility(View.VISIBLE);
@@ -250,6 +253,8 @@ public class CameraActivity extends AppCompatActivity {
         // For now, just assume location is seattle
         city = "seattle";
         // All details gathered, may now post
+        Button submitPostButton = (Button) findViewById(R.id.button_send);
+        submitPostButton.setEnabled(false); // prevent spam clicking
         post();
     }
 
@@ -261,13 +266,22 @@ public class CameraActivity extends AppCompatActivity {
         String result = String.format("title=%s;category=%s;description=%s;price=%s,location=%s", title, category, description, price, city);
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = imageView.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        UploadTask uploadTask = postRef.putBytes(data);
+        //imageView.setDrawingCacheEnabled(true);
+        //imageView.buildDrawingCache();
+        //Bitmap bitmap = imageView.getDrawingCache();
+        //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        //byte[] data = baos.toByteArray();
+        UploadTask uploadTask;
+        if(uploadable != null) { // photo was from camera
+            Bitmap bitmap = uploadable;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            uploadTask = postRef.putBytes(data);
+        } else { // photo was from camera roll
+            uploadTask = postRef.putFile(imageUri);
+        }
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
