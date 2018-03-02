@@ -6,8 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -17,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.Models.Item;
@@ -91,6 +94,16 @@ public class ListingActivity extends AppCompatActivity {
                         User user = dataSnapshot.getValue(User.class);
                         TextView userField = findViewById(R.id.textView5);
                         userField.setText(user.getUsername());
+                        ImageButton mButton = findViewById(R.id.imageButton);
+                        mButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String token = FirebaseInstanceId.getInstance().getToken();
+                                Log.d(TAG, "Token : " + token);
+                                Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
                     }
 
                     @Override
