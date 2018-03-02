@@ -10,6 +10,16 @@
     <style name="RentTo" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
         <item name="android:textSize">20sp</item>
         <item name="android:text">Rent.To</item>
-
     </style>
+
+    <!--<style name="CustomActionBarTheme"-->
+        <!--parent="@android:style/Theme.Holo.Light">-->
+        <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
+    <!--</style>-->
+    <!--&lt;!&ndash; ActionBar styles &ndash;&gt;-->
+    <!--<style name="MyActionBar"-->
+        <!--parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">-->
+        <!--<item name="android:background">#A97946</item>-->
+    <!--</style>-->
 </resources>
+
