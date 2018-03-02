@@ -23,7 +23,7 @@
                 android:id="@+id/display_name"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:text="Mitch"
+                android:text="Sam Zeng"
                 android:textSize="16sp"
                 />
 
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/description"
                 android:textColor="@color/black"
-                android:text="I live in Vancouver, BC"
+                android:text="In the Seattle area"
                 android:textSize="16sp"
                 android:layout_marginTop="5dp"
                 />
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/website"
                 android:textColor="@color/link_blue"
-                android:text="https://codingwithmitch.com"
+                android:text="http://students.washington.edu/sazeng/info/p1-imsora/"
                 android:textSize="16sp"
                 android:layout_marginTop="5dp"
                 />
