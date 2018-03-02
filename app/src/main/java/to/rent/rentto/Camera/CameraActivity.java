@@ -3,7 +3,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -230,7 +229,7 @@ public class CameraActivity extends AppCompatActivity {
         if(checkEditTextNonEmpty(editTextPrice)) {
             try {
                 timeType = timePicker.getDisplayedValues()[timePicker.getValue()];
-                price = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.0)/ 100.0;
+                price = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.00)/ 100.00;
                 if(price > MAX_PRICE) {
                     Toast.makeText(mContext, "That price is too high (Max is " + MAX_PRICE + ")", Toast.LENGTH_SHORT).show();
                 } else {
