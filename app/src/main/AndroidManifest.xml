@@ -29,13 +29,17 @@
 
 
         <service
-            android:name=".Messages.MyFirebaseMessagingService">
+            android:name=".Messages.MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".Messages.MyFirebaseInstanceIDService">
+            android:name=".Messages.MyFirebaseInstanceIDService"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
