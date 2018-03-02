@@ -103,7 +103,7 @@ public class CameraActivity extends AppCompatActivity {
         AddTitleFragment addTitleFragment = new AddTitleFragment();
         fragmentManager= getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.CameraFrameLayout, addTitleFragment, "title").addToBackStack(null).commit();
+        transaction.replace(R.id.relLayout2, addTitleFragment, "title").addToBackStack(null).commit();
         imageView.setVisibility(View.GONE);
         confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
         cancelButton.setVisibility(View.GONE);
