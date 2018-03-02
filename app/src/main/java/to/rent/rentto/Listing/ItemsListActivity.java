@@ -12,8 +12,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -76,6 +74,8 @@ public class ItemsListActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mImageUrls.clear();
+                iDs.clear();
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     String keyID = singleSnapshot.getKey(); //photoIDs
                     iDs.add(keyID);
