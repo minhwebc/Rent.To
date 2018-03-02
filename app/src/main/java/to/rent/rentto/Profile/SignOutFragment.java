@@ -30,9 +30,7 @@ public class SignOutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "inside of signoutfragment oncreate");
-        Intent intent = new Intent(getContext(), LoginActivity.class);
-        FirebaseAuth.getInstance().signOut();
-        getContext().startActivity(intent);
+
         View view = inflater.inflate(R.layout.fragment_signout, container, false);
         /*
         tvSignout = (TextView) view.findViewById(R.id.tvConfirmSignout);
