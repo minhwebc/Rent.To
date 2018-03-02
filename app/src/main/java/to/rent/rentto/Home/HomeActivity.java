@@ -18,7 +18,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import to.rent.rentto.Listing.ItemsListActivity;
-import to.rent.rentto.Listing.ListingActivity;
 import to.rent.rentto.Login.LoginActivity;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
@@ -62,9 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Log.d(TAG, "onCreate: Starting. ");
-
         setupFirebaseAuth();
-
         initImageLoader();
         setupBottomNavigationView();
         setupViewPager();
