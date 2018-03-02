@@ -54,6 +54,13 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        // does nothing
+        // Because user should not be able to go back
+        // when not authenticated
+    }
+
     public boolean validate() {
         boolean valid = true;
 
