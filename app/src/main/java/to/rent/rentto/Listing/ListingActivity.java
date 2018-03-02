@@ -22,6 +22,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.util.UUID;
+
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.R;
@@ -125,7 +127,7 @@ public class ListingActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        mReference.child("notifications").child(mItem.userUID).child(currentUser.getUser_id()).setValue(true, new DatabaseReference.CompletionListener() {
+                                        mReference.child("notifications").child(mItem.userUID).child(currentUser.getUser_id()).setValue(UUID.randomUUID().toString(), new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                 if(databaseError == null) {
