@@ -1,5 +1,4 @@
 package to.rent.rentto.Profile;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,21 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.w3c.dom.Text;
-
 import to.rent.rentto.Login.LoginActivity;
 import to.rent.rentto.R;
-
-/**
- * Created by allencho on 2/15/18.
- */
 
 public class SignOutFragment extends Fragment {
 
@@ -39,7 +29,12 @@ public class SignOutFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "inside of signoutfragment oncreate");
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        FirebaseAuth.getInstance().signOut();
+        getContext().startActivity(intent);
         View view = inflater.inflate(R.layout.fragment_signout, container, false);
+        /*
         tvSignout = (TextView) view.findViewById(R.id.tvConfirmSignout);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         tvSigningOut = (TextView) view.findViewById(R.id.tvSigningOut);
@@ -49,6 +44,8 @@ public class SignOutFragment extends Fragment {
         tvSigningOut.setVisibility(View.GONE);
 
         setupFirebaseAuth();
+        mAuth.addAuthStateListener(mAuthListener);
+
 
         btnConfirmSignout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +58,7 @@ public class SignOutFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
+*/
         return view;
     }
 
@@ -103,14 +100,15 @@ public class SignOutFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        Log.d(TAG, "Inside of signoutfragment onstart");
+        //mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
+//        if (mAuthListener != null) {
+//            mAuth.removeAuthStateListener(mAuthListener);
+//        }
     }
 }
