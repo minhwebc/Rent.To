@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +16,7 @@ import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 public class NotificationActivity extends AppCompatActivity {
+    private static final int ACTIVITY_NUM = 3; // the fourth case in bottomnav (0 index)
     private static final String TAG = "NotificationActivity";
     private Context mContext;
     private ListView messagesListView;
@@ -55,5 +58,8 @@ public class NotificationActivity extends AppCompatActivity {
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
     }
 }

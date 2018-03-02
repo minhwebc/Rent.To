@@ -4,10 +4,13 @@
     <string name="sign_out_fragment">Sign Out</string>
     <string name="submit_listing">Submit Listing</string>
     <string name="auth_failed">Wrong Email and Password combination</string>
+    <string name="profile_fragment">Profile</string>
   
     <!-- Firebase database tables -->
     <string name="dbname_users">users</string>
     <string name="dbname_photos">photos</string>
     <string name="field_username">username</string>
     <string name="dbname_items">posts</string>
+    <string name="dbname_user_account_settings">users</string>
 </resources>
+

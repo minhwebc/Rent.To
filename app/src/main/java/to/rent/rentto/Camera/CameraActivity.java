@@ -32,12 +32,12 @@ import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 public class CameraActivity extends AppCompatActivity {
+    private static final int ACTIVITY_NUM = 1; // the second case in bottomnav (0 index)
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();
     private static final String TAG = "CameraActivity";
     private Context mContext = CameraActivity.this;
-    private static final int ACTIVITY_NUM = 1;
     static final int REQUEST_IMAGE_CAPTURE = 1; // the request code number assigned to image capture
     static final int MAX_PRICE = 10000;
     static final int REQUEST_CAMERA_ROLL = 2;   // the request code number assigned to camera roll
@@ -266,12 +266,6 @@ public class CameraActivity extends AppCompatActivity {
         String result = String.format("title=%s;category=%s;description=%s;price=%s,location=%s", title, category, description, price, city);
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
-        //imageView.setDrawingCacheEnabled(true);
-        //imageView.buildDrawingCache();
-        //Bitmap bitmap = imageView.getDrawingCache();
-        //ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        //byte[] data = baos.toByteArray();
         UploadTask uploadTask;
         if(uploadable != null) { // photo was from camera
             Bitmap bitmap = uploadable;
