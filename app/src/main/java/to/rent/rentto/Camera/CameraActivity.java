@@ -26,6 +26,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import to.rent.rentto.R;
@@ -51,7 +52,7 @@ public class CameraActivity extends AppCompatActivity {
     String title; // the title, for post
     String description; // the description, for post
     String category; // the category, for post
-    double price; // the price, for post
+    String price; // the price, for post
     String timeType; // the type of time: hour, day, week, month, year
     String condition;
     String city; // the zipcode, for post
@@ -102,7 +103,7 @@ public class CameraActivity extends AppCompatActivity {
         AddTitleFragment addTitleFragment = new AddTitleFragment();
         fragmentManager= getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.relLayout2, addTitleFragment, "title").commit();
+        transaction.replace(R.id.relLayout2, addTitleFragment, "title").addToBackStack(null).commit();
         imageView.setVisibility(View.GONE);
         confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
         cancelButton.setVisibility(View.GONE);
@@ -169,9 +170,9 @@ public class CameraActivity extends AppCompatActivity {
      * @param newTag    The tag for the new fragment
      */
     private void changeFragment(String oldTag, android.support.v4.app.Fragment fragment, String newTag) {
-        android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
-        fragmentManager.beginTransaction().remove(oldFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.relLayout2, fragment, newTag).commit();
+        //android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
+        //fragmentManager.beginTransaction().remove(oldFragment).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.relLayout2, fragment, newTag).addToBackStack(null).commit();
     }
 
     /**
@@ -228,8 +229,10 @@ public class CameraActivity extends AppCompatActivity {
         if(checkEditTextNonEmpty(editTextPrice)) {
             try {
                 timeType = timePicker.getDisplayedValues()[timePicker.getValue()];
-                price = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.0)/ 100.0;
-                if(price > MAX_PRICE) {
+                double rate = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.00)/ 100.00;
+                price = String.format("%.2f", rate);
+
+                if(rate > MAX_PRICE) {
                     Toast.makeText(mContext, "That price is too high (Max is " + MAX_PRICE + ")", Toast.LENGTH_SHORT).show();
                 } else {
                     // Replace price fragment with location fragment
