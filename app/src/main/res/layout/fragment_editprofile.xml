@@ -15,10 +15,6 @@
 
             <include layout="@layout/snippet_top_editprofiletoolbar"/>
 
-
-
-
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -32,8 +28,6 @@
 
 
         </RelativeLayout>
-
-
 
     </RelativeLayout>
 

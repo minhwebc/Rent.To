@@ -10,6 +10,8 @@
     <style name="RentTo" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
         <item name="android:textSize">20sp</item>
         <item name="android:text">Rent.To</item>
-
     </style>
+
+
 </resources>
+
