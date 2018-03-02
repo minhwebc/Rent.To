@@ -7,20 +7,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.Models.Item;
@@ -39,7 +38,8 @@ public class ListingActivity extends AppCompatActivity {
     private String CITY;
     private Item mItem;
     private DatabaseReference mReference;
-
+    private FirebaseAuth mAuth;
+    private User currentUser;
     Button requestButton;
 
     @Override
@@ -48,21 +48,26 @@ public class ListingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_listing);
         mContext = ListingActivity.this;
         requestButton = (Button) findViewById(R.id.requestButton);
-//        requestButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CharSequence text = "Offer Sent!";
-//                int duration = Toast.LENGTH_SHORT;
-//                Toast toast = Toast.makeText(mContext, text, duration);
-//                toast.show();
-//            }
-//        });
+        mAuth = FirebaseAuth.getInstance();
         Log.d(TAG, "onCreate: Started.");
 
         ITEM_ID = getIntent().getStringExtra("ITEM_ID");
         CITY = getIntent().getStringExtra("CITY");
 
         mReference = FirebaseDatabase.getInstance().getReference();
+        Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currentUser = dataSnapshot.getValue(User.class);
+                Log.d(TAG, currentUser.getUsername());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         setupBottomNavigationView();
         grabTheItem();
@@ -113,13 +118,26 @@ public class ListingActivity extends AppCompatActivity {
                         mButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-//                                String token = FirebaseInstanceId.getInstance().getToken();
-//                                Log.d(TAG, "Token : " + token);
-//                                Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
-                                CharSequence text = "Offer Sent!";
-                                int duration = Toast.LENGTH_SHORT;
-                                Toast toast = Toast.makeText(mContext, text, duration);
-                                toast.show();
+                                DatabaseReference renterUIDRef = mReference.child("notificationMessages").child(mItem.userUID);
+                                DatabaseReference pushedKey = renterUIDRef.push();
+
+                                pushedKey.setValue(currentUser.getUsername() + " have made you an offer", new DatabaseReference.CompletionListener() {
+
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        mReference.child("notifications").child(mItem.userUID).child(currentUser.getUser_id()).setValue(true, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                if(databaseError == null) {
+                                                    CharSequence text = "Offer Sent!";
+                                                    int duration = Toast.LENGTH_SHORT;
+                                                    Toast toast = Toast.makeText(mContext, text, duration);
+                                                    toast.show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
                             }
                         });
                     }
@@ -129,6 +147,7 @@ public class ListingActivity extends AppCompatActivity {
 
                     }
                 });
+
             }
 
             @Override
