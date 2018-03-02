@@ -52,7 +52,7 @@ public class CameraActivity extends AppCompatActivity {
     String title; // the title, for post
     String description; // the description, for post
     String category; // the category, for post
-    double price; // the price, for post
+    String price; // the price, for post
     String timeType; // the type of time: hour, day, week, month, year
     String condition;
     String city; // the zipcode, for post
@@ -229,8 +229,10 @@ public class CameraActivity extends AppCompatActivity {
         if(checkEditTextNonEmpty(editTextPrice)) {
             try {
                 timeType = timePicker.getDisplayedValues()[timePicker.getValue()];
-                price = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.00)/ 100.00;
-                if(price > MAX_PRICE) {
+                double rate = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.00)/ 100.00;
+                price = String.format("%.2f", rate);
+
+                if(rate > MAX_PRICE) {
                     Toast.makeText(mContext, "That price is too high (Max is " + MAX_PRICE + ")", Toast.LENGTH_SHORT).show();
                 } else {
                     // Replace price fragment with location fragment

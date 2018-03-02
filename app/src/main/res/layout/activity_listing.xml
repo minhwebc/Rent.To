@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/relLayout2"
             android:layout_below="@+id/relLayout1">
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
@@ -44,46 +45,54 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/relLayout2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="Item Name" />
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="19dp"
+            android:text="Item Name"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView2"
             android:layout_below="@+id/textView2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="23dp"
             android:text="Item Description" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView3"
             android:layout_below="@+id/textView3"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp"
             android:text="Condition" />
+
         <TextView
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView3"
             android:layout_below="@+id/textView4"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp"
             android:text="User" />
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:icon="@drawable/ic_action_name"
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relLayout2"
+            android:layout_centerHorizontal="true"
+            android:text="Rates" />
+
+        <Button
+            android:id="@+id/requestButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="80dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            android:layout_marginBottom="71dp"
+            android:text="Send Request" />
 
 
     </RelativeLayout>
