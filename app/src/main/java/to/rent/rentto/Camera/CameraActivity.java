@@ -3,6 +3,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import to.rent.rentto.R;
@@ -102,7 +104,7 @@ public class CameraActivity extends AppCompatActivity {
         AddTitleFragment addTitleFragment = new AddTitleFragment();
         fragmentManager= getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.relLayout2, addTitleFragment, "title").commit();
+        transaction.replace(R.id.CameraFrameLayout, addTitleFragment, "title").addToBackStack(null).commit();
         imageView.setVisibility(View.GONE);
         confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
         cancelButton.setVisibility(View.GONE);
@@ -169,9 +171,9 @@ public class CameraActivity extends AppCompatActivity {
      * @param newTag    The tag for the new fragment
      */
     private void changeFragment(String oldTag, android.support.v4.app.Fragment fragment, String newTag) {
-        android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
-        fragmentManager.beginTransaction().remove(oldFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.relLayout2, fragment, newTag).commit();
+        //android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
+        //fragmentManager.beginTransaction().remove(oldFragment).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.relLayout2, fragment, newTag).addToBackStack(null).commit();
     }
 
     /**
