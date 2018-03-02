@@ -29,7 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private Context mContext = HomeActivity.this;
-    private static final int ACTIVITY_NUM = 0;
+    private static final int ACTIVITY_NUM = 0; // the first case in bottomnav (0 index)
 
     @Override
     public void onStart() {
