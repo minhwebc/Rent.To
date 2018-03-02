@@ -84,10 +84,10 @@ public class ListingActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.getValue()+"");
                 mItem = dataSnapshot.getValue(Item.class);
-                TextView item_name = findViewById(R.id.textView2);
-                TextView description = findViewById(R.id.textView3);
-                TextView condition = findViewById(R.id.textView4);
-                TextView price = findViewById(R.id.textView6);
+                TextView item_name = findViewById(R.id.textView1);
+                TextView description = findViewById(R.id.textView2);
+                TextView condition = findViewById(R.id.textView3);
+                TextView price = findViewById(R.id.textView5);
                 ImageView post_image = findViewById(R.id.imageView);
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
@@ -107,7 +107,7 @@ public class ListingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        TextView userField = findViewById(R.id.textView5);
+                        TextView userField = findViewById(R.id.textView4);
                         userField.setText(user.getUsername());
                         Button mButton = findViewById(R.id.requestButton);
                         mButton.setOnClickListener(new View.OnClickListener() {
