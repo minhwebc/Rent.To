@@ -37,14 +37,6 @@
             android:hint="Description "
             android:textAlignment="center" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Category Fragment"
-            android:layout_marginTop="50px"
-            android:layout_centerHorizontal="false"
-            android:textSize="20sp"
-            android:id="@+id/textView" />
 
         <Button
             android:id="@+id/button_send"
