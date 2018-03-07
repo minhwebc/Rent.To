@@ -4,27 +4,47 @@
     android:layout_height="match_parent">
 
 
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        >
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
-        <NumberPicker
-            android:id="@+id/categoryPicker"
-            android:layout_width="320dp"
-            android:layout_height="120dp"
-            android:layout_alignStart="@+id/editTextDescription"
-            android:layout_below="@+id/textView"
-            android:layout_marginTop="16dp" />
-
-        <NumberPicker
-            android:id="@+id/conditionPicker"
-            android:layout_width="320dp"
+        <SeekBar
+            android:id="@+id/conditionSeeker"
+            android:layout_width="300dp"
             android:layout_height="120dp"
             android:layout_above="@+id/editTextDescription"
-            android:layout_alignStart="@+id/editTextDescription"
-            android:layout_marginBottom="9dp" />
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignStart="@+id/conditionSeeker"
+            android:layout_below="@+id/spinnerCategory"
+            android:text="Condition:"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/conditionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignEnd="@+id/conditionSeeker"
+            android:layout_alignTop="@+id/conditionSeeker"
+            android:text="Used - Very Good"
+            android:textSize="25dp" />
+
+        <Spinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_above="@+id/conditionSeeker"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="21dp">
+
+        </Spinner>
+
 
         <EditText
             android:id="@+id/editTextDescription"

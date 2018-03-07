@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +28,6 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import to.rent.rentto.R;
@@ -170,8 +171,6 @@ public class CameraActivity extends AppCompatActivity {
      * @param newTag    The tag for the new fragment
      */
     private void changeFragment(String oldTag, android.support.v4.app.Fragment fragment, String newTag) {
-        //android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
-        //fragmentManager.beginTransaction().remove(oldFragment).addToBackStack(null).commit();
         fragmentManager.beginTransaction().replace(R.id.relLayout2, fragment, newTag).addToBackStack(null).commit();
     }
 
@@ -207,12 +206,12 @@ public class CameraActivity extends AppCompatActivity {
      * @param view
      */
     public void submitCategory(View view) {
-        NumberPicker categoryPicker = (NumberPicker) findViewById(R.id.categoryPicker);
-        category = categoryPicker.getDisplayedValues()[categoryPicker.getValue()];
+        Spinner categorySpinner = (Spinner) findViewById(R.id.spinnerCategory);
+        category = categorySpinner.getSelectedItem().toString();
         EditText editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         description = editTextDescription.getText().toString();
-        NumberPicker conditionPicker = (NumberPicker) findViewById(R.id.conditionPicker);
-        condition = conditionPicker.getDisplayedValues()[conditionPicker.getValue()];
+        TextView conditionTextView = (TextView) findViewById(R.id.conditionTextView);
+        condition = conditionTextView.getText().toString();
         // Replace category fragment with price fragment
         PriceFragment priceFragment = new PriceFragment();
         changeFragment("category", priceFragment, "price");
