@@ -31,6 +31,16 @@ android:layout_height="match_parent">
         android:onClick="submitLocation"
         android:text="Post" />
 
+    <Button
+        android:id="@+id/getLocationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editTextLocation"
+        android:layout_alignStart="@+id/editTextLocation"
+        android:layout_centerVertical="true"
+        android:onClick="getLocation"
+        android:text="Get Current Location" />
+
 
 </RelativeLayout>
 

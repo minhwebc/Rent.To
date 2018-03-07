@@ -248,17 +248,52 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
+     * Sets location to current location
+     * @param view
+     */
+    public void getLocation(View view) {
+        EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
+        String cityName = getCityName();
+        editTextLocation.setText(cityName);
+    }
+
+    /**
+     * Gets the zip code of the device's current location
+     * @return The zip code
+     */
+    private String getCityName() {
+        // For now, just returns Seattle
+        return "Seattle";
+    }
+
+    /**
+     * @return Whether the city is valid
+     */
+    private boolean validateCity(String cityString) {
+        // For now, assume all city names are valid
+        return true;
+    }
+
+    /**
      * Gets location from user input, submits posting and returns to blank camera activity
      * @param view
      */
     public void submitLocation(View view) {
         Log.d(TAG, "inside of submitLocation, cameraAcitivity");
-        // For now, just assume location is seattle
-        city = "seattle";
-        // All details gathered, may now post
-        Button submitPostButton = (Button) findViewById(R.id.button_send);
-        submitPostButton.setEnabled(false); // prevent spam clicking
-        post();
+        EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
+        if(checkEditTextNonEmpty(editTextLocation)) {
+            // For now, just assume location is seattle
+            if(validateCity(editTextLocation.getText().toString())) {
+                // All details gathered, may now post
+                Button submitPostButton = (Button) findViewById(R.id.button_send);
+                submitPostButton.setEnabled(false); // prevent spam clicking
+                post();
+            } else {
+                Toast.makeText(mContext, "Not a valid city", Toast.LENGTH_SHORT);
+            }
+        } else {
+            Toast.makeText(mContext, "You must choose a location", Toast.LENGTH_SHORT);
+        }
     }
 
     /**
