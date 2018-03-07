@@ -271,6 +271,7 @@ public class CameraActivity extends AppCompatActivity {
      */
     private boolean validateCity(String cityString) {
         // For now, assume all city names are valid
+        Log.d(TAG, "Inside validateCity " + cityString);
         return true;
     }
 
@@ -283,16 +284,18 @@ public class CameraActivity extends AppCompatActivity {
         EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
         if(checkEditTextNonEmpty(editTextLocation)) {
             // For now, just assume location is seattle
-            if(validateCity(editTextLocation.getText().toString())) {
+            String editTextCity = editTextLocation.getText().toString();
+            Log.d(TAG, "The city name is " + editTextCity);
+            if(validateCity(editTextCity)) {
                 // All details gathered, may now post
                 Button submitPostButton = (Button) findViewById(R.id.button_send);
                 submitPostButton.setEnabled(false); // prevent spam clicking
                 post();
             } else {
-                Toast.makeText(mContext, "Not a valid city", Toast.LENGTH_SHORT);
+                Toast.makeText(mContext, "Not a valid city", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(mContext, "You must choose a location", Toast.LENGTH_SHORT);
+            Toast.makeText(mContext, "You must choose a location", Toast.LENGTH_SHORT).show();
         }
     }
 
