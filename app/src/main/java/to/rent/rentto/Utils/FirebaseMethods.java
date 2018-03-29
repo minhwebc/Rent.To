@@ -118,21 +118,18 @@ public class FirebaseMethods {
                 .setValue(user);
 
 
-//        UserAccountSettings settings = new UserAccountSettings(
-//                description,
-//                username,
-//                0,
-//                0,
-//                0,
-//                profile_photo,
-//                StringManipulation.condenseUsername(username),
-//                website,
-//                userID
-//        );
+        UserAccountSettings settings = new UserAccountSettings(
+                description,
+                username,
+                0,
+                profile_photo,
+                StringManipulation.condenseUsername(username),
+                website
+        );
 
-//        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
-//                .child(userID)
-//                .setValue(settings);
+        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                .child(userID)
+                .setValue(settings);
 
     }
 
@@ -149,16 +146,21 @@ public class FirebaseMethods {
         for(DataSnapshot ds: dataSnapshot.getChildren()){
 
             // user_account_settings node
-            if(ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))){
+            if(ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
                 //Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
 
                 UserAccountSettings hello = ds.child(userID).getValue(UserAccountSettings.class);
-                Log.d(TAG,"account setting is : " + ds.child(userID).child("username").getValue());
-                try{
+                Log.d(TAG, "account setting is : " + ds.child(userID).child("username").getValue());
+                try {
                     settings.setUsername(
                             ds.child(userID)
                                     .getValue(UserAccountSettings.class)
                                     .getUsername()
+                    );
+                    settings.setDisplay_name(
+                            ds.child(userID)
+                                .getValue(UserAccountSettings.class)
+                                .getDisplay_name()
                     );
                     settings.setProfile_photo(
                             ds.child(userID)
@@ -172,11 +174,10 @@ public class FirebaseMethods {
                     );
                     //user account settings
                     Log.d(TAG, "getUserAccountSettings: retrieved user_account_settings information: " + settings.toString());
-                }catch (NullPointerException e){
-                    Log.e(TAG, "getUserAccountSettings: NullPointerException: " + e.getMessage() );
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getUserAccountSettings: NullPointerException: " + e.getMessage());
                 }
-
-
+            }
                 // users node
                 if(ds.getKey().equals(mContext.getString(R.string.dbname_users))) {
                     Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
@@ -199,14 +200,9 @@ public class FirebaseMethods {
                                     .getValue(User.class)
                                     .getUser_id()
                     );
-
                     Log.d(TAG, "getUserAccountSettings: retrieved users information: " + user.toString());
                 }
-            }
         }
         return new UserSettings(user, settings);
-
     }
-
-
 }
