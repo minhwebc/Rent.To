@@ -12,5 +12,6 @@
     <string name="field_username">username</string>
     <string name="dbname_items">posts</string>
     <string name="dbname_user_account_settings">user_account_settings</string>
+
 </resources>
 
