@@ -24,6 +24,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import to.rent.rentto.Dialogs.ConfirmPasswordDialog;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.Models.UserSettings;
@@ -115,28 +116,27 @@ public class EditProfileFragment extends Fragment {
         final String email = mEmail.getText().toString();
         final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        //case1: the user did not change their username
+        if(!mUserSettings.getUser().getUsername().equals(username)) {
 
-                //case1: the user did not change their username
-                if(!mUserSettings.getUser().getUsername().equals(username)) {
+            checkIfUsernameExists(username);
 
-                    checkIfUsernameExists(username);
+        }
+        //case2: the user changed their username therefore we need to check uniqueness
+        if(!mUserSettings.getUser().getEmail().equals(email)){
 
-                } else {
-                    //case2: the user changed their username therefore we need to check uniqueness
+            // step1) Reauthenticate
+            //          -Confirm the password and email
+            ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
+            dialog.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
 
-                }
 
+            // step2) check if the email already is registered
+            //          -'fetchProvidersForEmail(String email)'
+            // step3) change the email
+            //          -submit the new email to the database and authentication
+        }
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     /**
