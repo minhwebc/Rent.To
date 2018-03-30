@@ -28,7 +28,8 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 
-import to.rent.rentto.Models.User;
+import to.rent.rentto.Home.HomeActivity;
+import to.rent.rentto.Models.Message;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
@@ -78,7 +79,7 @@ public class NotificationActivity extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, data);
         messagesListView.setAdapter(arrayAdapter);
 
-        Query query = mReference.child("notifications").child(mAuth.getCurrentUser().getUid());
+        Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -87,15 +88,14 @@ public class NotificationActivity extends AppCompatActivity {
                     String userKey = ds.getKey();
                     Log.d(TAG, "user key is " + userKey);
 
-                    mReference.child("users").child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                    String messageId = (String) ds.getValue();
+                    mReference.child("messages").child(messageId).addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dsSnap) {
-                            Log.d(TAG, (String) dsSnap.getKey());
-                            Log.d(TAG, dsSnap.toString());
-                            User user = dsSnap.getValue(User.class);
-                            data.add(user.getUsername() + " made you an offer");
-                            Log.d(TAG, "size of data " + data.size());
-                            arrayAdapter.notifyDataSetChanged();
+                        public void onDataChange(DataSnapshot dataSnapshot1) {
+                            for(DataSnapshot ds1 : dataSnapshot1.getChildren()) {
+                                Message retrivedMessage = ds1.getValue(Message.class);
+                                Log.d(TAG, retrivedMessage.author + " send you a message");
+                            }
                         }
 
                         @Override
@@ -103,6 +103,25 @@ public class NotificationActivity extends AppCompatActivity {
 
                         }
                     });
+
+//                    mReference.child("users").child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dsSnap) {
+//                            Log.d(TAG, (String) dsSnap.getKey());
+//                            Log.d(TAG, dsSnap.toString());
+//                            User user = dsSnap.getValue(User.class);
+//                            data.add(user.getUsername() + " made you an offer");
+//                            Log.d(TAG, "size of data " + data.size());
+//                            arrayAdapter.notifyDataSetChanged();
+//                        }
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//                        }
+//                    });
+                    data.add(messageId);
+                    arrayAdapter.notifyDataSetChanged();
+
                 }
             }
 
@@ -117,6 +136,9 @@ public class NotificationActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedText = messagesListView.getItemAtPosition(position).toString();
                 Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NotificationActivity.this, HomeActivity.class);
+
+
             }
         });
 
