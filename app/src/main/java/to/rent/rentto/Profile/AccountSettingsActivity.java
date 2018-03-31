@@ -32,13 +32,13 @@ import to.rent.rentto.Utils.SectionsStatePagerAdapter;
 
 public class AccountSettingsActivity extends AppCompatActivity{
 
+
     private static final String TAG = "AccountSettingsActivity";
     private Context mContext;
     private SectionsStatePagerAdapter pagerAdapter;
     private ViewPager mViewPager;
     private RelativeLayout mRelativeLayout;
     private static final int ACTIVITY_NUM = 2;
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
