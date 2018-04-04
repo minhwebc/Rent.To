@@ -14,8 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,8 +40,72 @@ import to.rent.rentto.Utils.FirebaseMethods;
  * Created by allencho on 2/15/18.
  */
 
-public class EditProfileFragment extends Fragment {
+public class EditProfileFragment extends Fragment implements
+    ConfirmPasswordDialog.OnConfirmPasswordListener{
     private static final String TAG = "EditProfileFragment";
+
+    @Override
+    public void onConfirmPassword(String password) {
+        Log.d(TAG, "onConfirmPassword: got the password: " + password);
+
+        // Get auth credentials from the user for re-authentication. The example below shows
+        // email and password credentials but there are multiple possible providers,
+        // such as GoogleAuthProvider or FacebookAuthProvider.
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(mAuth.getCurrentUser().getEmail(), password);
+
+        ///////////////////// Prompt the user to re-provide their sign-in credentials
+        mAuth.getCurrentUser().reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "User re-authenticated.");
+
+                            ///////////////////////check to see if the email is not already present in the database
+                            mAuth.fetchProvidersForEmail(mEmail.getText().toString()).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<ProviderQueryResult> task) {
+                                    if(task.isSuccessful()){
+                                        try{
+                                            if(task.getResult().getProviders().size() == 1){
+                                                Log.d(TAG, "onComplete: that email is already in use.");
+                                                Toast.makeText(getActivity(), "That email is already in use", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else{
+                                                Log.d(TAG, "onComplete: That email is available.");
+
+                                                //////////////////////the email is available so update it
+                                                mAuth.getCurrentUser().updateEmail(mEmail.getText().toString())
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d(TAG, "User email address updated.");
+                                                                    Toast.makeText(getActivity(), "email updated", Toast.LENGTH_SHORT).show();
+                                                                    mFirebaseMethods.updateEmail(mEmail.getText().toString());
+                                                                }
+                                                            }
+                                                        });
+                                            }
+                                        }catch (NullPointerException e){
+                                            Log.e(TAG, "onComplete: NullPointerException: "  +e.getMessage() );
+                                        }
+                                    }
+                                }
+                            });
+
+
+
+
+
+                        }else{
+                            Log.d(TAG, "onComplete: re-authentication failed.");
+                        }
+
+                    }
+                });
+    }
 
     //firebase
     private FirebaseAuth mAuth;
@@ -108,7 +177,7 @@ public class EditProfileFragment extends Fragment {
      * Retrieves the data contained in the widgets and submits it to the database
      * Before doing so it checks to make sure the username chosen in unique
      */
-    private void saveProfileSettings() {
+    private void saveProfileSettings(){
         final String displayName = mDisplayName.getText().toString();
         final String username = mUsername.getText().toString();
         final String website = mWebsite.getText().toString();
@@ -116,19 +185,24 @@ public class EditProfileFragment extends Fragment {
         final String email = mEmail.getText().toString();
         final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
 
-        //case1: the user did not change their username
-        if(!mUserSettings.getUser().getUsername().equals(username)) {
+        Log.d(TAG, "saveProfileSettings: displayName: "+ displayName);
+        Log.d(TAG, "saveProfileSettings: website: " + website);
+        Log.d(TAG, "saveProfileSettings: description " + description);
+        Log.d(TAG, "saveProfileSettings: phoneNumber: " + phoneNumber);
+
+        //case1: if the user made a change to their username
+        if(!mUserSettings.getUser().getUsername().equals(username)){
 
             checkIfUsernameExists(username);
-
         }
-        //case2: the user changed their username therefore we need to check uniqueness
+        //case2: if the user made a change to their email
         if(!mUserSettings.getUser().getEmail().equals(email)){
 
             // step1) Reauthenticate
             //          -Confirm the password and email
             ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
             dialog.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
+            dialog.setTargetFragment(EditProfileFragment.this, 1);
 
 
             // step2) check if the email already is registered
@@ -137,6 +211,29 @@ public class EditProfileFragment extends Fragment {
             //          -submit the new email to the database and authentication
         }
 
+        /**
+         * change the rest of the settings that do not require uniqueness
+         */
+        if(!mUserSettings.getSettings().getDisplay_name().equals(displayName)){
+            Log.d(TAG, "saveProfileSettings: displayName: "+ displayName);
+            //update displayname
+            mFirebaseMethods.updateUserAccountSettings(displayName, null, null, 0);
+        }
+        if(!mUserSettings.getSettings().getWebsite().equals(website)){
+            Log.d(TAG, "saveProfileSettings: website: " + website);
+            //update website
+            mFirebaseMethods.updateUserAccountSettings(null, website, null, 0);
+        }
+        if(!mUserSettings.getSettings().getDescription().equals(description)){
+            Log.d(TAG, "saveProfileSettings: description " + description);
+            //update description
+            mFirebaseMethods.updateUserAccountSettings(null, null, description, 0);
+        }
+        if(!mUserSettings.getSettings().getProfile_photo().equals(phoneNumber)){
+            Log.d(TAG, "saveProfileSettings: phoneNumber: " + phoneNumber);
+            //update phoneNumber
+            mFirebaseMethods.updateUserAccountSettings(null, null, null, phoneNumber);
+        }
     }
 
     /**
@@ -256,4 +353,6 @@ public class EditProfileFragment extends Fragment {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+
 }
