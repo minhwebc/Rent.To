@@ -44,10 +44,8 @@ public class CameraActivity extends AppCompatActivity {
     static final int MAX_PRICE = 10000;
     static final int REQUEST_CAMERA_ROLL = 2;   // the request code number assigned to camera roll
     android.support.v4.app.FragmentManager fragmentManager;  // handles fragment switching
-    Button confirmButton;
-    Button cameraRollButton;
-    Button cameraButton;
-    Button cancelButton;
+    Button rightButton;
+    Button leftButton;
     Uri imageUri;  // the uri, for the image (for uploading)
     ImageView imageView;  // Where the selected image will be displayed
     String title; // the title, for post
@@ -67,23 +65,58 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        cameraButton = (Button) findViewById(R.id.buttonCamera);
-        cameraRollButton = (Button) findViewById(R.id.buttonCameraRoll);
-        confirmButton = (Button) findViewById(R.id.buttonConfirmPicture);
-        cancelButton = (Button) findViewById(R.id.buttonCancel);
-        imageView = (ImageView) findViewById(R.id.cameraImageView);
-        confirmButton.setVisibility(View.GONE); // hides on start, only after picture is selected
-        cancelButton.setVisibility(View.GONE);
+        AddPhotoFragment addPhotoFragment = new AddPhotoFragment();
+        fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.relLayout2, addPhotoFragment, "photo").commit();
         setupBottomNavigationView();
+    }
+
+    /**
+     * Buttons and imageView are connected
+     */
+    private void initializeButtons(){
+        rightButton = (Button) findViewById(R.id.buttonRight);
+        leftButton = (Button) findViewById(R.id.buttonLeft);
+        imageView = (ImageView) findViewById(R.id.cameraImageView);
+    }
+
+    /**
+     * Right button is pressed
+     * If the text is "Take Photo", it will launch the camera
+     * Otherwise, it will confirm that the photo is there
+     * @param view
+     */
+    public void rightButtonPressed(View view) {
+        initializeButtons();
+        if(rightButton.getText().toString().equalsIgnoreCase("Take Photo")) {
+            launchCamera(view);
+        } else {
+            launchConfirm(view);
+        }
+    }
+
+    /**
+     * Left button is pressed
+     * If the text is "Select Photo", it will launch the camera roll
+     * Otherwise, it will cancel and bring the user back to previous step
+     * @param view
+     */
+    public void leftButtonPressed(View view) {
+        initializeButtons();
+        if(leftButton.getText().toString().equalsIgnoreCase("Select Photo")) {
+            launchCameraRoll(view);
+        } else {
+            launchCancel(view);
+        }
     }
 
     /**
      * Launches the camera, and feeds result to imageView.
      * @param view
      */
-    public void launchCamera(View view) {
+    private void launchCamera(View view) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Take a picture and pass results to onActivityResult
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
 
@@ -91,7 +124,7 @@ public class CameraActivity extends AppCompatActivity {
      * Launches the camera roll, and feeds result to imageView.
      * @param view
      */
-    public void launchCameraRoll(View view) {
+    private void launchCameraRoll(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(intent, REQUEST_CAMERA_ROLL);
     }
@@ -100,29 +133,19 @@ public class CameraActivity extends AppCompatActivity {
      * Switches to addTitleFragment and makes all elements from CameraActivity relLayout2 invisible
      * @param view
      */
-    public void launchConfirm(View view) {
+    private void launchConfirm(View view) {
         AddTitleFragment addTitleFragment = new AddTitleFragment();
-        fragmentManager= getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.relLayout2, addTitleFragment, "title").addToBackStack(null).commit();
-        imageView.setVisibility(View.GONE);
-        confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
-        cancelButton.setVisibility(View.GONE);
+        changeFragment("photo", addTitleFragment, "title");
     }
 
     /**
      * Resets CameraActivity to default viewing state
      * @param view
      */
-    public void launchCancel(View view) {
-        confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
-        cancelButton.setVisibility(View.GONE);
-        cameraRollButton.setVisibility(View.VISIBLE); // since no pic is selected
-        cameraButton.setVisibility(View.VISIBLE);
+    private void launchCancel(View view) {
+        rightButton.setText("Take Photo");
+        leftButton.setText("Select Photo");
         imageView.setImageResource(0);
-        imageView.setVisibility(View.VISIBLE);
-        imageUri = null;
-        uploadable = null;
     }
 
     /**
@@ -133,6 +156,10 @@ public class CameraActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK) {
+            rightButton.setText("Next");
+            leftButton.setText("Cancel");
+        }
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             //Get the photo
             Bundle extras = data.getExtras();
@@ -142,12 +169,6 @@ public class CameraActivity extends AppCompatActivity {
         } else if(requestCode == REQUEST_CAMERA_ROLL && resultCode == RESULT_OK) {
             imageUri = data.getData();
             imageView.setImageURI(imageUri);
-        }
-        if(resultCode == RESULT_OK) {
-            confirmButton.setVisibility(View.VISIBLE);
-            cancelButton.setVisibility(View.VISIBLE);
-            cameraButton.setVisibility(View.GONE);
-            cameraRollButton.setVisibility(View.GONE);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -356,9 +377,6 @@ public class CameraActivity extends AppCompatActivity {
         userItemsRef.child(userUid).child(key).setValue(userItemsPostValues);
         Toast.makeText(mContext, "Post Submitted!", Toast.LENGTH_SHORT).show();
         // Removes fragment, back to default cameraActivity
-        android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag("location");
-        fragmentManager.beginTransaction().remove(oldFragment).commit();
-        launchCancel(null);
-        imageView.setVisibility(View.VISIBLE);
+        finish();
     }
 }
