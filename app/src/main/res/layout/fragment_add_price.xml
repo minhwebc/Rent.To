@@ -33,6 +33,7 @@ android:layout_height="match_parent">
         android:inputType="numberDecimal"
         android:textAlignment="center" />
 
+
     <TextView
         android:id="@+id/textViewPer"
         android:layout_width="100dp"

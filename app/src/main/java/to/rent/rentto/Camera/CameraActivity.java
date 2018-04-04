@@ -228,7 +228,7 @@ public class CameraActivity extends AppCompatActivity {
         if(checkEditTextNonEmpty(editTextPrice)) {
             try {
                 timeType = timePicker.getDisplayedValues()[timePicker.getValue()];
-                double rate = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.00)/ 100.00;
+                double rate = Math.round(Double.parseDouble(editTextPrice.getText().toString().substring(1)) * 100.00)/ 100.00;
                 price = String.format("%.2f", rate);
 
                 if(rate > MAX_PRICE) {
