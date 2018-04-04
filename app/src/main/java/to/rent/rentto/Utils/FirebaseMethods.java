@@ -49,6 +49,10 @@ public class FirebaseMethods {
         }
     }
 
+    /**
+     * update username in the 'users' node and 'user_account_settings' node
+     * @param username
+     */
     public void updateUsername(String username) {
         Log.d(TAG, "updateUsername: updating username to: " + username);
         myRef.child(mContext.getString(R.string.dbname_users))
@@ -61,6 +65,21 @@ public class FirebaseMethods {
                 .child(mContext.getString(R.string.field_username))
                 .setValue(username);
     }
+
+    /**
+     * update the email in the 'user's' node
+     * @param email
+     */
+    public void updateEmail(String email){
+        Log.d(TAG, "updateEmail: upadting email to: " + email);
+
+        myRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.field_email))
+                .setValue(email);
+
+    }
+
     public void sendVerificationEmail(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
