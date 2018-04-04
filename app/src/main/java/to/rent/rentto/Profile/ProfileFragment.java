@@ -109,8 +109,8 @@ public class ProfileFragment extends Fragment {
                 .into(mProfilePhoto);
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
-        mWebsite.setText("Some website");
-        mDescription.setText("Description");
+        mWebsite.setText(settings.getWebsite());
+        mDescription.setText(settings.getDescription());
         //mPosts.setText(String.valueOf(settings.getPosts()));
         mProgressBar.setVisibility(View.GONE);
 

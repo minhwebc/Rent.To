@@ -177,7 +177,7 @@ public class EditProfileFragment extends Fragment implements
      * Retrieves the data contained in the widgets and submits it to the database
      * Before doing so it checks to make sure the username chosen in unique
      */
-    private void saveProfileSettings() {
+    private void saveProfileSettings(){
         final String displayName = mDisplayName.getText().toString();
         final String username = mUsername.getText().toString();
         final String website = mWebsite.getText().toString();
@@ -185,13 +185,17 @@ public class EditProfileFragment extends Fragment implements
         final String email = mEmail.getText().toString();
         final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
 
-        //case1: the user did not change their username
-        if(!mUserSettings.getUser().getUsername().equals(username)) {
+        Log.d(TAG, "saveProfileSettings: displayName: "+ displayName);
+        Log.d(TAG, "saveProfileSettings: website: " + website);
+        Log.d(TAG, "saveProfileSettings: description " + description);
+        Log.d(TAG, "saveProfileSettings: phoneNumber: " + phoneNumber);
+
+        //case1: if the user made a change to their username
+        if(!mUserSettings.getUser().getUsername().equals(username)){
 
             checkIfUsernameExists(username);
-
         }
-        //case2: the user changed their username therefore we need to check uniqueness
+        //case2: if the user made a change to their email
         if(!mUserSettings.getUser().getEmail().equals(email)){
 
             // step1) Reauthenticate
@@ -200,12 +204,36 @@ public class EditProfileFragment extends Fragment implements
             dialog.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
             dialog.setTargetFragment(EditProfileFragment.this, 1);
 
+
             // step2) check if the email already is registered
             //          -'fetchProvidersForEmail(String email)'
             // step3) change the email
             //          -submit the new email to the database and authentication
         }
 
+        /**
+         * change the rest of the settings that do not require uniqueness
+         */
+        if(!mUserSettings.getSettings().getDisplay_name().equals(displayName)){
+            Log.d(TAG, "saveProfileSettings: displayName: "+ displayName);
+            //update displayname
+            mFirebaseMethods.updateUserAccountSettings(displayName, null, null, 0);
+        }
+        if(!mUserSettings.getSettings().getWebsite().equals(website)){
+            Log.d(TAG, "saveProfileSettings: website: " + website);
+            //update website
+            mFirebaseMethods.updateUserAccountSettings(null, website, null, 0);
+        }
+        if(!mUserSettings.getSettings().getDescription().equals(description)){
+            Log.d(TAG, "saveProfileSettings: description " + description);
+            //update description
+            mFirebaseMethods.updateUserAccountSettings(null, null, description, 0);
+        }
+        if(!mUserSettings.getSettings().getProfile_photo().equals(phoneNumber)){
+            Log.d(TAG, "saveProfileSettings: phoneNumber: " + phoneNumber);
+            //update phoneNumber
+            mFirebaseMethods.updateUserAccountSettings(null, null, null, phoneNumber);
+        }
     }
 
     /**
