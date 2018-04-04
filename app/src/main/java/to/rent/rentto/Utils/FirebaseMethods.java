@@ -244,6 +244,17 @@ public class FirebaseMethods {
                                     .getValue(UserAccountSettings.class)
                                     .getPosts()
                     );
+                    settings.setWebsite(
+                            ds.child(userID)
+                                .getValue(UserAccountSettings.class)
+                                .getWebsite()
+                    );
+                    settings.setDescription(
+                            ds.child(userID)
+                                .getValue(UserAccountSettings.class)
+                                .getDescription()
+                    );
+
                     //user account settings
                     Log.d(TAG, "getUserAccountSettings: retrieved user_account_settings information: " + settings.toString());
                 } catch (NullPointerException e) {
