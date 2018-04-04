@@ -11,23 +11,23 @@ android:layout_height="match_parent">
     >
 
     <TextView
+        android:id="@+id/textView9"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:textColor="@color/black"
-        android:layout_alignBottom="@+id/editTextPrice"
-        android:layout_marginBottom="8dp"
-        android:layout_toStartOf="@+id/timePicker"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/editTextPrice"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="9dp"
         android:text="$"
-        android:textSize="50dp"
-        android:id="@+id/textView9" />
+        android:textColor="@color/black"
+        android:textSize="50dp" />
 
     <EditText
         android:id="@+id/editTextPrice"
-        android:layout_width="200dp"
+        android:layout_width="120dp"
         android:layout_height="80dp"
-        android:layout_above="@+id/timePicker"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="44dp"
+        android:layout_alignTop="@+id/timePicker"
+        android:layout_toEndOf="@+id/textView9"
         android:layout_weight="5"
         android:hint="Price"
         android:inputType="numberDecimal"
@@ -37,9 +37,10 @@ android:layout_height="match_parent">
         android:id="@+id/textViewPer"
         android:layout_width="100dp"
         android:layout_height="25dp"
-        android:layout_alignBottom="@+id/timePicker"
-        android:layout_marginBottom="18dp"
-        android:layout_toStartOf="@+id/button_send"
+        android:layout_alignBaseline="@+id/textView9"
+        android:layout_alignBottom="@+id/textView9"
+        android:layout_alignStart="@+id/button_send"
+        android:layout_marginStart="24dp"
         android:text="Per"
         android:textAlignment="center" />
 
@@ -48,9 +49,9 @@ android:layout_height="match_parent">
         android:layout_width="120dp"
         android:layout_height="80dp"
         android:layout_above="@+id/button_send"
-        android:layout_alignStart="@+id/button_send"
-        android:layout_marginBottom="45dp"
-        android:layout_marginStart="54dp" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="137dp"
+        android:layout_marginEnd="17dp" />
 
 
     <Button

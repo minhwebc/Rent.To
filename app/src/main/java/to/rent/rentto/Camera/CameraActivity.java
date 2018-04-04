@@ -270,8 +270,13 @@ public class CameraActivity extends AppCompatActivity {
      */
     private boolean validateCity(String cityString) {
         // For now, assume all city names are valid
-        Log.d(TAG, "Inside validateCity " + cityString);
-        return true;
+        if(true) {
+            city = cityString;
+            Log.d(TAG, "Inside validateCity " + cityString);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

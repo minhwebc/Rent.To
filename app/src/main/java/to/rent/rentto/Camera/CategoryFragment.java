@@ -42,6 +42,9 @@ public class CategoryFragment extends android.support.v4.app.Fragment {
 
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
+
+        // set spinner default value to 0 index
+        spinner.setSelection(0);
     }
 
     // Hooks up conditionSeeker SeekBar
@@ -49,6 +52,7 @@ public class CategoryFragment extends android.support.v4.app.Fragment {
     private void initiateConditionSeekBar(View view) {
         // Hook up condition SeekBar and conditionTextView
         SeekBar conditionSeeker = (SeekBar) view.findViewById(R.id.conditionSeeker);
+
         conditionTextView = (TextView) view.findViewById(R.id.conditionTextView);
         conditionSeeker.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             int progressChangedValue = 0;
@@ -93,5 +97,10 @@ public class CategoryFragment extends android.support.v4.app.Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+
+        // Set seekbar default index to 0
+        conditionSeeker.setProgress(0);
+        conditionTextView.setText(conditionValues[0]);
+
     }
 }
