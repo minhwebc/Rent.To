@@ -21,15 +21,6 @@ android:layout_height="match_parent">
         android:hint="Location"
         android:textAlignment="center" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Location Fragment"
-        android:layout_marginTop="50px"
-        android:layout_centerHorizontal="false"
-        android:textSize="20sp"
-        android:id="@+id/textView" />
-
     <Button
         android:id="@+id/button_send"
         android:layout_width="wrap_content"
@@ -39,6 +30,16 @@ android:layout_height="match_parent">
         android:layout_marginBottom="119dp"
         android:onClick="submitLocation"
         android:text="Post" />
+
+    <Button
+        android:id="@+id/getLocationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editTextLocation"
+        android:layout_alignStart="@+id/editTextLocation"
+        android:layout_centerVertical="true"
+        android:onClick="getLocation"
+        android:text="Get Current Location" />
 
 
 </RelativeLayout>

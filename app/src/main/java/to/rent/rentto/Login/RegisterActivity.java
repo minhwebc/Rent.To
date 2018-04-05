@@ -157,7 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
                 mUsername = username + append;
 
                 //add new user to the database
-                firebaseMethods.addNewUser(email, mUsername, "", "", "");
+                firebaseMethods.addNewUser(email, mUsername, "No Description", "No Website", "");
 
                 Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
 

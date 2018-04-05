@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +28,6 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import to.rent.rentto.R;
@@ -43,10 +44,8 @@ public class CameraActivity extends AppCompatActivity {
     static final int MAX_PRICE = 10000;
     static final int REQUEST_CAMERA_ROLL = 2;   // the request code number assigned to camera roll
     android.support.v4.app.FragmentManager fragmentManager;  // handles fragment switching
-    Button confirmButton;
-    Button cameraRollButton;
-    Button cameraButton;
-    Button cancelButton;
+    Button rightButton;
+    Button leftButton;
     Uri imageUri;  // the uri, for the image (for uploading)
     ImageView imageView;  // Where the selected image will be displayed
     String title; // the title, for post
@@ -66,23 +65,58 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        cameraButton = (Button) findViewById(R.id.buttonCamera);
-        cameraRollButton = (Button) findViewById(R.id.buttonCameraRoll);
-        confirmButton = (Button) findViewById(R.id.buttonConfirmPicture);
-        cancelButton = (Button) findViewById(R.id.buttonCancel);
-        imageView = (ImageView) findViewById(R.id.cameraImageView);
-        confirmButton.setVisibility(View.GONE); // hides on start, only after picture is selected
-        cancelButton.setVisibility(View.GONE);
+        AddPhotoFragment addPhotoFragment = new AddPhotoFragment();
+        fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.relLayout2, addPhotoFragment, "photo").commit();
         setupBottomNavigationView();
+    }
+
+    /**
+     * Buttons and imageView are connected
+     */
+    private void initializeButtons(){
+        rightButton = (Button) findViewById(R.id.buttonRight);
+        leftButton = (Button) findViewById(R.id.buttonLeft);
+        imageView = (ImageView) findViewById(R.id.cameraImageView);
+    }
+
+    /**
+     * Right button is pressed
+     * If the text is "Take Photo", it will launch the camera
+     * Otherwise, it will confirm that the photo is there
+     * @param view
+     */
+    public void rightButtonPressed(View view) {
+        initializeButtons();
+        if(rightButton.getText().toString().equalsIgnoreCase("Take Photo")) {
+            launchCamera(view);
+        } else {
+            launchConfirm(view);
+        }
+    }
+
+    /**
+     * Left button is pressed
+     * If the text is "Select Photo", it will launch the camera roll
+     * Otherwise, it will cancel and bring the user back to previous step
+     * @param view
+     */
+    public void leftButtonPressed(View view) {
+        initializeButtons();
+        if(leftButton.getText().toString().equalsIgnoreCase("Select Photo")) {
+            launchCameraRoll(view);
+        } else {
+            launchCancel(view);
+        }
     }
 
     /**
      * Launches the camera, and feeds result to imageView.
      * @param view
      */
-    public void launchCamera(View view) {
+    private void launchCamera(View view) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Take a picture and pass results to onActivityResult
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
 
@@ -90,7 +124,7 @@ public class CameraActivity extends AppCompatActivity {
      * Launches the camera roll, and feeds result to imageView.
      * @param view
      */
-    public void launchCameraRoll(View view) {
+    private void launchCameraRoll(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(intent, REQUEST_CAMERA_ROLL);
     }
@@ -99,29 +133,19 @@ public class CameraActivity extends AppCompatActivity {
      * Switches to addTitleFragment and makes all elements from CameraActivity relLayout2 invisible
      * @param view
      */
-    public void launchConfirm(View view) {
+    private void launchConfirm(View view) {
         AddTitleFragment addTitleFragment = new AddTitleFragment();
-        fragmentManager= getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.relLayout2, addTitleFragment, "title").addToBackStack(null).commit();
-        imageView.setVisibility(View.GONE);
-        confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
-        cancelButton.setVisibility(View.GONE);
+        changeFragment("photo", addTitleFragment, "title");
     }
 
     /**
      * Resets CameraActivity to default viewing state
      * @param view
      */
-    public void launchCancel(View view) {
-        confirmButton.setVisibility(View.GONE); // only visible when a picture is selected
-        cancelButton.setVisibility(View.GONE);
-        cameraRollButton.setVisibility(View.VISIBLE); // since no pic is selected
-        cameraButton.setVisibility(View.VISIBLE);
+    private void launchCancel(View view) {
+        rightButton.setText("Take Photo");
+        leftButton.setText("Select Photo");
         imageView.setImageResource(0);
-        imageView.setVisibility(View.VISIBLE);
-        imageUri = null;
-        uploadable = null;
     }
 
     /**
@@ -132,6 +156,10 @@ public class CameraActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK) {
+            rightButton.setText("Next");
+            leftButton.setText("Cancel");
+        }
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             //Get the photo
             Bundle extras = data.getExtras();
@@ -141,12 +169,6 @@ public class CameraActivity extends AppCompatActivity {
         } else if(requestCode == REQUEST_CAMERA_ROLL && resultCode == RESULT_OK) {
             imageUri = data.getData();
             imageView.setImageURI(imageUri);
-        }
-        if(resultCode == RESULT_OK) {
-            confirmButton.setVisibility(View.VISIBLE);
-            cancelButton.setVisibility(View.VISIBLE);
-            cameraButton.setVisibility(View.GONE);
-            cameraRollButton.setVisibility(View.GONE);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -170,8 +192,6 @@ public class CameraActivity extends AppCompatActivity {
      * @param newTag    The tag for the new fragment
      */
     private void changeFragment(String oldTag, android.support.v4.app.Fragment fragment, String newTag) {
-        //android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag(oldTag);
-        //fragmentManager.beginTransaction().remove(oldFragment).addToBackStack(null).commit();
         fragmentManager.beginTransaction().replace(R.id.relLayout2, fragment, newTag).addToBackStack(null).commit();
     }
 
@@ -207,12 +227,12 @@ public class CameraActivity extends AppCompatActivity {
      * @param view
      */
     public void submitCategory(View view) {
-        NumberPicker categoryPicker = (NumberPicker) findViewById(R.id.categoryPicker);
-        category = categoryPicker.getDisplayedValues()[categoryPicker.getValue()];
+        Spinner categorySpinner = (Spinner) findViewById(R.id.spinnerCategory);
+        category = categorySpinner.getSelectedItem().toString();
         EditText editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         description = editTextDescription.getText().toString();
-        NumberPicker conditionPicker = (NumberPicker) findViewById(R.id.conditionPicker);
-        condition = conditionPicker.getDisplayedValues()[conditionPicker.getValue()];
+        TextView conditionTextView = (TextView) findViewById(R.id.conditionTextView);
+        condition = conditionTextView.getText().toString();
         // Replace category fragment with price fragment
         PriceFragment priceFragment = new PriceFragment();
         changeFragment("category", priceFragment, "price");
@@ -229,7 +249,7 @@ public class CameraActivity extends AppCompatActivity {
         if(checkEditTextNonEmpty(editTextPrice)) {
             try {
                 timeType = timePicker.getDisplayedValues()[timePicker.getValue()];
-                double rate = Math.round(Double.parseDouble(editTextPrice.getText().toString()) * 100.00)/ 100.00;
+                double rate = Math.round(Double.parseDouble(editTextPrice.getText().toString().substring(1)) * 100.00)/ 100.00;
                 price = String.format("%.2f", rate);
 
                 if(rate > MAX_PRICE) {
@@ -248,17 +268,60 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
+     * Sets location to current location
+     * @param view
+     */
+    public void getLocation(View view) {
+        EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
+        String cityName = getCityName();
+        editTextLocation.setText(cityName);
+    }
+
+    /**
+     * Gets the zip code of the device's current location
+     * @return The zip code
+     */
+    private String getCityName() {
+        // For now, just returns Seattle
+        return "Seattle";
+    }
+
+    /**
+     * @return Whether the city is valid
+     */
+    private boolean validateCity(String cityString) {
+        // For now, assume all city names are valid
+        if(true) {
+            city = cityString;
+            Log.d(TAG, "Inside validateCity " + cityString);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Gets location from user input, submits posting and returns to blank camera activity
      * @param view
      */
     public void submitLocation(View view) {
         Log.d(TAG, "inside of submitLocation, cameraAcitivity");
-        // For now, just assume location is seattle
-        city = "seattle";
-        // All details gathered, may now post
-        Button submitPostButton = (Button) findViewById(R.id.button_send);
-        submitPostButton.setEnabled(false); // prevent spam clicking
-        post();
+        EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
+        if(checkEditTextNonEmpty(editTextLocation)) {
+            // For now, just assume location is seattle
+            String editTextCity = editTextLocation.getText().toString();
+            Log.d(TAG, "The city name is " + editTextCity);
+            if(validateCity(editTextCity)) {
+                // All details gathered, may now post
+                Button submitPostButton = (Button) findViewById(R.id.button_send);
+                submitPostButton.setEnabled(false); // prevent spam clicking
+                post();
+            } else {
+                Toast.makeText(mContext, "Not a valid city", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(mContext, "You must choose a location", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -314,9 +377,6 @@ public class CameraActivity extends AppCompatActivity {
         userItemsRef.child(userUid).child(key).setValue(userItemsPostValues);
         Toast.makeText(mContext, "Post Submitted!", Toast.LENGTH_SHORT).show();
         // Removes fragment, back to default cameraActivity
-        android.support.v4.app.Fragment oldFragment = fragmentManager.findFragmentByTag("location");
-        fragmentManager.beginTransaction().remove(oldFragment).commit();
-        launchCancel(null);
-        imageView.setVisibility(View.VISIBLE);
+        finish();
     }
 }

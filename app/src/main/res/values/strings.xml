@@ -9,9 +9,17 @@
     <!-- Firebase database tables -->
     <string name="dbname_users">users</string>
     <string name="dbname_photos">photos</string>
-    <string name="field_username">username</string>
     <string name="dbname_items">posts</string>
     <string name="dbname_user_account_settings">users</string>
+    <string name="field_username">username</string>
+    <string name="field_email">email</string>
+    <string name="field_display_name">display_name</string>
+    <string name="field_website">website</string>
+    <string name="field_description">description</string>
+    <string name="field_phone_number">phone_number</string>
+
+    <!-- Dialog -->
+    <string name="confirm_password_dialog">ConfirmPasswordDialog</string>
 
     <!-- Chat -->
     <string name="input_placeholder">Write a message</string>

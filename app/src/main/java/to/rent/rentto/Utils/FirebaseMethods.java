@@ -49,6 +49,78 @@ public class FirebaseMethods {
         }
     }
 
+    /**
+     * Update 'user_account_settings' node for the current user
+     * @param displayName
+     * @param website
+     * @param description
+     * @param phoneNumber
+     */
+    public void updateUserAccountSettings(String displayName, String website, String description, long phoneNumber){
+
+        Log.d(TAG, "updateUserAccountSettings: updating user account settings.");
+
+        if(displayName != null){
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_display_name))
+                    .setValue(displayName);
+        }
+
+
+        if(website != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_website))
+                    .setValue(website);
+        }
+
+        if(description != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_description))
+                    .setValue(description);
+        }
+
+        if(phoneNumber != 0) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_phone_number))
+                    .setValue(phoneNumber);
+        }
+    }
+
+    /**
+     * update username in the 'users' node and 'user_account_settings' node
+     * @param username
+     */
+    public void updateUsername(String username) {
+        Log.d(TAG, "updateUsername: updating username to: " + username);
+        myRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.field_username))
+                .setValue(username);
+
+        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                .child(userID)
+                .child(mContext.getString(R.string.field_username))
+                .setValue(username);
+    }
+
+    /**
+     * update the email in the 'user's' node
+     * @param email
+     */
+    public void updateEmail(String email){
+        Log.d(TAG, "updateEmail: upadting email to: " + email);
+
+        myRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.field_email))
+                .setValue(email);
+
+    }
+
     public void sendVerificationEmail(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -118,21 +190,18 @@ public class FirebaseMethods {
                 .setValue(user);
 
 
-//        UserAccountSettings settings = new UserAccountSettings(
-//                description,
-//                username,
-//                0,
-//                0,
-//                0,
-//                profile_photo,
-//                StringManipulation.condenseUsername(username),
-//                website,
-//                userID
-//        );
+        UserAccountSettings settings = new UserAccountSettings(
+                description,
+                username,
+                0,
+                profile_photo,
+                StringManipulation.condenseUsername(username),
+                website
+        );
 
-//        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
-//                .child(userID)
-//                .setValue(settings);
+        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                .child(userID)
+                .setValue(settings);
 
     }
 
@@ -149,16 +218,21 @@ public class FirebaseMethods {
         for(DataSnapshot ds: dataSnapshot.getChildren()){
 
             // user_account_settings node
-            if(ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))){
+            if(ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
                 //Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
 
                 UserAccountSettings hello = ds.child(userID).getValue(UserAccountSettings.class);
-                Log.d(TAG,"account setting is : " + ds.child(userID).child("username").getValue());
-                try{
+                Log.d(TAG, "account setting is : " + ds.child(userID).child("username").getValue());
+                try {
                     settings.setUsername(
                             ds.child(userID)
                                     .getValue(UserAccountSettings.class)
                                     .getUsername()
+                    );
+                    settings.setDisplay_name(
+                            ds.child(userID)
+                                .getValue(UserAccountSettings.class)
+                                .getDisplay_name()
                     );
                     settings.setProfile_photo(
                             ds.child(userID)
@@ -170,13 +244,23 @@ public class FirebaseMethods {
                                     .getValue(UserAccountSettings.class)
                                     .getPosts()
                     );
+                    settings.setWebsite(
+                            ds.child(userID)
+                                .getValue(UserAccountSettings.class)
+                                .getWebsite()
+                    );
+                    settings.setDescription(
+                            ds.child(userID)
+                                .getValue(UserAccountSettings.class)
+                                .getDescription()
+                    );
+
                     //user account settings
                     Log.d(TAG, "getUserAccountSettings: retrieved user_account_settings information: " + settings.toString());
-                }catch (NullPointerException e){
-                    Log.e(TAG, "getUserAccountSettings: NullPointerException: " + e.getMessage() );
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getUserAccountSettings: NullPointerException: " + e.getMessage());
                 }
-
-
+            }
                 // users node
                 if(ds.getKey().equals(mContext.getString(R.string.dbname_users))) {
                     Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
@@ -199,14 +283,9 @@ public class FirebaseMethods {
                                     .getValue(User.class)
                                     .getUser_id()
                     );
-
                     Log.d(TAG, "getUserAccountSettings: retrieved users information: " + user.toString());
                 }
-            }
         }
         return new UserSettings(user, settings);
-
     }
-
-
 }
