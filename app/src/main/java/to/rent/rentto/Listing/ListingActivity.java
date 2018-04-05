@@ -135,7 +135,7 @@ public class ListingActivity extends AppCompatActivity {
                                                     DatabaseReference messageRef = mReference.child("messages");
                                                     final DatabaseReference newMessageID = messageRef.push(); //this will be included into both the offered and the renter as well
                                                     newMessageID.setValue(currentUser.getUser_id());
-                                                    Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your item", "date here");
+                                                    Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your " + mItem.title, "date here", true, currentUser.getUser_id());
                                                     //push message to the message table
                                                     newMessageID.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
                                                         @Override

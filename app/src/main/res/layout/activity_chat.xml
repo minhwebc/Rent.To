@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:clipToPadding="false"
     android:focusableInTouchMode="true"
-    tools:context="com.example.scaledrone.chat.MainActivity">
+    tools:context="to.rent.rentto.Messages.ChatActivity">
 
     <ListView
         android:layout_width="match_parent"
@@ -34,6 +34,7 @@
             android:text="" />
 
         <ImageButton
+            android:id="@+id/SendMessageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

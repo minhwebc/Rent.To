@@ -28,7 +28,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 
-import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
@@ -136,9 +135,9 @@ public class NotificationActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedText = messagesListView.getItemAtPosition(position).toString();
                 Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(NotificationActivity.this, HomeActivity.class);
-
-
+                Intent intent = new Intent(NotificationActivity.this, ChatActivity.class);
+                intent.putExtra("MessageChannelID", selectedText);
+                startActivity(intent);
             }
         });
 
