@@ -25,6 +25,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.util.UUID;
 
 import to.rent.rentto.Models.Item;
+import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
@@ -131,10 +132,51 @@ public class ListingActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                 if(databaseError == null) {
-                                                    CharSequence text = "Offer Sent!";
-                                                    int duration = Toast.LENGTH_SHORT;
-                                                    Toast toast = Toast.makeText(mContext, text, duration);
-                                                    toast.show();
+                                                    DatabaseReference messageRef = mReference.child("messages");
+                                                    final DatabaseReference newMessageID = messageRef.push(); //this will be included into both the offered and the renter as well
+                                                    newMessageID.setValue(currentUser.getUser_id());
+                                                    Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your " + mItem.title, "date here", true, currentUser.getUser_id());
+                                                    //push message to the message table
+                                                    newMessageID.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
+                                                        @Override
+                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                            if(databaseError == null) {
+                                                                //set message to the current user
+                                                                mReference.child("users").child(currentUser.getUser_id()).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
+                                                                    @Override
+                                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                        if(databaseError == null) {
+                                                                            //Set the message to the renter
+                                                                            mReference.child("users").child(mItem.userUID).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
+                                                                                @Override
+                                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                    if(databaseError == null) {
+                                                                                        int duration = Toast.LENGTH_SHORT;
+                                                                                        Toast toast = Toast.makeText(mContext, "Offer sent", duration);
+                                                                                        toast.show();
+                                                                                    } else {
+
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        } else {
+                                                                            int duration = Toast.LENGTH_SHORT;
+                                                                            Toast toast = Toast.makeText(mContext, "error at pushing new message to the currentUser", duration);
+                                                                            toast.show();
+                                                                        }
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                int duration = Toast.LENGTH_SHORT;
+                                                                Toast toast = Toast.makeText(mContext, "error at pushing new message", duration);
+                                                                toast.show();
+                                                            }
+                                                        }
+                                                    });
+//                                                    CharSequence text = "Offer Sent!";
+//                                                    int duration = Toast.LENGTH_SHORT;
+//                                                    Toast toast = Toast.makeText(mContext, text, duration);
+//                                                    toast.show();
                                                 }
                                             }
                                         });

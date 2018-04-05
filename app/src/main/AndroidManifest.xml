@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="to.rent.rentto">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,23 +18,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Profile.ProfileActivity"/>
-        <activity android:name=".Share.ShareActivity"/>
-        <activity android:name=".Profile.AccountSettingsActivity"/>
-        <activity android:name=".Listing.ListingActivity"/>
-        <activity android:name=".Listing.ItemsListActivity"/>
-        <activity android:name=".Camera.CameraActivity"></activity>
-        <activity android:name=".Login.LoginActivity"></activity>
-        <activity android:name=".Login.RegisterActivity"></activity>
-        <activity android:name=".Messages.NotificationActivity"></activity>
-
+        <activity android:name=".Profile.ProfileActivity" />
+        <activity android:name=".Share.ShareActivity" />
+        <activity android:name=".Profile.AccountSettingsActivity" />
+        <activity android:name=".Listing.ListingActivity" />
+        <activity android:name=".Listing.ItemsListActivity" />
+        <activity android:name=".Camera.CameraActivity" />
+        <activity android:name=".Login.LoginActivity" />
+        <activity android:name=".Login.RegisterActivity" />
+        <activity android:name=".Messages.NotificationActivity" />
 
         <service
             android:name=".Messages.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
@@ -41,11 +41,11 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-
+        <activity android:name=".Messages.ChatActivity"></activity>
     </application>
 
 </manifest>
