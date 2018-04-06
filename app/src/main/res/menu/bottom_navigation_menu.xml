@@ -4,6 +4,12 @@
         android:icon="@drawable/ic_home"
         android:title=""></item>
 
+    <item android:id="@+id/something"
+        android:icon="@drawable/profile_thumbnail"
+        android:title="">
+
+    </item>
+
     <item android:id="@+id/ic_addImage"
         android:icon="@drawable/ic_camera"
         android:title="">
