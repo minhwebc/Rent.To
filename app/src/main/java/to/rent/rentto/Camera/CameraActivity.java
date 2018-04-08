@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -61,7 +62,7 @@ public class CameraActivity extends AppCompatActivity {
     Bitmap uploadable;
 
     /**
-     * Hooks up buttons from camera fragment
+     * Hooks up buttons from camera fragment, Asks for permissions for camera and location
      * @param savedInstanceState
      */
     @Override
@@ -73,8 +74,10 @@ public class CameraActivity extends AppCompatActivity {
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.relLayout2, addPhotoFragment, "photo").commit();
         setupBottomNavigationView();
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+
+        // Gets Permissions
+        if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
     }
 
@@ -119,11 +122,22 @@ public class CameraActivity extends AppCompatActivity {
 
     /**
      * Launches the camera, and feeds result to imageView.
+     * Requires Camera Permission
      * @param view
      */
     private void launchCamera(View view) {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(mContext, "Needs Camera Permission",Toast.LENGTH_SHORT).show();
+            // 1. Instantiate an AlertDialog.Builder with its constructor
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+            // 2. Chain together various setter methods to set the dialog characteristics
+            builder.setMessage("Please Allow Camera Access")
+                    .setTitle("Rent.to Needs Permission");
+
+            // 3. Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
         } else { // App has camera permission
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
@@ -278,13 +292,28 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets location to current location
+     * When user presses "Get Current Location Button", Sets location to current location
+     * Requires Location Permission
      * @param view
      */
     public void getLocation(View view) {
-        EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
-        String cityName = getCityName();
-        editTextLocation.setText(cityName);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // 1. Instantiate an AlertDialog.Builder with its constructor
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+            // 2. Chain together various setter methods to set the dialog characteristics
+            builder.setMessage("Please Allow Location Access")
+                    .setTitle("Rent.to Needs Permission");
+
+            // 3. Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        } else { // App has Location permission
+            EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
+            String cityName = getCityName();
+            editTextLocation.setText(cityName);
+        }
     }
 
     /**
