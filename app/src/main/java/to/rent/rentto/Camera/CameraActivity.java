@@ -1,8 +1,10 @@
 package to.rent.rentto.Camera;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import android.Manifest;
 
 public class CameraActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUM = 1; // the second case in bottomnav (0 index)
@@ -70,6 +73,9 @@ public class CameraActivity extends AppCompatActivity {
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.relLayout2, addPhotoFragment, "photo").commit();
         setupBottomNavigationView();
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        }
     }
 
     /**
@@ -116,8 +122,12 @@ public class CameraActivity extends AppCompatActivity {
      * @param view
      */
     private void launchCamera(View view) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(mContext, "Needs Camera Permission",Toast.LENGTH_SHORT).show();
+        } else { // App has camera permission
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
     /**
