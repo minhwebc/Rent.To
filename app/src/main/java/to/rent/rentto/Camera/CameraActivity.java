@@ -340,8 +340,7 @@ public class CameraActivity extends AppCompatActivity {
                                     Address address = addresses.get(0);
                                     String zip = address.getPostalCode(); // gets zip code
                                     String locality = address.getLocality(); // Gets locality (the city name)
-                                    Toast.makeText(mContext, "Zipcode is " + zip + " Locality is " + locality, Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG, "zipcode is " + zip);
+                                    Log.d(TAG, "zipcode is " + zip + " locality is: " + locality);
                                     setZip(zip);
                                     setLocality(locality);
                                     EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
@@ -389,14 +388,13 @@ public class CameraActivity extends AppCompatActivity {
         Log.d(TAG, "inside of submitLocation, cameraAcitivity");
         EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
         if(checkEditTextNonEmpty(editTextLocation)) {
-            String editTextZip = editTextLocation.getText().toString();
-            Log.d(TAG, "The postal code is " + editTextZip);
-            if(validateZip(editTextZip)) {
+            zip = editTextLocation.getText().toString();
+            Log.d(TAG, "The postal code is " + zip);
+            if(validateZip(zip)) {
                 // All details gathered, may now post
                 Button submitPostButton = (Button) findViewById(R.id.button_send);
-                Toast.makeText(mContext, "Valid U.S Postal code", Toast.LENGTH_SHORT).show();
-//                submitPostButton.setEnabled(false); // prevent spam clicking
-//                post();
+                submitPostButton.setEnabled(false); // prevent spam clicking
+                post();
             } else {
                 Toast.makeText(mContext, "Not a valid U.S. postal code", Toast.LENGTH_SHORT).show();
             }
