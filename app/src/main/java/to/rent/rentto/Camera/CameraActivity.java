@@ -1,6 +1,9 @@
 package to.rent.rentto.Camera;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +24,8 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +35,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import to.rent.rentto.R;
@@ -42,6 +50,7 @@ public class CameraActivity extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();
+    private FusedLocationProviderClient mFusedLocationClient;
     private static final String TAG = "CameraActivity";
     private Context mContext = CameraActivity.this;
     static final int REQUEST_IMAGE_CAPTURE = 1; // the request code number assigned to image capture
@@ -59,6 +68,7 @@ public class CameraActivity extends AppCompatActivity {
     String timeType; // the type of time: hour, day, week, month, year
     String condition;
     String city; // the zipcode, for post
+    String zip; // The zip code for the post
     Bitmap uploadable;
 
     /**
@@ -310,33 +320,65 @@ public class CameraActivity extends AppCompatActivity {
 
             dialog.show();
         } else { // App has Location permission
-            EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
-            String cityName = getCityName();
-            editTextLocation.setText(cityName);
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location == null) {
+                                Toast.makeText(mContext, "Rent.to cannot get your location", Toast.LENGTH_SHORT).show();
+                                // Logic to handle location object
+                            } else { // location is not null
+                                double lat = location.getLatitude();
+                                double lng = location.getLongitude();
+                                Log.d(TAG, "Lat: " + lat + ", Lng: " + lng);
+                                Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+                                List<Address> addresses;
+                                try {
+                                    addresses = geocoder.getFromLocation(lat, lng, 1);
+                                    Address address = addresses.get(0);
+                                    String zip = address.getPostalCode(); // gets zip code
+                                    String locality = address.getLocality(); // Gets locality (the city name)
+                                    Toast.makeText(mContext, "Zipcode is " + zip + " Locality is " + locality, Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "zipcode is " + zip);
+                                    setZip(zip);
+                                    setLocality(locality);
+                                    EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
+                                    editTextLocation.setText(zip);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(mContext, "Rent.to cannot get your location", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    });
+            mFusedLocationClient.getLastLocation();
         }
     }
 
     /**
-     * Gets the zip code of the device's current location
-     * @return The zip code
+     * Sets the zip code for the post
+     * @param postalCode
      */
-    private String getCityName() {
-        // For now, just returns Seattle
-        return "Seattle";
+    private void setZip(String postalCode) {
+        zip = postalCode;
     }
 
     /**
-     * @return Whether the city is valid
+     * Sets the locality (city) for the post
+     * @param locality
      */
-    private boolean validateCity(String cityString) {
-        // For now, assume all city names are valid
-        if(true) {
-            city = cityString;
-            Log.d(TAG, "Inside validateCity " + cityString);
-            return true;
-        } else {
-            return false;
-        }
+    private void setLocality(String locality) {
+        city = locality;
+    }
+
+    /**
+     * Validates the zipcode
+     * @return Whether the zipcode is valid
+     */
+    private boolean validateZip(String zipCode) {
+        return zipCode.matches("^[0-9]{5}(-[0-9]{4})?$");
     }
 
     /**
@@ -347,16 +389,16 @@ public class CameraActivity extends AppCompatActivity {
         Log.d(TAG, "inside of submitLocation, cameraAcitivity");
         EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
         if(checkEditTextNonEmpty(editTextLocation)) {
-            // For now, just assume location is seattle
-            String editTextCity = editTextLocation.getText().toString();
-            Log.d(TAG, "The city name is " + editTextCity);
-            if(validateCity(editTextCity)) {
+            String editTextZip = editTextLocation.getText().toString();
+            Log.d(TAG, "The postal code is " + editTextZip);
+            if(validateZip(editTextZip)) {
                 // All details gathered, may now post
                 Button submitPostButton = (Button) findViewById(R.id.button_send);
-                submitPostButton.setEnabled(false); // prevent spam clicking
-                post();
+                Toast.makeText(mContext, "Valid U.S Postal code", Toast.LENGTH_SHORT).show();
+//                submitPostButton.setEnabled(false); // prevent spam clicking
+//                post();
             } else {
-                Toast.makeText(mContext, "Not a valid city", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Not a valid U.S. postal code", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(mContext, "You must choose a location", Toast.LENGTH_SHORT).show();
@@ -368,7 +410,7 @@ public class CameraActivity extends AppCompatActivity {
      * Pictures will be in items/[UUID]
      */
     private void post() {
-        String result = String.format("title=%s;category=%s;description=%s;price=%s,location=%s", title, category, description, price, city);
+        String result = String.format("title=%s;category=%s;description=%s;price=%s,location=%s", title, category, description, price, zip);
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
         UploadTask uploadTask;
@@ -406,12 +448,12 @@ public class CameraActivity extends AppCompatActivity {
         postValues.put("description", description);
         postValues.put("condition", condition);
         postValues.put("category", category);
-        DatabaseReference myRef = mReference.child("posts/" + city.toLowerCase());
+        DatabaseReference myRef = mReference.child("posts/" + zip);
         String key = myRef.push().getKey();           //this returns the unique key generated by firebase
         myRef.child(key).setValue(postValues);
         DatabaseReference userItemsRef = mReference.child("user_items");
         Map<String, Object> userItemsPostValues = new HashMap<>();
-        userItemsPostValues.put("city", "seattle");
+        userItemsPostValues.put("zip", zip);
         userItemsPostValues.put("imageURL", downloadUri.toString());
         userItemsRef.child(userUid).child(key).setValue(userItemsPostValues);
         Toast.makeText(mContext, "Post Submitted!", Toast.LENGTH_SHORT).show();
