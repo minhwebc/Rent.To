@@ -11,7 +11,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import to.rent.rentto.Models.Message;
@@ -28,6 +33,19 @@ public class MessageAdapter extends BaseAdapter {
 
     public void add(Message message) {
         this.messages.add(message);
+        Collections.sort(this.messages, new Comparator<Message>() {
+            @Override
+            public int compare(Message o1, Message o2) {
+                DateFormat f = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
+                try {
+                    Log.d("MessageAdapter", "successfully parse");
+                    return f.parse(o1.date).compareTo(f.parse(o1.date));
+                } catch (ParseException e) {
+                    Log.d("MessageAdapter", e.toString());
+                    return 0;
+                }
+            }
+        });
         notifyDataSetChanged(); // to render the list we need to notify
     }
 
@@ -65,11 +83,13 @@ public class MessageAdapter extends BaseAdapter {
             holder.avatar = (View) convertView.findViewById(R.id.image_message_profile);
             holder.name = (TextView) convertView.findViewById(R.id.text_message_name);
             holder.messageBody = (TextView) convertView.findViewById(R.id.text_message_body);
+            holder.messageDate = (TextView) convertView.findViewById(R.id.text_message_time);
             convertView.setTag(holder);
 
             //holder.name.setText(message.getData().getName());
             holder.name.setText(message.getAuthor());
             holder.messageBody.setText(message.getText());
+            holder.messageDate.setText(message.date);
             GradientDrawable drawable = (GradientDrawable) holder.avatar.getBackground();
             drawable.setColor(Color.parseColor("#FFFF00"));
         }
@@ -81,4 +101,5 @@ class MessageViewHolder {
     public View avatar;
     public TextView name;
     public TextView messageBody;
+    public TextView messageDate;
 }
