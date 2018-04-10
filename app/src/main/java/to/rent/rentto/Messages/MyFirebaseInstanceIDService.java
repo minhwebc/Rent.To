@@ -29,7 +29,22 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     //update the token on firebase
     private void sendRegistrationToServer(String refreshedToken) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid()).child("notificationTokens").child(refreshedToken).setValue(true);
+        try {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            if(auth != null) {
+                FirebaseUser currentUser = auth.getCurrentUser();
+                if (currentUser != null) {
+                    try {
+                        FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid()).child("notificationTokens").child(refreshedToken).setValue(true);
+                    } catch (Exception e) {
+                        Log.d(TAG, "Could not get notification token");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e){ // There is no current user signed in
+            Log.d(TAG, "Cannot get FirebaseAuth instance");
+            e.printStackTrace();
+        }
     }
 }
