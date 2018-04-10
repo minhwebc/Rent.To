@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +46,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private ArrayList<String> iDs = new ArrayList<>();
     private DatabaseReference mReference;
     private RecyclerViewAdapter staggeredRecyclerViewAdapter;
+    private String filter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         Log.d(TAG, "onCreate: Started.");
@@ -81,7 +85,13 @@ public class ItemsListActivity extends AppCompatActivity {
                     iDs.add(keyID);
                     Item mItem = singleSnapshot.getValue(Item.class);
                     String photo_path = mItem.imageURL;
-                    mImageUrls.add(photo_path);
+                    if(filter != null){
+                        if(filter.equals(mItem.category)){
+                            mImageUrls.add(photo_path);
+                        }
+                    } else {
+                        mImageUrls.add(photo_path);
+                    }
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
             }
@@ -139,4 +149,12 @@ public class ItemsListActivity extends AppCompatActivity {
         int height = size.y;
         return height;
     }
+
+    private void setFilter(View view) {
+
+    }
+    public void launchFilter(View view) {
+
+    }
+
 }
