@@ -41,6 +41,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private static final String TAG = "ItemsListActivity";
     private static final int NUM_COLUMNS = 3;
 
+    android.support.v4.app.FragmentManager fragmentManager;
     private Context mContext;
     private ArrayList<String> mImageUrls = new ArrayList<>();
     private ArrayList<String> iDs = new ArrayList<>();
@@ -126,7 +127,7 @@ public class ItemsListActivity extends AppCompatActivity {
 
     private void initRecyclerView(int width) {
         Log.d(TAG, "initRecyclerView staggered view");
-        RecyclerView recyclerView = findViewById(R.id.recylerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
                 new RecyclerViewAdapter(this, iDs, mImageUrls, width);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
@@ -153,8 +154,10 @@ public class ItemsListActivity extends AppCompatActivity {
     private void setFilter(View view) {
 
     }
-    public void launchFilter(View view) {
 
+    public void launchFilter(View view) {
+        FilterFragment filterFragment = new FilterFragment();
+        fragmentManager.beginTransaction().replace(R.id.mainLayout, filterFragment, "filter").addToBackStack(null).commit();
     }
 
 }
