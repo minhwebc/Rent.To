@@ -18,15 +18,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Profile.ProfileActivity" />
+        <activity android:name=".Profile.ProfileActivity" android:launchMode="singleTask"/>
         <activity android:name=".Share.ShareActivity" />
         <activity android:name=".Profile.AccountSettingsActivity" />
-        <activity android:name=".Listing.ListingActivity" />
-        <activity android:name=".Listing.ItemsListActivity" />
-        <activity android:name=".Camera.CameraActivity" />
+        <activity android:name=".Listing.ListingActivity" android:launchMode="singleTask"/>
+        <activity android:name=".Listing.ItemsListActivity" android:launchMode="singleTask"/>
+        <activity android:name=".Camera.CameraActivity" android:launchMode="singleTask"/>
         <activity android:name=".Login.LoginActivity" />
         <activity android:name=".Login.RegisterActivity" />
-        <activity android:name=".Messages.NotificationActivity" />
+        <activity android:name=".Messages.NotificationActivity" android:launchMode="singleTask"/>
 
         <service
             android:name=".Messages.MyFirebaseMessagingService"

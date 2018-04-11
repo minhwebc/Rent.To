@@ -3,10 +3,10 @@ package to.rent.rentto.Listing;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,14 +43,14 @@ public class ListingActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private User currentUser;
-    Button requestButton;
+    FloatingActionButton requestButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listing);
         mContext = ListingActivity.this;
-        requestButton = (Button) findViewById(R.id.requestButton);
+        requestButton = (FloatingActionButton) findViewById(R.id.requestButton);
         mAuth = FirebaseAuth.getInstance();
         Log.d(TAG, "onCreate: Started.");
 
@@ -117,7 +117,7 @@ public class ListingActivity extends AppCompatActivity {
                         User user = dataSnapshot.getValue(User.class);
                         TextView userField = findViewById(R.id.textView4);
                         userField.setText(user.getUsername());
-                        Button mButton = findViewById(R.id.requestButton);
+                        FloatingActionButton mButton = findViewById(R.id.requestButton);
                         mButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
