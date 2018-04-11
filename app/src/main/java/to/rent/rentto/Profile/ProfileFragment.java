@@ -67,7 +67,7 @@ public class ProfileFragment extends Fragment {
     //From ItemListActivity
     private ArrayList<String> mImageUrls = new ArrayList<>();
     private ArrayList<String> iDs = new ArrayList<>();
-    private RecyclerViewAdapter staggeredRecyclerViewAdapter;
+    private ProfileRecyclerViewAdapter staggeredRecyclerViewAdapter;
     private static final int NUM_COLUMNS = 3;
 
     private TextView mPosts, mDisplayName, mUsername, mWebsite, mDescription;
@@ -105,7 +105,7 @@ public class ProfileFragment extends Fragment {
         //RecyclerView
         int width = getScreenSizeX();
         initImageLoader();
-        initRecyclerView(width);
+        initRecyclerView(width, view);
         initImageBitMaps();
 
         return view;
@@ -159,11 +159,11 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void initRecyclerView(int width) {
+    private void initRecyclerView(int width, View view) {
         Log.d(TAG, "initRecyclerView staggered view");
-        RecyclerView recyclerView = getActivity().findViewById(R.id.profileRecylerView);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.profileRecylerVieww);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter((ItemsListActivity) this.mContext, iDs, mImageUrls, width);
+                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);

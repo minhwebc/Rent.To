@@ -1,4 +1,4 @@
-package to.rent.rentto.Listing;
+package to.rent.rentto.Profile;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,14 +15,15 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
-import to.rent.rentto.Profile.ProfileFragment;
+import to.rent.rentto.Listing.ItemsListActivity;
+import to.rent.rentto.Listing.ListingActivity;
 import to.rent.rentto.R;
 
 /**
  * Created by Sora on 2/15/2018.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecyclerViewAdapter.ViewHolder>{
 
     private static final String TAG = "StaggeredRecyclerViewAd";
 
@@ -31,10 +32,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private String[] mData = new String[0];
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private ItemsListActivity mContext;
+    private Context mContext;
     private int width;
 
-    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width){
+    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width){
         Log.d(TAG, "constructor: called.");
 
         this.width = width;
@@ -51,7 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     };
 
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup par, int viewType){
+    public ProfileRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup par, int viewType){
         View view = mInflater.inflate(R.layout.recyclerview_item, par, false);
         return new ViewHolder(view, this.width);
     }
@@ -68,17 +69,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .apply(requestOptions)
                 .into(holder.imageView);
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
-                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mContext, ListingActivity.class);
-                intent.putExtra("ITEM_ID", mIDs.get(position));
-                intent.putExtra("CITY", findCurrentCity());
-                mContext.startActivity(intent);
-            }
-        });
+//        holder.imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
+//                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(mContext, ListingActivity.class);
+//                intent.putExtra("ITEM_ID", mIDs.get(position));
+//                intent.putExtra("CITY", findCurrentCity());
+//                mContext.startActivity(intent);
+//            }
+//        });
 
     }
 
