@@ -11,22 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Home.HomeActivity">
+        <activity android:name=".Home.HomeActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Profile.ProfileActivity" android:launchMode="singleTask"/>
-        <activity android:name=".Share.ShareActivity" />
-        <activity android:name=".Profile.AccountSettingsActivity" />
-        <activity android:name=".Listing.ListingActivity" android:launchMode="singleTask"/>
-        <activity android:name=".Listing.ItemsListActivity" android:launchMode="singleTask"/>
-        <activity android:name=".Camera.CameraActivity" android:launchMode="singleTask"/>
-        <activity android:name=".Login.LoginActivity" />
-        <activity android:name=".Login.RegisterActivity" />
-        <activity android:name=".Messages.NotificationActivity" android:launchMode="singleTask"/>
+        <activity android:name=".Profile.ProfileActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+        <activity android:name=".Share.ShareActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Profile.AccountSettingsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Listing.ListingActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+        <activity android:name=".Listing.ItemsListActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+        <activity android:name=".Camera.CameraActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+        <activity android:name=".Login.LoginActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Login.RegisterActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Messages.NotificationActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
 
         <service
             android:name=".Messages.MyFirebaseMessagingService"
