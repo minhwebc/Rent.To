@@ -71,7 +71,7 @@ public class ProfileFragment extends Fragment {
         mDescription = (TextView) view.findViewById(R.id.description);
         mProfilePhoto = (CircleImageView) view.findViewById(R.id.profile_photo);
         //mPosts = (TextView) view.findViewById(R.id.tvPosts);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
+        //mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
         gridView = (GridView) view.findViewById(R.id.gridView);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
@@ -109,10 +109,10 @@ public class ProfileFragment extends Fragment {
                 .into(mProfilePhoto);
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
-        mWebsite.setText(settings.getWebsite());
-        mDescription.setText(settings.getDescription());
+        //mWebsite.setText(settings.getWebsite());
+        //mDescription.setText(settings.getDescription());
         //mPosts.setText(String.valueOf(settings.getPosts()));
-        mProgressBar.setVisibility(View.GONE);
+        //mProgressBar.setVisibility(View.GONE);
 
 
     }

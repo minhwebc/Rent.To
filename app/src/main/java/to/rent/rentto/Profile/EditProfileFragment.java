@@ -326,8 +326,12 @@ public class EditProfileFragment extends Fragment implements
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //retrieve user information from the database
+                //try here so it doesn't break the code
+                try {
+                    setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
+                } catch (Exception e) {
 
-                setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
+                }
 
                 //retrieve images for the user in question
 
@@ -353,6 +357,8 @@ public class EditProfileFragment extends Fragment implements
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+
 
 
 }
