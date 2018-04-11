@@ -178,9 +178,11 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //retrieve user information from the database
+                try {
+                    setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
+                } catch(Exception e) {
 
-                setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
-
+                }
                 //retrieve images for the user in question
 
             }
