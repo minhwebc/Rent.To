@@ -1,19 +1,14 @@
 package to.rent.rentto.Profile;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -23,7 +18,7 @@ import to.rent.rentto.Utils.BottomNavigationViewHelper;
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private Context mContext = ProfileActivity.this;
-    private static final int ACTIVITY_NUM = 2;
+    private static final int ACTIVITY_NUM = 3;
     private ProgressBar mProgressBar;
 
     @Override
@@ -45,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
         ProfileFragment fragment = new ProfileFragment();
         FragmentTransaction transaction = ProfileActivity.this.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(getString(R.string.profile_fragment));
+        //transaction.addToBackStack(getString(R.string.profile_fragment));
         transaction.commit();
     }
 //    private void setupToolbar() {
@@ -64,13 +59,13 @@ public class ProfileActivity extends AppCompatActivity {
 //    }
 //
 //
-//    private void setupBottomNavigationView(){
-//        Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
-//        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-//        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-//        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
-//        Menu menu = bottomNavigationViewEx.getMenu();
-//        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-//        menuItem.setChecked(true);
-//    }
+    private void setupBottomNavigationView(){
+        Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
+    }
 }

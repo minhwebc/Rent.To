@@ -43,7 +43,7 @@ import to.rent.rentto.Utils.FirebaseMethods;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
 
-    private static final int ACTIVITY_NUM = 2;
+    private static final int ACTIVITY_NUM = 3;
 
     //firebase
     private FirebaseAuth mAuth;
