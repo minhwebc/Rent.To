@@ -2,12 +2,17 @@ package to.rent.rentto.Profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,16 +30,23 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import to.rent.rentto.Models.User;
+import to.rent.rentto.Listing.ItemsListActivity;
+import to.rent.rentto.Listing.RecyclerViewAdapter;
+import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.FirebaseMethods;
+import to.rent.rentto.Utils.UniversalImageLoader;
 
 /**
  * Created by allencho on 2/27/18.
@@ -51,6 +63,12 @@ public class ProfileFragment extends Fragment {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
     private FirebaseMethods mFirebaseMethods;
+
+    //From ItemListActivity
+    private ArrayList<String> mImageUrls = new ArrayList<>();
+    private ArrayList<String> iDs = new ArrayList<>();
+    private RecyclerViewAdapter staggeredRecyclerViewAdapter;
+    private static final int NUM_COLUMNS = 3;
 
     private TextView mPosts, mDisplayName, mUsername, mWebsite, mDescription;
     private ProgressBar mProgressBar;
@@ -72,7 +90,6 @@ public class ProfileFragment extends Fragment {
         mProfilePhoto = (CircleImageView) view.findViewById(R.id.profile_photo);
         //mPosts = (TextView) view.findViewById(R.id.tvPosts);
         mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
-        gridView = (GridView) view.findViewById(R.id.gridView);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
@@ -85,23 +102,84 @@ public class ProfileFragment extends Fragment {
         setupToolbar();
         setupFirebaseAuth();
 
-//        TextView editProfile = (TextView) view.findViewById(R.id.textEditProfile);
-//        editProfile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
-//                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
-//                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
-//                startActivity(intent);
-//            }
-//        });
+        //RecyclerView
+        int width = getScreenSizeX();
+        initImageLoader();
+        initRecyclerView(width);
+        initImageBitMaps();
+
         return view;
+    }
+
+    private void initImageBitMaps(){
+        Log.d(TAG, "setupGridView: Setting up image grid.");
+
+        final ArrayList<String> photos = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference
+                .child(getString(R.string.dbname_user_items))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+
+                    String keyID = singleSnapshot.getKey(); //photoIDs
+                    iDs.add(keyID);
+                    Item mItem = singleSnapshot.getValue(Item.class);
+                    String photo_path = mItem.imageURL;
+                    mImageUrls.add(photo_path);
+                }
+                staggeredRecyclerViewAdapter.notifyDataSetChanged();
+
+//                //setup our image grid
+//                int gridWidth = getResources().getDisplayMetrics().widthPixels;
+//                int imageWidth = gridWidth/NUM_GRID_COLUMNS;
+//                gridView.setColumnWidth(imageWidth);
+//
+//                ArrayList<String> imgUrls = new ArrayList<String>();
+//                for(int i = 0; i < photos.size(); i++){
+//                    imgUrls.add(photos.get(i).getImage_path());
+//                }
+//                GridImageAdapter adapter = new GridImageAdapter(getActivity(),R.layout.layout_grid_imageview,
+//                        "", imgUrls);
+//                gridView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled.");
+            }
+        });
+    }
+
+    private void initImageLoader(){
+        UniversalImageLoader universalImageLoader = new UniversalImageLoader(mContext);
+        ImageLoader.getInstance().init(universalImageLoader.getConfig());
+    }
+
+
+    private void initRecyclerView(int width) {
+        Log.d(TAG, "initRecyclerView staggered view");
+        RecyclerView recyclerView = getActivity().findViewById(R.id.profileRecylerView);
+        staggeredRecyclerViewAdapter =
+                new RecyclerViewAdapter((ItemsListActivity) this.mContext, iDs, mImageUrls, width);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        recyclerView.setAdapter(staggeredRecyclerViewAdapter);
+    }
+
+    private int getScreenSizeX () {
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
     }
 
     private void setProfileWidgets(UserSettings userSettings) {
         Log.d(TAG, "setProfileWidgets: settings widgets with data retrieving from firebase database: " + userSettings.toString());
         Log.d(TAG, "setProfileWidgets: settings widgets with data retrieving from firebase database: " + userSettings.getSettings().getUsername());
-        User user = userSettings.getUser();
         UserAccountSettings settings = userSettings.getSettings();
         //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
         Glide.with(getActivity())
@@ -113,7 +191,6 @@ public class ProfileFragment extends Fragment {
         mDescription.setText(settings.getDescription());
         //mPosts.setText(String.valueOf(settings.getPosts()));
         mProgressBar.setVisibility(View.GONE);
-
 
     }
 

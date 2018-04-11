@@ -2,23 +2,20 @@ package to.rent.rentto.Listing;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
 import to.rent.rentto.R;
-
-import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -36,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context mContext;
     private int width;
 
-    public RecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width){
+    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width){
         Log.d(TAG, "constructor: called.");
 
         this.width = width;
