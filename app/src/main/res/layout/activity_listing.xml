@@ -170,7 +170,11 @@
                     android:textSize="@dimen/font_22"
                     android:transitionName="Title"
                     tools:ignore="UnusedAttribute"
-                    tools:text="Rossies place show" />
+                    tools:text="Rossies place show"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="3"
+                    android:shadowDy="5"
+                    android:shadowDx="5"/>
 
                 <!-- Session subtitle -->
                 <TextView
@@ -182,7 +186,11 @@
                     android:paddingRight="30dp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_14"
-                    tools:text="Details" />
+                    tools:text="Details"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="3"
+                    android:shadowDy="5"
+                    android:shadowDx="5"/>
 
             </LinearLayout>
 
