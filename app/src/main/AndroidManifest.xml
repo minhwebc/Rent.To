@@ -27,6 +27,7 @@
         <activity android:name=".Login.LoginActivity" />
         <activity android:name=".Login.RegisterActivity" />
         <activity android:name=".Messages.NotificationActivity" />
+        <activity android:name=".Listing.FilterActivity" />
 
         <service
             android:name=".Messages.MyFirebaseMessagingService"

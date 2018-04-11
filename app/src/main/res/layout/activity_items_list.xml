@@ -24,7 +24,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="14dp"
                 android:text="Filter"
-                android:onClick="launchFilter"/>
+                android:onClick="testFunction"/>
         </RelativeLayout>
 
         <!-- Middle section (body) + recycled view -->
