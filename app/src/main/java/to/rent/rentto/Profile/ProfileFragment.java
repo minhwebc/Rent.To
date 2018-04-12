@@ -43,7 +43,7 @@ import to.rent.rentto.Utils.FirebaseMethods;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
 
-    private static final int ACTIVITY_NUM = 2;
+    private static final int ACTIVITY_NUM = 3;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -178,9 +178,11 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //retrieve user information from the database
+                try {
+                    setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
+                } catch(Exception e) {
 
-                setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
-
+                }
                 //retrieve images for the user in question
 
             }

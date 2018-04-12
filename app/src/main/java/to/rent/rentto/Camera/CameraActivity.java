@@ -46,7 +46,7 @@ import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import android.Manifest;
 
 public class CameraActivity extends AppCompatActivity {
-    private static final int ACTIVITY_NUM = 1; // the second case in bottomnav (0 index)
+    private static final int ACTIVITY_NUM = 2; // the second case in bottomnav (0 index)
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();

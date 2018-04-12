@@ -33,7 +33,7 @@ import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 public class NotificationActivity extends AppCompatActivity {
-    private static final int ACTIVITY_NUM = 3; // the fourth case in bottomnav (0 index)
+    private static final int ACTIVITY_NUM = 4; // the fourth case in bottomnav (0 index)
     private static final String TAG = "NotificationActivity";
     private Context mContext;
     private ListView messagesListView;
