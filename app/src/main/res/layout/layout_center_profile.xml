@@ -61,15 +61,12 @@
                 android:layout_below="@+id/linLayout"
                 android:layout_marginBottom="50dp">
 
-                <GridView
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/profileRecylerVieww"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gridView"
-                    android:numColumns="3"
-                    android:verticalSpacing="1dp"
-                    android:horizontalSpacing="1dp"
-                    android:gravity="center"
-                    ></GridView>
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
