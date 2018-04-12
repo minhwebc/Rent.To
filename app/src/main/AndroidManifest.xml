@@ -34,6 +34,7 @@
         <activity android:name=".Login.LoginActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Login.RegisterActivity" android:screenOrientation="portrait"/>
         <activity android:name=".Messages.NotificationActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+				<activity android:name=".Listing.FilterActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
 
         <service
             android:name=".Messages.MyFirebaseMessagingService"

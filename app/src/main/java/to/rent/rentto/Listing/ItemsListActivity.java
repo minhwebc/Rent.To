@@ -1,6 +1,8 @@
 package to.rent.rentto.Listing;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +14,11 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Filter;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,12 +44,17 @@ public class ItemsListActivity extends AppCompatActivity {
 
     private static final String TAG = "ItemsListActivity";
     private static final int NUM_COLUMNS = 3;
+    private static final int REQUEST_CATEGORY_CODE = 1000;
 
+    private android.support.v4.app.FragmentManager fragmentManager;
     private Context mContext;
     private ArrayList<String> mImageUrls = new ArrayList<>();
     private ArrayList<String> iDs = new ArrayList<>();
     private DatabaseReference mReference;
     private RecyclerViewAdapter staggeredRecyclerViewAdapter;
+    private String filter;
+    private TextView textView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         Log.d(TAG, "onCreate: Started.");
@@ -51,14 +63,20 @@ public class ItemsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_items_list);
         mContext = ItemsListActivity.this;
         mReference = FirebaseDatabase.getInstance().getReference();
-
-
         setupBottomNavigationView();
 
         int width = getScreenSizeX();
         initImageLoader();
         initRecyclerView(width);
         initImageBitMaps();
+
+        textView = (TextView) findViewById(R.id.textView6);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchFilter(v);
+            }
+        });
     }
 
     //To-do here find the current city
@@ -78,10 +96,18 @@ public class ItemsListActivity extends AppCompatActivity {
                 iDs.clear();
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     String keyID = singleSnapshot.getKey(); //photoIDs
-                    iDs.add(keyID);
                     Item mItem = singleSnapshot.getValue(Item.class);
                     String photo_path = mItem.imageURL;
-                    mImageUrls.add(photo_path);
+                    System.out.println(mItem.category);
+                    if(filter != null){
+                        if(filter.equals(mItem.category)){
+                            mImageUrls.add(photo_path);
+                            iDs.add(keyID);
+                        }
+                    } else {
+                        mImageUrls.add(photo_path);
+                        iDs.add(keyID);
+                    }
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
             }
@@ -116,7 +142,7 @@ public class ItemsListActivity extends AppCompatActivity {
 
     private void initRecyclerView(int width) {
         Log.d(TAG, "initRecyclerView staggered view");
-        RecyclerView recyclerView = findViewById(R.id.recylerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
                 new RecyclerViewAdapter(this, iDs, mImageUrls, width);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
@@ -139,4 +165,30 @@ public class ItemsListActivity extends AppCompatActivity {
         int height = size.y;
         return height;
     }
+
+    private void setFilter(View view) {
+
+    }
+
+    public void launchFilter(View view) {
+        Intent intent = new Intent(getApplicationContext(), FilterActivity.class);
+        startActivityForResult(intent, REQUEST_CATEGORY_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CATEGORY_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    String filterData = FilterActivity.getResult(data);
+                    filter = filterData;
+                    initImageBitMaps();
+                    Log.d(TAG, "filter is " + filterData);
+                } else {
+                    Log.d(TAG, "Filter canceled");
+                }
+        }
+    }
+
+
 }
