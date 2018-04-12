@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
         mDescription = (TextView) view.findViewById(R.id.description);
         mProfilePhoto = (CircleImageView) view.findViewById(R.id.profile_photo);
         //mPosts = (TextView) view.findViewById(R.id.tvPosts);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
+        //mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
@@ -165,8 +165,16 @@ public class ProfileFragment extends Fragment {
         staggeredRecyclerViewAdapter =
                 new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(staggeredGridLayoutManager);
-        recyclerView.setAdapter(staggeredRecyclerViewAdapter);
+        if(recyclerView == null) {
+            Log.d(TAG, "RecyclerView is null");
+        }
+        if(staggeredGridLayoutManager == null) {
+            Log.d(TAG, "staggeredgridlayout manger is null");
+        }
+        if(recyclerView != null && staggeredGridLayoutManager != null){
+                recyclerView.setLayoutManager(staggeredGridLayoutManager);
+                recyclerView.setAdapter(staggeredRecyclerViewAdapter);
+        }
     }
 
     private int getScreenSizeX () {

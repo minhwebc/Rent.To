@@ -453,7 +453,7 @@ public class CameraActivity extends AppCompatActivity {
         DatabaseReference userItemsRef = mReference.child("user_items");
         Map<String, Object> userItemsPostValues = new HashMap<>();
         userItemsPostValues.put("zip", zip);
-        userItemsPostValues.put("city", locality);
+        userItemsPostValues.put("city", city);
         userItemsPostValues.put("title", title);
         userItemsPostValues.put("rate", "" + price + " per " + timeType);
         userItemsPostValues.put("imageURL", downloadUri.toString());
