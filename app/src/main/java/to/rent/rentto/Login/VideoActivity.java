@@ -80,7 +80,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     }
 
     private void playVideo(){
-        final String videoPath = "android.resource://to.rent.rentto/"+R.raw.video;
+        final String videoPath = "android.resource://to.rent.rentto/"+R.raw.video2;
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -95,6 +95,18 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         }).start();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        player.stop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        player.pause();
+    }
+    
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         final Surface surface = holder.getSurface();
