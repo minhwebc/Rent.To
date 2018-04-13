@@ -59,6 +59,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -107,4 +108,12 @@
         android:layout_alignLeft="@+id/progressBar"
         android:id="@+id/pleaseWait"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomBar"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_messages"
+        android:layout_margin="16dp" />
 </RelativeLayout>

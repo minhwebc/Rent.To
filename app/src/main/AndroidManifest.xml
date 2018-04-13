@@ -6,10 +6,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
     <uses-feature android:name="android.hardware.location.gps" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
 
     <application
         android:allowBackup="true"
@@ -18,23 +19,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Home.HomeActivity" android:screenOrientation="portrait">
+        <activity
+            android:name=".Home.HomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Profile.ProfileActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
-        <activity android:name=".Share.ShareActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".Profile.AccountSettingsActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".Listing.ListingActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
-        <activity android:name=".Listing.ItemsListActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
-        <activity android:name=".Camera.CameraActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
-        <activity android:name=".Login.LoginActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".Login.RegisterActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".Messages.NotificationActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
-				<activity android:name=".Listing.FilterActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Profile.ProfileActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Share.ShareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Profile.AccountSettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Listing.ListingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Listing.ItemsListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Camera.CameraActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Login.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Login.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Messages.NotificationActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Listing.FilterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".Messages.MyFirebaseMessagingService"
@@ -53,7 +82,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".Messages.ChatActivity"></activity>
+        <activity android:name=".Messages.ChatActivity" />
+        <activity android:name=".Login.VideoActivity"></activity>
     </application>
 
 </manifest>

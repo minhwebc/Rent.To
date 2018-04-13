@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private EditText mEmail, mPassword;
     private TextView mPleaseWait;
-
+    private FloatingActionButton floatingActionButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,14 @@ public class LoginActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.input_password);
         mContext = LoginActivity.this;
         Log.d(TAG, "onCreate: started.");
-
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, VideoActivity.class);
+                startActivity(intent);
+            }
+        });
         mPleaseWait.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.GONE);
 
