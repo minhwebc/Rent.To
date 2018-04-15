@@ -83,10 +83,12 @@ public class ListingActivity extends AppCompatActivity {
             }
         });
     }
-
+    private String getCurrentLocation(){
+        return "seattle";
+    }
     private void grabTheItem(){
         Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -110,7 +112,7 @@ public class ListingActivity extends AppCompatActivity {
                 //post_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                 Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
-                query.addValueEventListener(new ValueEventListener() {
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -151,9 +153,16 @@ public class ListingActivity extends AppCompatActivity {
                                                                                 @Override
                                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                                     if(databaseError == null) {
-                                                                                        int duration = Toast.LENGTH_SHORT;
-                                                                                        Toast toast = Toast.makeText(mContext, "Offer sent", duration);
-                                                                                        toast.show();
+                                                                                        mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").push().setValue(currentUser.getUser_id(), new DatabaseReference.CompletionListener() {
+                                                                                            @Override
+                                                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                if(databaseError == null) {
+                                                                                                    int duration = Toast.LENGTH_SHORT;
+                                                                                                    Toast toast = Toast.makeText(mContext, "Offer sent", duration);
+                                                                                                    toast.show();
+                                                                                                }
+                                                                                            }
+                                                                                        });
                                                                                     } else {
 
                                                                                     }

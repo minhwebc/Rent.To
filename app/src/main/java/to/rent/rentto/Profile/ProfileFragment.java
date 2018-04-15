@@ -38,8 +38,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import to.rent.rentto.Listing.ItemsListActivity;
-import to.rent.rentto.Listing.RecyclerViewAdapter;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.Models.UserSettings;
@@ -131,19 +129,6 @@ public class ProfileFragment extends Fragment {
                     mImageUrls.add(photo_path);
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
-
-//                //setup our image grid
-//                int gridWidth = getResources().getDisplayMetrics().widthPixels;
-//                int imageWidth = gridWidth/NUM_GRID_COLUMNS;
-//                gridView.setColumnWidth(imageWidth);
-//
-//                ArrayList<String> imgUrls = new ArrayList<String>();
-//                for(int i = 0; i < photos.size(); i++){
-//                    imgUrls.add(photos.get(i).getImage_path());
-//                }
-//                GridImageAdapter adapter = new GridImageAdapter(getActivity(),R.layout.layout_grid_imageview,
-//                        "", imgUrls);
-//                gridView.setAdapter(adapter);
             }
 
             @Override
@@ -199,7 +184,6 @@ public class ProfileFragment extends Fragment {
         //mDescription.setText(settings.getDescription());
         //mPosts.setText(String.valueOf(settings.getPosts()));
         //mProgressBar.setVisibility(View.GONE);
-
     }
 
     private void setupToolbar(){
