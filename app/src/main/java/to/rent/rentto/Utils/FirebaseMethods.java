@@ -182,7 +182,7 @@ public class FirebaseMethods {
      * @param profile_photo
      */
     public void addNewUser(String email, String username, String description, String website, String profile_photo){
-
+        Log.d(TAG, "inside: addNewUser: userID: " + userID + " email: "+ email + " username: " + username + " profile_photo " + profile_photo);
         User user = new User( userID,  1,  email,  StringManipulation.condenseUsername(username) );
 
         myRef.child(mContext.getString(R.string.dbname_users))
@@ -199,7 +199,8 @@ public class FirebaseMethods {
                 website
         );
 
-        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+//        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+        myRef.child("user_account_settings")
                 .child(userID)
                 .setValue(settings);
 
