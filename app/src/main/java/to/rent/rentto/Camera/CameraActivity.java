@@ -135,7 +135,7 @@ public class CameraActivity extends AppCompatActivity {
      * Requires Camera Permission
      * @param view
      */
-    private void launchCamera(View view) {
+    public void launchCamera(View view) {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -149,6 +149,7 @@ public class CameraActivity extends AppCompatActivity {
 
             dialog.show();
         } else { // App has camera permission
+            changeConfirmPhotoFragment(view);
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
         }
@@ -158,16 +159,23 @@ public class CameraActivity extends AppCompatActivity {
      * Launches the camera roll, and feeds result to imageView.
      * @param view
      */
-    private void launchCameraRoll(View view) {
+    public void launchCameraRoll(View view) {
+        changeConfirmPhotoFragment(view);
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(intent, REQUEST_CAMERA_ROLL);
+    }
+
+    private void changeConfirmPhotoFragment(View view) {
+        ConfirmPhotoFragment confirmPhotoFragment = new ConfirmPhotoFragment();
+        changeFragment("photo", confirmPhotoFragment, "confirm");
+        imageView = (ImageView) findViewById(R.id.cameraImageView);
     }
 
     /**
      * Switches to addTitleFragment and makes all elements from CameraActivity relLayout2 invisible
      * @param view
      */
-    private void launchConfirm(View view) {
+    public void launchConfirm(View view) {
         AddTitleFragment addTitleFragment = new AddTitleFragment();
         changeFragment("photo", addTitleFragment, "title");
     }
@@ -190,10 +198,10 @@ public class CameraActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK) {
-            rightButton.setText("Next");
-            leftButton.setText("Cancel");
-        }
+//        if(resultCode == RESULT_OK) {
+//            rightButton.setText("Next");
+//            leftButton.setText("Cancel");
+//        }
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             //Get the photo
             Bundle extras = data.getExtras();
