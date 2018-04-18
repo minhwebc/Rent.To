@@ -182,8 +182,8 @@ public class FirebaseMethods {
      * @param profile_photo
      */
     public void addNewUser(String email, String username, String description, String website, String profile_photo){
-        Log.d(TAG, "inside: addNewUser: userID: " + userID + " email: "+ email + " username: " + username + " profile_photo " + profile_photo);
-        User user = new User( userID,  1,  email,  StringManipulation.condenseUsername(username) );
+
+        User user = new User( userID,  1,  email,  StringManipulation.condenseUsername(username), 0.0, 0);
 
         myRef.child(mContext.getString(R.string.dbname_users))
                 .child(userID)

@@ -62,13 +62,15 @@
 
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
+
                 <RatingBar
                     android:id="@+id/rtbDvcMgmt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="?android:attr/ratingBarStyleSmall"
                     android:layout_marginRight="25dp"
                     android:max="5"
                     android:maxHeight="50dp"
