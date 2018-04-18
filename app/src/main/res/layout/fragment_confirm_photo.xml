@@ -24,7 +24,7 @@
             <include layout="@layout/layout_center_viewpager" />
 
             <ImageView
-                android:id="@+id/cameraImageView"
+                android:id="@+id/confirmImageView"
                 android:layout_weight="9"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent" />
