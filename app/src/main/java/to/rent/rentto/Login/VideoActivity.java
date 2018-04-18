@@ -80,7 +80,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     }
 
     private void playVideo(){
-        final String videoPath = "android.resource://to.rent.rentto/"+R.raw.video2;
+        final String videoPath = "android.resource://to.rent.rentto/"+R.raw.video;
         new Thread(new Runnable() {
             public void run() {
                 try {

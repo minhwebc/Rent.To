@@ -83,7 +83,8 @@
         </service>
 
         <activity android:name=".Messages.ChatActivity" />
-        <activity android:name=".Login.VideoActivity"></activity>
+        <activity android:name=".Login.VideoActivity" />
+        <activity android:name=".Messages.RatingActivity"></activity>
     </application>
 
 </manifest>

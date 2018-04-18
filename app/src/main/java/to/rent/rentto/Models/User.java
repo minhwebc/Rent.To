@@ -13,12 +13,16 @@ public class User implements Parcelable {
     private long phone_number;
     private String email;
     private String username;
+    private Double rating;
+    private int totalRating;
 
-    public User(String user_id, long phone_number, String email, String username) {
+    public User(String user_id, long phone_number, String email, String username, Double rating, int totalRating) {
         this.user_id = user_id;
         this.phone_number = phone_number;
         this.email = email;
         this.username = username;
+        this.rating = rating;
+        this.totalRating = totalRating;
     }
 
     public User() {
@@ -45,6 +49,8 @@ public class User implements Parcelable {
         }
     };
 
+    public int getTotalRating() {return totalRating;
+    }
     public String getUser_id() {
         return user_id;
     }
@@ -72,6 +78,8 @@ public class User implements Parcelable {
     public String getUsername() {
         return username;
     }
+
+    public double getRating() {return this.rating;}
 
     public void setUsername(String username) {
         this.username = username;

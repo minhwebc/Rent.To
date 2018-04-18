@@ -57,5 +57,9 @@ dependencies {
 
     //location
     implementation 'com.google.android.gms:play-services-location:11.8.0'
+
+    //rating dialog
+    implementation 'com.stepstone.apprating:app-rating:2.2.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
