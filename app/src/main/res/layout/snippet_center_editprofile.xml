@@ -207,7 +207,7 @@
                     android:layout_marginStart="40dp"
                     android:background="@null"
                     android:hint="Phone Number"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="number" />
 
             </RelativeLayout>
 

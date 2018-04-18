@@ -83,7 +83,7 @@ public class FirebaseMethods {
         }
 
         if(phoneNumber != 0) {
-            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+            myRef.child(mContext.getString(R.string.dbname_users))
                     .child(userID)
                     .child(mContext.getString(R.string.field_phone_number))
                     .setValue(phoneNumber);
@@ -199,8 +199,7 @@ public class FirebaseMethods {
                 website
         );
 
-//        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
-        myRef.child("user_account_settings")
+        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
                 .child(userID)
                 .setValue(settings);
 

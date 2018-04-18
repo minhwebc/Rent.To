@@ -183,7 +183,13 @@ public class EditProfileFragment extends Fragment implements
         final String website = mWebsite.getText().toString();
         final String description = mDescription.getText().toString();
         final String email = mEmail.getText().toString();
-        final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
+        Long phoneNumber = new Long(0);
+        try {
+            phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
+        } catch(Exception e) {
+            Toast.makeText(getActivity(), "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
 
         Log.d(TAG, "saveProfileSettings: displayName: "+ displayName);
         Log.d(TAG, "saveProfileSettings: website: " + website);
@@ -229,7 +235,9 @@ public class EditProfileFragment extends Fragment implements
             //update description
             mFirebaseMethods.updateUserAccountSettings(null, null, description, 0);
         }
-        if(!mUserSettings.getSettings().getProfile_photo().equals(phoneNumber)){
+        if(!(mUserSettings.getUser().getPhone_number() == phoneNumber)) {
+
+                //.getUser().getPhone_number()().equals(phoneNumber)){
             Log.d(TAG, "saveProfileSettings: phoneNumber: " + phoneNumber);
             //update phoneNumber
             mFirebaseMethods.updateUserAccountSettings(null, null, null, phoneNumber);
