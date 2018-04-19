@@ -3,12 +3,14 @@ package to.rent.rentto.Profile;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -83,17 +85,17 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                 .apply(requestOptions)
                 .into(holder.imageView);
 
-//        holder.imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
-//                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(mContext, ListingActivity.class);
-//                intent.putExtra("ITEM_ID", mIDs.get(position));
-//                intent.putExtra("CITY", findCurrentCity());
-//                mContext.startActivity(intent);
-//            }
-//        });
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
+                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, ProfileListingActivity.class);
+                intent.putExtra("ITEM_ID", mIDs.get(position));
+                intent.putExtra("CITY", findCurrentCity());
+                mContext.startActivity(intent);
+            }
+        });
 
     }
 
