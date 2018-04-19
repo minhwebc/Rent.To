@@ -46,6 +46,8 @@ import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.FirebaseMethods;
 import to.rent.rentto.Utils.UniversalImageLoader;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by allencho on 2/27/18.
  */
@@ -67,7 +69,7 @@ public class ProfileFragment extends Fragment {
     private ArrayList<String> iDs = new ArrayList<>();
     private ProfileRecyclerViewAdapter staggeredRecyclerViewAdapter;
     private static final int NUM_COLUMNS = 3;
-
+    private static final int CHANGE_PROFILE_PIC = 1;
     private TextView mPosts, mDisplayName, mUsername, mWebsite, mDescription;
     private ProgressBar mProgressBar;
     private CircleImageView mProfilePhoto;
@@ -96,6 +98,7 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "onCreateView: stared.");
 
 
+        setupProfilePhotoClick();
         setupBottomNavigationView();
         setupToolbar();
         setupFirebaseAuth();
@@ -107,6 +110,25 @@ public class ProfileFragment extends Fragment {
         initImageBitMaps();
 
         return view;
+    }
+
+    private void setupProfilePhotoClick() {
+        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: switching to ChangeProfilePictureActivity.");
+                Intent intent = new Intent(getActivity(), ChangeProfilePictureActivity.class);
+                startActivityForResult(intent, CHANGE_PROFILE_PIC);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            getActivity().recreate();
+        }
     }
 
     private void initImageBitMaps(){
@@ -129,19 +151,6 @@ public class ProfileFragment extends Fragment {
                     mImageUrls.add(photo_path);
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
-
-//                //setup our image grid
-//                int gridWidth = getResources().getDisplayMetrics().widthPixels;
-//                int imageWidth = gridWidth/NUM_GRID_COLUMNS;
-//                gridView.setColumnWidth(imageWidth);
-//
-//                ArrayList<String> imgUrls = new ArrayList<String>();
-//                for(int i = 0; i < photos.size(); i++){
-//                    imgUrls.add(photos.get(i).getImage_path());
-//                }
-//                GridImageAdapter adapter = new GridImageAdapter(getActivity(),R.layout.layout_grid_imageview,
-//                        "", imgUrls);
-//                gridView.setAdapter(adapter);
             }
 
             @Override
@@ -197,7 +206,6 @@ public class ProfileFragment extends Fragment {
         //mDescription.setText(settings.getDescription());
         //mPosts.setText(String.valueOf(settings.getPosts()));
         //mProgressBar.setVisibility(View.GONE);
-
     }
 
     private void setupToolbar(){

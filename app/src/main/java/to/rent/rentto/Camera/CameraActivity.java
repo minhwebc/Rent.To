@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
@@ -57,10 +56,8 @@ public class CameraActivity extends AppCompatActivity {
     static final int MAX_PRICE = 10000;
     static final int REQUEST_CAMERA_ROLL = 2;   // the request code number assigned to camera roll
     android.support.v4.app.FragmentManager fragmentManager;  // handles fragment switching
-    Button rightButton;
-    Button leftButton;
     Uri imageUri;  // the uri, for the image (for uploading)
-    ImageView imageView;  // Where the selected image will be displayed
+    byte[] imageByteArray;
     String title; // the title, for post
     String description; // the description, for post
     String category; // the category, for post
@@ -70,6 +67,7 @@ public class CameraActivity extends AppCompatActivity {
     String city; // the zipcode, for post
     String zip; // The zip code for the post
     Bitmap uploadable;
+    boolean gotPicture;
 
     /**
      * Hooks up buttons from camera fragment, Asks for permissions for camera and location
@@ -92,50 +90,11 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     * Buttons and imageView are connected
-     */
-    private void initializeButtons(){
-        rightButton = (Button) findViewById(R.id.buttonRight);
-        leftButton = (Button) findViewById(R.id.buttonLeft);
-        imageView = (ImageView) findViewById(R.id.cameraImageView);
-    }
-
-    /**
-     * Right button is pressed
-     * If the text is "Take Photo", it will launch the camera
-     * Otherwise, it will confirm that the photo is there
-     * @param view
-     */
-    public void rightButtonPressed(View view) {
-        initializeButtons();
-        if(rightButton.getText().toString().equalsIgnoreCase("Take Photo")) {
-            launchCamera(view);
-        } else {
-            launchConfirm(view);
-        }
-    }
-
-    /**
-     * Left button is pressed
-     * If the text is "Select Photo", it will launch the camera roll
-     * Otherwise, it will cancel and bring the user back to previous step
-     * @param view
-     */
-    public void leftButtonPressed(View view) {
-        initializeButtons();
-        if(leftButton.getText().toString().equalsIgnoreCase("Select Photo")) {
-            launchCameraRoll(view);
-        } else {
-            launchCancel(view);
-        }
-    }
-
-    /**
      * Launches the camera, and feeds result to imageView.
      * Requires Camera Permission
      * @param view
      */
-    private void launchCamera(View view) {
+    public void launchCamera(View view) {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -158,7 +117,7 @@ public class CameraActivity extends AppCompatActivity {
      * Launches the camera roll, and feeds result to imageView.
      * @param view
      */
-    private void launchCameraRoll(View view) {
+    public void launchCameraRoll(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(intent, REQUEST_CAMERA_ROLL);
     }
@@ -167,19 +126,26 @@ public class CameraActivity extends AppCompatActivity {
      * Switches to addTitleFragment and makes all elements from CameraActivity relLayout2 invisible
      * @param view
      */
-    private void launchConfirm(View view) {
+    public void launchConfirm(View view) {
         AddTitleFragment addTitleFragment = new AddTitleFragment();
         changeFragment("photo", addTitleFragment, "title");
     }
 
-    /**
-     * Resets CameraActivity to default viewing state
-     * @param view
-     */
-    private void launchCancel(View view) {
-        rightButton.setText("Take Photo");
-        leftButton.setText("Select Photo");
-        imageView.setImageResource(0);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(gotPicture) {
+            ConfirmPhotoFragment confirmPhotoFragment = new ConfirmPhotoFragment();
+            Bundle args = new Bundle();
+            args.putBoolean("CameraRoll", imageUri == null);
+            if(imageUri != null) {
+                args.putString("Image", imageUri.toString());
+            } else {
+                args.putByteArray("ImageByteArray", imageByteArray);
+            }
+            confirmPhotoFragment.setArguments(args);
+            changeFragment("photo", confirmPhotoFragment, "confirm");
+        }
     }
 
     /**
@@ -190,22 +156,32 @@ public class CameraActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        gotPicture = false;
+        imageUri = null;
+        imageByteArray = null;
+        uploadable = null;
         if(resultCode == RESULT_OK) {
-            rightButton.setText("Next");
-            leftButton.setText("Cancel");
+            Log.d(TAG, "result code was ok");
+            gotPicture = true;
+//            rightButton.setText("Next");
+//            leftButton.setText("Cancel");
         }
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             //Get the photo
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap) extras.get("data");
-            imageView.setImageBitmap(photo);
+//            imageView.setImageBitmap(photo);
             uploadable = photo;
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            imageByteArray = stream.toByteArray();
         } else if(requestCode == REQUEST_CAMERA_ROLL && resultCode == RESULT_OK) {
             imageUri = data.getData();
-            imageView.setImageURI(imageUri);
+//            imageView.setImageURI(imageUri);
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
+
 
     /**
      * Sets up the bottom navigation view
@@ -412,7 +388,7 @@ public class CameraActivity extends AppCompatActivity {
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
         UploadTask uploadTask;
-        if(uploadable != null) { // photo was from camera
+        if(imageUri == null) { // photo was from camera
             Bitmap bitmap = uploadable;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);

@@ -60,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "email: " + currentUser.getEmail());
             String token = FirebaseInstanceId.getInstance().getToken();
             Log.d(TAG, "Token : " + token);
-            Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
             FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid()).child("notificationTokens").child(token).setValue(true);
             Intent intent = new Intent(getApplicationContext(), ItemsListActivity.class);
             startActivity(intent);

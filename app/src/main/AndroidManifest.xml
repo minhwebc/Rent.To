@@ -42,6 +42,8 @@
         <activity
             android:name=".Profile.AccountSettingsActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".Profile.ChangeProfilePictureActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Listing.ListingActivity"
             android:launchMode="singleTask"
@@ -87,7 +89,8 @@
         </service>
 
         <activity android:name=".Messages.ChatActivity" />
-        <activity android:name=".Login.VideoActivity"></activity>
+        <activity android:name=".Login.VideoActivity" />
+        <activity android:name=".Messages.RatingActivity"></activity>
     </application>
 
 </manifest>
