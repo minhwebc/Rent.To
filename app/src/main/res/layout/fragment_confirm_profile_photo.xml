@@ -21,28 +21,17 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true">
 
-            <Button
-                android:id="@+id/buttonLeft"
-                android:layout_width="269dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="238dp"
-                android:drawableLeft="@android:drawable/ic_menu_gallery"
-                android:onClick="profilePictureRoll"
-                android:padding="16dp"
-                android:textColor="@color/white"
-                android:background="@color/colorAccent"
-                android:theme="@style/Widget.AppCompat.Button.Colored"
-                android:text="Select Photo" />
+            <include layout="@layout/layout_center_viewpager" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="224dp"
-                android:text="OR" />
+            <ImageView
+                android:id="@+id/confirmImageView"
+                android:layout_weight="9"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent" />
+
+
+
+
 
             <Button
                 android:id="@+id/buttonRight"
@@ -51,14 +40,17 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="140dp"
-                android:drawableLeft="@android:drawable/ic_menu_camera"
-                android:onClick="profilePictureCamera"
+                android:onClick="launchConfirm"
                 android:padding="16dp"
                 android:textColor="@color/white"
                 android:background="@color/colorAccent"
 
-                android:text="Take Photo" />
+                android:text="Next" />
+
+
         </RelativeLayout>
+
     </RelativeLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

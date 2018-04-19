@@ -44,6 +44,7 @@ public class ChangeProfilePictureActivity extends AppCompatActivity{
         fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.relLayout2, addProfilePhotoFragment, "addProfilePhoto").commit();
+
         // Gets Permissions
         if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
@@ -117,9 +118,8 @@ public class ChangeProfilePictureActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         if(gotPicture) {
-            ConfirmPhotoFragment confirmPhotoFragment = new ConfirmPhotoFragment();
+            ConfirmProfilePhotoFragment confirmProfilePhotoFragment= new ConfirmProfilePhotoFragment();
             fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
             Bundle args = new Bundle();
             args.putBoolean("CameraRoll", imageUri == null);
             if(imageUri != null) {
@@ -127,8 +127,8 @@ public class ChangeProfilePictureActivity extends AppCompatActivity{
             } else {
                 args.putByteArray("ImageByteArray", imageByteArray);
             }
-            confirmPhotoFragment.setArguments(args);
-            fragmentManager.beginTransaction().replace(R.id.relLayout2, confirmPhotoFragment, "confirm").addToBackStack(null).commit();
+            confirmProfilePhotoFragment.setArguments(args);
+            fragmentManager.beginTransaction().replace(R.id.relLayout2, confirmProfilePhotoFragment, "confirm").addToBackStack(null).commit();
         }
     }
 
