@@ -220,22 +220,27 @@ public class EditProfileFragment extends Fragment implements
         /**
          * change the rest of the settings that do not require uniqueness
          */
-        if(!mUserSettings.getSettings().getDisplay_name().equals(displayName)){
+        String firebaseDisplayName = mUserSettings.getSettings().getDisplay_name();
+        String firebaseWebsite = mUserSettings.getSettings().getWebsite();
+        String firebaseDescription = mUserSettings.getSettings().getDescription();
+        Long firebasePhoneNumber = mUserSettings.getUser().getPhone_number();
+
+        if(firebaseDisplayName == null || !mUserSettings.getSettings().getDisplay_name().equals(displayName)){
             Log.d(TAG, "saveProfileSettings: displayName: "+ displayName);
             //update displayname
             mFirebaseMethods.updateUserAccountSettings(displayName, null, null, 0);
         }
-        if(!mUserSettings.getSettings().getWebsite().equals(website)){
+        if(firebaseWebsite == null || !mUserSettings.getSettings().getWebsite().equals(website)){
             Log.d(TAG, "saveProfileSettings: website: " + website);
             //update website
             mFirebaseMethods.updateUserAccountSettings(null, website, null, 0);
         }
-        if(!mUserSettings.getSettings().getDescription().equals(description)){
+        if(firebaseDescription == null || !mUserSettings.getSettings().getDescription().equals(description)){
             Log.d(TAG, "saveProfileSettings: description " + description);
             //update description
             mFirebaseMethods.updateUserAccountSettings(null, null, description, 0);
         }
-        if(!(mUserSettings.getUser().getPhone_number() == phoneNumber)) {
+        if(firebasePhoneNumber == null || !(mUserSettings.getUser().getPhone_number() == phoneNumber)) {
 
                 //.getUser().getPhone_number()().equals(phoneNumber)){
             Log.d(TAG, "saveProfileSettings: phoneNumber: " + phoneNumber);
