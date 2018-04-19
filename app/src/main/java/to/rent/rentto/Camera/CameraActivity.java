@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
@@ -57,10 +56,8 @@ public class CameraActivity extends AppCompatActivity {
     static final int MAX_PRICE = 10000;
     static final int REQUEST_CAMERA_ROLL = 2;   // the request code number assigned to camera roll
     android.support.v4.app.FragmentManager fragmentManager;  // handles fragment switching
-    Button rightButton;
-    Button leftButton;
     Uri imageUri;  // the uri, for the image (for uploading)
-    ImageView imageView;  // Where the selected image will be displayed
+    byte[] imageByteArray;
     String title; // the title, for post
     String description; // the description, for post
     String category; // the category, for post
@@ -125,12 +122,6 @@ public class CameraActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CAMERA_ROLL);
     }
 
-    private void changeConfirmPhotoFragment(View view) {
-        ConfirmPhotoFragment confirmPhotoFragment = new ConfirmPhotoFragment();
-        changeFragment("photo", confirmPhotoFragment, "confirm");
-        imageView = (ImageView) findViewById(R.id.cameraImageView);
-    }
-
     /**
      * Switches to addTitleFragment and makes all elements from CameraActivity relLayout2 invisible
      * @param view
@@ -140,25 +131,18 @@ public class CameraActivity extends AppCompatActivity {
         changeFragment("photo", addTitleFragment, "title");
     }
 
-    /**
-     * Resets CameraActivity to default viewing state
-     * @param view
-     */
-    private void launchCancel(View view) {
-        rightButton.setText("Take Photo");
-        leftButton.setText("Select Photo");
-        imageView.setImageResource(0);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         if(gotPicture) {
-            Log.d(TAG, "inside on resume, uri is " + imageUri.toString());
-            Toast.makeText(mContext, "Inside On resume, uri is " + imageUri, Toast.LENGTH_SHORT);
             ConfirmPhotoFragment confirmPhotoFragment = new ConfirmPhotoFragment();
             Bundle args = new Bundle();
-            args.putString("Image", imageUri.toString());
+            args.putBoolean("CameraRoll", imageUri == null);
+            if(imageUri != null) {
+                args.putString("Image", imageUri.toString());
+            } else {
+                args.putByteArray("ImageByteArray", imageByteArray);
+            }
             confirmPhotoFragment.setArguments(args);
             changeFragment("photo", confirmPhotoFragment, "confirm");
         }
@@ -173,6 +157,10 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        gotPicture = false;
+        imageUri = null;
+        imageByteArray = null;
+        uploadable = null;
         if(resultCode == RESULT_OK) {
             Log.d(TAG, "result code was ok");
             gotPicture = true;
@@ -184,8 +172,10 @@ public class CameraActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap) extras.get("data");
 //            imageView.setImageBitmap(photo);
-            imageUri = data.getData();
             uploadable = photo;
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            imageByteArray = stream.toByteArray();
         } else if(requestCode == REQUEST_CAMERA_ROLL && resultCode == RESULT_OK) {
             imageUri = data.getData();
 //            imageView.setImageURI(imageUri);
@@ -398,7 +388,7 @@ public class CameraActivity extends AppCompatActivity {
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
         UploadTask uploadTask;
-        if(uploadable != null) { // photo was from camera
+        if(imageUri == null) { // photo was from camera
             Bitmap bitmap = uploadable;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
