@@ -33,6 +33,7 @@ public class ProfileListingActivity extends AppCompatActivity {
     private static final String TAG = "ListingActivity";
     private Context mContext;
     private String ITEM_ID;
+    private String CITY;
     private Item mItem;
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
@@ -43,10 +44,12 @@ public class ProfileListingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_listing);
         mContext = ProfileListingActivity.this;
+
         mAuth = FirebaseAuth.getInstance();
         Log.d(TAG, "onCreate: Started.");
 
         ITEM_ID = getIntent().getStringExtra("ITEM_ID");
+        CITY = getIntent().getStringExtra("CITY");
 
         mReference = FirebaseDatabase.getInstance().getReference();
         Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid());
@@ -76,9 +79,11 @@ public class ProfileListingActivity extends AppCompatActivity {
     }
 
     private void grabTheItem(){
-        Query query = mReference.child(mContext.getString(R.string.dbname_user_items)).child(currentUser.getUser_id()).child(ITEM_ID);
-        query.addValueEventListener(new ValueEventListener() {
+//        Query query = mReference.child(mContext.getString(R.string.dbname_user_items)).child(mAuth.getCurrentUser().getUid()).child(ITEM_ID);
+//        query.addValueEventListener(new ValueEventListener() {
 
+        Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.getValue()+"");
@@ -108,73 +113,6 @@ public class ProfileListingActivity extends AppCompatActivity {
                         User user = dataSnapshot.getValue(User.class);
                         TextView userField = findViewById(R.id.textView4);
                         userField.setText(user.getUsername());
-//                        Button mButton = findViewById(R.id.requestButton);
-////                        mButton.setOnClickListener(new View.OnClickListener() {
-////                            @Override
-////                            public void onClick(View view) {
-////                                DatabaseReference renterUIDRef = mReference.child("notificationMessages").child(mItem.userUID);
-////                                DatabaseReference pushedKey = renterUIDRef.push();
-////
-////                                pushedKey.setValue(currentUser.getUsername() + " have made you an offer", new DatabaseReference.CompletionListener() {
-////
-////                                    @Override
-////                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-////                                        mReference.child("notifications").child(mItem.userUID).child(currentUser.getUser_id()).setValue(UUID.randomUUID().toString(), new DatabaseReference.CompletionListener() {
-////                                            @Override
-////                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-////                                                if(databaseError == null) {
-////                                                    DatabaseReference messageRef = mReference.child("messages");
-////                                                    final DatabaseReference newMessageID = messageRef.push(); //this will be included into both the offered and the renter as well
-////                                                    newMessageID.setValue(currentUser.getUser_id());
-////                                                    Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your " + mItem.title, "date here", true, currentUser.getUser_id());
-////                                                    //push message to the message table
-////                                                    newMessageID.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
-////                                                        @Override
-////                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-////                                                            if(databaseError == null) {
-////                                                                //set message to the current user
-////                                                                mReference.child("users").child(currentUser.getUser_id()).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
-////                                                                    @Override
-////                                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-////                                                                        if(databaseError == null) {
-////                                                                            //Set the message to the renter
-////                                                                            mReference.child("users").child(mItem.userUID).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
-////                                                                                @Override
-////                                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-////                                                                                    if(databaseError == null) {
-////                                                                                        int duration = Toast.LENGTH_SHORT;
-////                                                                                        Toast toast = Toast.makeText(mContext, "Offer sent", duration);
-////                                                                                        toast.show();
-////                                                                                    } else {
-////
-////                                                                                    }
-////                                                                                }
-////                                                                            });
-////                                                                        } else {
-////                                                                            int duration = Toast.LENGTH_SHORT;
-////                                                                            Toast toast = Toast.makeText(mContext, "error at pushing new message to the currentUser", duration);
-////                                                                            toast.show();
-////                                                                        }
-////                                                                    }
-////                                                                });
-////                                                            } else {
-////                                                                int duration = Toast.LENGTH_SHORT;
-////                                                                Toast toast = Toast.makeText(mContext, "error at pushing new message", duration);
-////                                                                toast.show();
-////                                                            }
-////                                                        }
-////                                                    });
-//////                                                    CharSequence text = "Offer Sent!";
-//////                                                    int duration = Toast.LENGTH_SHORT;
-//////                                                    Toast toast = Toast.makeText(mContext, text, duration);
-//////                                                    toast.show();
-////                                                }
-////                                            }
-////                                        });
-////                                    }
-////                                });
-////                            }
-////                        });
                     }
 
                     @Override
