@@ -1,5 +1,6 @@
 package to.rent.rentto.Profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +37,8 @@ import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.FirebaseMethods;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by allencho on 2/15/18.
  */
@@ -43,6 +46,7 @@ import to.rent.rentto.Utils.FirebaseMethods;
 public class EditProfileFragment extends Fragment implements
     ConfirmPasswordDialog.OnConfirmPasswordListener{
     private static final String TAG = "EditProfileFragment";
+    private static final int CHANGE_PROFILE_PIC = 1;
 
     @Override
     public void onConfirmPassword(String password) {
@@ -142,6 +146,9 @@ public class EditProfileFragment extends Fragment implements
         //setProfileImage();
         setupFirebaseAuth();
 
+        setupProfilePhotoClick();
+
+
         //back arrow for navigating back to "ProfileActivity"
         ImageView backArrow = (ImageView) view.findViewById(R.id.backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -163,8 +170,26 @@ public class EditProfileFragment extends Fragment implements
         return view;
     }
 
+    private void setupProfilePhotoClick() {
+        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: switching to ChangeProfilePictureActivity.");
+                Intent intent = new Intent(getActivity(), ChangeProfilePictureActivity.class);
+                startActivityForResult(intent, CHANGE_PROFILE_PIC);
+            }
+        });
+    }
 
-//    private void setProfileImage() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            getActivity().recreate();
+        }
+    }
+
+    //    private void setProfileImage() {
 //        Log.d(TAG, "setProfileImage: setting profile image.");
 //        String imgURL = "https://josephratliff.name/wp-content/uploads/2017/11/android-central.jpg";
 //        Glide.with(getActivity())
@@ -370,8 +395,4 @@ public class EditProfileFragment extends Fragment implements
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
-
-
-
 }

@@ -19,6 +19,15 @@ public class ConfirmPhotoFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_confirm_photo, container, false);
         Log.d(TAG, "inside of ConfirmPhoto.java onCreateView");
+        initiateImageView(view);
+        return view;
+    }
+
+    /**
+     * Sets imageView image to the chosen image
+     * @param view
+     */
+    private void initiateImageView(View view) {
         ImageView imageView = view.findViewById(R.id.confirmImageView);
         boolean cameraRoll = getArguments().getBoolean("CameraRoll");
         if(cameraRoll) {
@@ -30,6 +39,5 @@ public class ConfirmPhotoFragment extends android.support.v4.app.Fragment {
             Uri uri = Uri.parse(imagePath);
             imageView.setImageURI(uri);
         }
-        return view;
     }
 }
