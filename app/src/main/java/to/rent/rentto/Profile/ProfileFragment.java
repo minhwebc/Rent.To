@@ -46,6 +46,8 @@ import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.FirebaseMethods;
 import to.rent.rentto.Utils.UniversalImageLoader;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by allencho on 2/27/18.
  */
@@ -67,7 +69,7 @@ public class ProfileFragment extends Fragment {
     private ArrayList<String> iDs = new ArrayList<>();
     private ProfileRecyclerViewAdapter staggeredRecyclerViewAdapter;
     private static final int NUM_COLUMNS = 3;
-
+    private static final int CHANGE_PROFILE_PIC = 1;
     private TextView mPosts, mDisplayName, mUsername, mWebsite, mDescription;
     private ProgressBar mProgressBar;
     private CircleImageView mProfilePhoto;
@@ -116,9 +118,17 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: switching to ChangeProfilePictureActivity.");
                 Intent intent = new Intent(getActivity(), ChangeProfilePictureActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, CHANGE_PROFILE_PIC);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            getActivity().recreate();
+        }
     }
 
     private void initImageBitMaps(){

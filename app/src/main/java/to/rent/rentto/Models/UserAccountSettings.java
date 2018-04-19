@@ -51,8 +51,8 @@ public class UserAccountSettings {
     }
 
     public String getProfile_photo() {
-        return "https://firebasestorage.googleapis.com/v0/b/rentto-f0093.appspot.com/o/chrome_2018-03-05_21-10-33.png?alt=media&token=ed0b7cd0-0eb3-41ea-a082-5cb3c3f862fd";
-        //return "https://firebasestorage.googleapis.com/v0/b/rentto-f0093.appspot.com/o/flat%2C800x800%2C075%2Cf.u1.jpg?alt=media&token=d77b3c5b-7355-4e77-a3f9-6b5c92a1b167";
+        String defaultPic = "https://firebasestorage.googleapis.com/v0/b/rentto-f0093.appspot.com/o/600px-Default_profile_picture_(male)_on_Facebook.jpg?alt=media&token=166b9b02-1528-448a-ba2c-5ee8c7cb4522";
+        return (profile_photo == null) ? defaultPic : profile_photo;
     }
 
     public void setProfile_photo(String profile_photo) {
