@@ -15,8 +15,6 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
-import to.rent.rentto.Listing.ItemsListActivity;
-import to.rent.rentto.Listing.ListingActivity;
 import to.rent.rentto.R;
 
 /**
@@ -69,17 +67,17 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                 .apply(requestOptions)
                 .into(holder.imageView);
 
-//        holder.imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
-//                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(mContext, ListingActivity.class);
-//                intent.putExtra("ITEM_ID", mIDs.get(position));
-//                intent.putExtra("CITY", findCurrentCity());
-//                mContext.startActivity(intent);
-//            }
-//        });
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
+                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, ProfileListingActivity.class);
+                intent.putExtra("ITEM_ID", mIDs.get(position));
+                intent.putExtra("CITY", findCurrentCity());
+                mContext.startActivity(intent);
+            }
+        });
 
     }
 

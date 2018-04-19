@@ -28,6 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Profile.ProfileListingActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".Profile.ProfileActivity"
             android:launchMode="singleTask"

@@ -38,8 +38,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import to.rent.rentto.Listing.ItemsListActivity;
-import to.rent.rentto.Listing.RecyclerViewAdapter;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.Models.UserSettings;
