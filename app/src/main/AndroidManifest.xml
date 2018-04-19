@@ -38,6 +38,8 @@
         <activity
             android:name=".Profile.AccountSettingsActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".Profile.ChangeProfilePictureActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Listing.ListingActivity"
             android:launchMode="singleTask"

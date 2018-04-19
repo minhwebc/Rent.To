@@ -96,6 +96,7 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "onCreateView: stared.");
 
 
+        setupProfilePhotoClick();
         setupBottomNavigationView();
         setupToolbar();
         setupFirebaseAuth();
@@ -107,6 +108,17 @@ public class ProfileFragment extends Fragment {
         initImageBitMaps();
 
         return view;
+    }
+
+    private void setupProfilePhotoClick() {
+        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: switching to ChangeProfilePictureActivity.");
+                Intent intent = new Intent(getActivity(), ChangeProfilePictureActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initImageBitMaps(){
