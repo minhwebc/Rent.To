@@ -33,10 +33,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemClickListener mClickListener;
     private ItemsListActivity mContext;
     private int width;
+    private String city;
 
-    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width){
+    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, String city){
         Log.d(TAG, "constructor: called.");
 
+        this.city = city;
         this.width = width;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
@@ -47,7 +49,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     //To-do here find the current city
     private String findCurrentCity(){
-        return "seattle";
+        return this.city;
     };
 
     @Override

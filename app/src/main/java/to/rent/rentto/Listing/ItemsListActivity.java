@@ -3,9 +3,16 @@ package to.rent.rentto.Listing;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +38,8 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
@@ -45,6 +55,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private static final String TAG = "ItemsListActivity";
     private static final int NUM_COLUMNS = 3;
     private static final int REQUEST_CATEGORY_CODE = 1000;
+    private static final int LOCATION_PERMISSION_REQUEST = 1;
 
     private android.support.v4.app.FragmentManager fragmentManager;
     private Context mContext;
@@ -53,6 +64,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private RecyclerViewAdapter staggeredRecyclerViewAdapter;
     private String filter;
+    private double miles;
     private TextView textView;
 
     @Override
@@ -65,7 +77,9 @@ public class ItemsListActivity extends AppCompatActivity {
         mReference = FirebaseDatabase.getInstance().getReference();
         setupBottomNavigationView();
 
+        miles = 20;
         int width = getScreenSizeX();
+
         initImageLoader();
         initRecyclerView(width);
         initImageBitMaps();
@@ -81,8 +95,44 @@ public class ItemsListActivity extends AppCompatActivity {
 
     //To-do here find the current city
     private String findCurrentCity(){
-        return "seattle";
+        if(ContextCompat.checkSelfPermission(ItemsListActivity.this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(ItemsListActivity.this,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+            } else {
+                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+            }
+        } else {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            try {
+                return getZipcode(location.getLatitude(), location.getLongitude());
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(ItemsListActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
+                return "";
+            }
+        }
+        return "";
     };
+
+    private String getZipcode(double lat, double lon){
+        String location = "";
+
+        Geocoder geocoder = new Geocoder(ItemsListActivity.this, Locale.getDefault());
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(lat, lon, 1);
+            if(addresses.size() > 0){
+                location = addresses.get(0).getPostalCode();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(ItemsListActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
+        }
+        return location;
+    }
 
     private void initImageBitMaps(){
         //grabs all the photos back
@@ -144,7 +194,7 @@ public class ItemsListActivity extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls, width);
+                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity());
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);
@@ -180,14 +230,20 @@ public class ItemsListActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CATEGORY_CODE:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filterData = FilterActivity.getResult(data);
-                    filter = filterData;
+                    String filterCatData = FilterActivity.getCategory(data);
+                    filter = filterCatData;
+                    double filterDistanceData = FilterActivity.getDistance(data);
+                    miles = filterDistanceData;
                     initImageBitMaps();
-                    Log.d(TAG, "filter is " + filterData);
+                    Log.d(TAG, "filter is " + filterCatData);
+                    Log.d(TAG, "distance is " + filterDistanceData);
                 } else {
                     Log.d(TAG, "Filter canceled");
                 }
         }
+    }
+
+    private void getDistanceFromZip(String zip1, String zip2){
     }
 
 
