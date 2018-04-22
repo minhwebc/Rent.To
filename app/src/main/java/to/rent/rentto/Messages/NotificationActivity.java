@@ -40,6 +40,7 @@ public class NotificationActivity extends AppCompatActivity {
     private ArrayAdapter arrayAdapter;
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
+    private ArrayList<String> messageUIDlist;
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -77,6 +78,7 @@ public class NotificationActivity extends AppCompatActivity {
         final ArrayList<String> data = new ArrayList<>();
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, data);
         messagesListView.setAdapter(arrayAdapter);
+        messageUIDlist = new ArrayList<>();
 
         Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see");
         query.addValueEventListener(new ValueEventListener() {
@@ -86,9 +88,10 @@ public class NotificationActivity extends AppCompatActivity {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String userKey = ds.getKey();
                     Log.d(TAG, "user key is " + userKey);
+                    messageUIDlist.add(userKey);
 
                     String messageId = (String) ds.getValue();
-                    mReference.child("messages").child(messageId).addValueEventListener(new ValueEventListener() {
+                    mReference.child("messages").child(userKey).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
                             for(DataSnapshot ds1 : dataSnapshot1.getChildren()) {
@@ -136,7 +139,7 @@ public class NotificationActivity extends AppCompatActivity {
                 String selectedText = messagesListView.getItemAtPosition(position).toString();
                 Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NotificationActivity.this, ChatActivity.class);
-                intent.putExtra("MessageChannelID", selectedText);
+                intent.putExtra("MessageChannelID", messageUIDlist.get(position));
                 startActivity(intent);
             }
         });

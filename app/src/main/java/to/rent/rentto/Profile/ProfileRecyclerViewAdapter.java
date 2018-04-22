@@ -97,6 +97,111 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
             }
         });
 
+        holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            /*
+            @Override
+            public boolean onLongClick(View v) {
+
+                return true;
+            }*/
+            @Override
+            public boolean onLongClick(View view) {
+                final CharSequence colors[] = new CharSequence[] {"Mark as sold", "Delete item"};
+                final ArrayList<String> usersIDArray = new ArrayList<>();
+                final ArrayList<String> usersNameArray = new ArrayList<>();
+
+                String location = ShareMethods.getCurrentLocation();
+                String itemID = mIDs.get(position);
+                myRef.child("posts").child(location).child(itemID).child("user_offers").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                            String userID = ds.getValue(String.class);
+                            usersIDArray.add(userID);
+                            myRef.child("users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot ds : dataSnapshot.getChildren()){
+                                        if(ds.getKey().equals("username")) {
+                                            usersNameArray.add(ds.getValue(String.class));
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                builder.setTitle("Action");
+                builder.setItems(colors, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(which == 0) {
+                            Log.d("ViewHolder", "mark as rented item");
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                            builder.setTitle("Who do you sold it to:");
+                            String usersIDStringArray[] = usersIDArray.toArray(new String[usersIDArray.size()]);
+                            String usersNameStringArray[] = usersNameArray.toArray(new String[usersNameArray.size()]);
+                            builder.setItems(usersNameStringArray, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    final String userStringSold = usersIDArray.get(which);
+                                    myRef.child("users").child(userStringSold).child("users_to_be_rated").push().setValue(mAuth.getCurrentUser().getUid(),new DatabaseReference.CompletionListener(){
+                                        @Override
+                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                            if(databaseError == null) {
+                                                ((ProfileActivity) mContext).setUserID(userStringSold);
+                                                showDialog();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            builder.show();
+                        } else if(which == 1){
+                            Log.d("ViewHolder", "delete item");
+                        }
+                    }
+                });
+                builder.show();
+                return false;
+            }
+
+            private void showDialog() {
+                new AppRatingDialog.Builder()
+                        .setPositiveButtonText("Submit")
+                        .setNegativeButtonText("Cancel")
+                        .setNeutralButtonText("Later")
+                        .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+                        .setDefaultRating(2)
+                        .setTitle("How would you rate this person")
+                        .setDescription("Please select some stars and give your feedback")
+                        .setStarColor(R.color.colorAccent)
+                        .setNoteDescriptionTextColor(R.color.colorPrimary)
+                        .setTitleTextColor(R.color.black)
+                        .setDescriptionTextColor(R.color.colorPrimary)
+                        .setHint("Please write your comment here ...")
+                        .setHintTextColor(R.color.black_11)
+                        .setCommentTextColor(R.color.black)
+                        .setCommentBackgroundColor(R.color.white)
+                        .create((ProfileActivity) mContext)
+                        .show();
+            }
+
+        });
+
     }
 
     @Override
