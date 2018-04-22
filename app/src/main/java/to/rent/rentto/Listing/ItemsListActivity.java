@@ -110,8 +110,8 @@ public class ItemsListActivity extends AppCompatActivity {
                 return getZipcode(location.getLatitude(), location.getLongitude());
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(ItemsListActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
-                return "";
+                Toast.makeText(ItemsListActivity.this, "Location not found, using default zip", Toast.LENGTH_SHORT).show();
+                return "98105";
             }
         }
         return "";
@@ -129,7 +129,8 @@ public class ItemsListActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(ItemsListActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ItemsListActivity.this, "Location not found, using default zip", Toast.LENGTH_SHORT).show();
+            return "98105";
         }
         return location;
     }
