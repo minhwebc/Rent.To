@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -138,26 +140,31 @@ public class ItemsListActivity extends AppCompatActivity {
     private void initImageBitMaps(){
         //grabs all the photos back
         Log.d(TAG, "initimagebitmaps");
-        Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(findCurrentCity());
+        Query query = mReference.child(mContext.getString(R.string.dbname_items));
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                String currCity = findCurrentCity();
                 mImageUrls.clear();
                 iDs.clear();
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    String keyID = singleSnapshot.getKey(); //photoIDs
-                    Item mItem = singleSnapshot.getValue(Item.class);
-                    String photo_path = mItem.imageURL;
-                    System.out.println(mItem.category);
-                    if(filter != null){
-                        if(filter.equals(mItem.category)){
-                            mImageUrls.add(photo_path);
-                            iDs.add(keyID);
+                for(DataSnapshot zips : dataSnapshot.getChildren()) {
+                    if (distanceBetweenZip(zips.getKey(), currCity) < miles) {
+                        for (DataSnapshot singleSnapShot : dataSnapshot.child(zips.getKey()).getChildren()) {
+                            String keyID = singleSnapShot.getKey(); //photoIDs
+                            Item mItem = singleSnapShot.getValue(Item.class);
+                            String photo_path = mItem.imageURL;
+                            System.out.println(mItem.category);
+                            if (filter != null) {
+                                if (filter.equals(mItem.category)) {
+                                    mImageUrls.add(photo_path);
+                                    iDs.add(keyID);
+                                }
+                            } else {
+                                mImageUrls.add(photo_path);
+                                iDs.add(keyID);
+                            }
                         }
-                    } else {
-                        mImageUrls.add(photo_path);
-                        iDs.add(keyID);
                     }
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
@@ -169,6 +176,27 @@ public class ItemsListActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private double distanceBetweenZip(String zipOne, String zipTwo){
+        String locationOne = zipOne + ", " + "United States";
+        String locationTwo = zipTwo + ", " + "United States";
+        Geocoder geoCoder = new Geocoder(mContext, Locale.getDefault());
+        try {
+            List<Address> addresses = geoCoder.getFromLocationName(locationOne, 1);
+            double lat = addresses.get(0).getLatitude();
+            double lon = addresses.get(0).getLongitude();
+            List<Address> addressesTwo = geoCoder.getFromLocationName(locationTwo, 1);
+            double latTwo = addressesTwo.get(0).getLatitude();
+            double lonTwo = addressesTwo.get(0).getLongitude();
+            float[] res = {3};
+            Location.distanceBetween(lat, lon, latTwo, lonTwo, res);
+            // Convert meters to miles
+            return (res[0]/1609);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
     }
 
     @Override
@@ -215,10 +243,6 @@ public class ItemsListActivity extends AppCompatActivity {
         display.getSize(size);
         int height = size.y;
         return height;
-    }
-
-    private void setFilter(View view) {
-
     }
 
     public void launchFilter(View view) {

@@ -112,7 +112,7 @@ public class FilterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 String category = spinner.getSelectedItem().toString();
-                Double distance = Double.parseDouble((distanceTextView.toString()));
+                Double distance = Double.parseDouble((distanceTextView.getText().subSequence(0,2).toString().trim()));
                 Intent intent = new Intent();
                 intent.putExtra(CATEGORY_RESULT_KEY_MESSAGE, category);
                 intent.putExtra(DISTANCE_RESULT_KEY_MESSAGE, distance);
