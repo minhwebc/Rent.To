@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import to.rent.rentto.Profile.ProfileFragment;
@@ -34,10 +35,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemsListActivity mContext;
     private int width;
     private String city;
+    private ArrayList<String> zips = new ArrayList<>();
 
-    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, String city){
+    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, String city, ArrayList<String> zipcodes){
         Log.d(TAG, "constructor: called.");
-
+        this.zips = zipcodes;
         this.city = city;
         this.width = width;
         this.mInflater = LayoutInflater.from(context);
@@ -77,7 +79,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, ListingActivity.class);
                 intent.putExtra("ITEM_ID", mIDs.get(position));
-                intent.putExtra("CITY", findCurrentCity());
+                intent.putExtra("CITY", zips.get(position));
                 mContext.startActivity(intent);
             }
         });

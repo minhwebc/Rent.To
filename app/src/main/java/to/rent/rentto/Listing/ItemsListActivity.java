@@ -63,6 +63,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private Context mContext;
     private ArrayList<String> mImageUrls = new ArrayList<>();
     private ArrayList<String> iDs = new ArrayList<>();
+    private ArrayList<String> zipcodes = new ArrayList<>();
     private DatabaseReference mReference;
     private RecyclerViewAdapter staggeredRecyclerViewAdapter;
     private String filter;
@@ -148,6 +149,7 @@ public class ItemsListActivity extends AppCompatActivity {
                 String currCity = findCurrentCity();
                 mImageUrls.clear();
                 iDs.clear();
+                zipcodes.clear();
                 for(DataSnapshot zips : dataSnapshot.getChildren()) {
                     if (distanceBetweenZip(zips.getKey(), currCity) < miles) {
                         for (DataSnapshot singleSnapShot : dataSnapshot.child(zips.getKey()).getChildren()) {
@@ -164,6 +166,7 @@ public class ItemsListActivity extends AppCompatActivity {
                                 mImageUrls.add(photo_path);
                                 iDs.add(keyID);
                             }
+                            zipcodes.add(zips.getKey());
                         }
                     }
                 }
@@ -223,7 +226,7 @@ public class ItemsListActivity extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity());
+                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity(), zipcodes);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);
