@@ -22,7 +22,7 @@ public class FilterActivity extends AppCompatActivity {
     private static final String CATEGORY_RESULT_KEY_MESSAGE = "Category_Result";
     private static final String DISTANCE_RESULT_KEY_MESSAGE = "Distance_Result";
     private static final String TAG = "FilterFragment";
-    private final String[] categoryValues = {"Manual Tools", "Motor Tools", "Sports Equipment", "Cookware", "Videogames", "Electronics", "Movies", "Parking Spot", "Party Supplies", "Other"};
+    private final String[] categoryValues = {"No Filter", "Manual Tools", "Motor Tools", "Sports Equipment", "Cookware", "Videogames", "Electronics", "Movies", "Parking Spot", "Party Supplies", "Other"};
     final String[] distanceValues= {"5 mi", "10 mi", "20 mi", "30 mi", "40 mi", "50 mi"};
 
     private TextView distanceTextView;

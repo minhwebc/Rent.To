@@ -260,6 +260,9 @@ public class ItemsListActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     String filterCatData = FilterActivity.getCategory(data);
                     filter = filterCatData;
+                    if (filter.equals("No Filter")) {
+                        filter = null;
+                    }
                     double filterDistanceData = FilterActivity.getDistance(data);
                     miles = filterDistanceData;
                     initImageBitMaps();
