@@ -18,6 +18,7 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 import java.util.Arrays;
 import java.util.UUID;
 
+import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.R;
 
 public class RatingActivity extends AppCompatActivity implements RatingDialogListener {
@@ -99,6 +100,8 @@ public class RatingActivity extends AppCompatActivity implements RatingDialogLis
                                                 if (databaseError == null) {
                                                     Toast.makeText(RatingActivity.this, "Rating submitted",
                                                             Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(RatingActivity.this, HomeActivity.class);
+                                                    startActivity(intent);
                                                 }
                                             }
                                         });

@@ -67,6 +67,8 @@ public class ProfileFragment extends Fragment {
     //From ItemListActivity
     private ArrayList<String> mImageUrls = new ArrayList<>();
     private ArrayList<String> iDs = new ArrayList<>();
+    private ArrayList<String> zips = new ArrayList<>();
+    private ArrayList<Boolean> rented = new ArrayList<>();
     private ProfileRecyclerViewAdapter staggeredRecyclerViewAdapter;
     private static final int NUM_COLUMNS = 3;
     private static final int CHANGE_PROFILE_PIC = 1;
@@ -139,16 +141,27 @@ public class ProfileFragment extends Fragment {
         Query query = reference
                 .child(getString(R.string.dbname_user_items))
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                iDs.clear();
+                zips.clear();
+                rented.clear();
+                mImageUrls.clear();
                 for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
 
                     String keyID = singleSnapshot.getKey(); //photoIDs
                     iDs.add(keyID);
                     Item mItem = singleSnapshot.getValue(Item.class);
+                    zips.add(mItem.zip);
+
+                    if(mItem.sold)
+                        rented.add(true);
+                    else
+                        rented.add(false);
                     String photo_path = mItem.imageURL;
                     mImageUrls.add(photo_path);
+                    Log.d(TAG, mItem.sold + " something");
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
             }
@@ -170,7 +183,7 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.profileRecylerVieww);
         staggeredRecyclerViewAdapter =
-                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width);
+                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width, zips, rented);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         if(recyclerView == null) {
             Log.d(TAG, "RecyclerView is null");
@@ -202,10 +215,6 @@ public class ProfileFragment extends Fragment {
                 .into(mProfilePhoto);
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
-        //mWebsite.setText(settings.getWebsite());
-        //mDescription.setText(settings.getDescription());
-        //mPosts.setText(String.valueOf(settings.getPosts()));
-        //mProgressBar.setVisibility(View.GONE);
     }
 
     private void setupToolbar(){

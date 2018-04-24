@@ -127,6 +127,10 @@ public class ListingActivity extends AppCompatActivity {
                         mButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                if(currentUser.getUser_id().equals(mItem.userUID)){
+                                    Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 DatabaseReference renterUIDRef = mReference.child("notificationMessages").child(mItem.userUID);
                                 DatabaseReference pushedKey = renterUIDRef.push();
 

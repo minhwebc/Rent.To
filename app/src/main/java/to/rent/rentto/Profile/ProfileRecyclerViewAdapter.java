@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import to.rent.rentto.R;
-import to.rent.rentto.Utils.ShareMethods;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -36,9 +36,14 @@ import to.rent.rentto.Utils.ShareMethods;
 public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecyclerViewAdapter.ViewHolder>{
 
     private static final String TAG = "StaggeredRecyclerViewAd";
+    private static final int REQUEST_CATEGORY_CODE = 1000;
+    private static final int LOCATION_PERMISSION_REQUEST = 1;
 
     private ArrayList<String> mIDs = new ArrayList<>();
     private ArrayList<String> mImageUrls = new ArrayList<>();
+    private ArrayList<String> zips = new ArrayList<>();
+    private ArrayList<Boolean> rented = new ArrayList<>();
+
     private String[] mData = new String[0];
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -49,7 +54,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
     private FirebaseAuth mAuth;
 
 
-    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width){
+    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, ArrayList<String> zips, ArrayList<Boolean> rented){
         Log.d(TAG, "constructor: called.");
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -59,17 +64,15 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
         this.mContext = context;
         Log.d(TAG, mIDs.size()+"");
         mIDs = ids;
+        this.zips = zips;
+        this.rented = rented;
         mImageUrls = imageUrls;
     }
-
-    //To-do here find the current city
-    private String findCurrentCity(){
-        return "seattle";
-    };
 
     @Override
     public ProfileRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup par, int viewType){
         View view = mInflater.inflate(R.layout.recyclerview_item, par, false);
+        TextView soldInfo = (TextView) view.findViewById(R.id.ratedInformation);
         return new ViewHolder(view, this.width);
     }
 
@@ -79,23 +82,22 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
         Log.d(TAG, "onBindViewHolder: called." + mIDs.size());
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.ic_launcher_background);
-
+        if(rented.get(position)) {
+            holder.soldInfo.setText("RENTED");
+        }else{
+            holder.soldInfo.setVisibility(View.GONE);
+        }
         Glide.with(mContext)
                 .load(mImageUrls.get(position))
                 .apply(requestOptions)
                 .into(holder.imageView);
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
-                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mContext, ProfileListingActivity.class);
-                intent.putExtra("ITEM_ID", mIDs.get(position));
-                intent.putExtra("CITY", findCurrentCity());
-                mContext.startActivity(intent);
-            }
-        });
+//        holder.imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+
+//            }
+//        });
 
     }
 
@@ -106,10 +108,12 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, RatingDialogListener {
         ImageView imageView;
+        TextView soldInfo;
 
         ViewHolder(View itemView, int width) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
+            soldInfo = (TextView) itemView.findViewById(R.id.ratedInformation);
             int newWidth = width / 3;
             if(imageView.getLayoutParams().width > newWidth) {
                 int ratio = newWidth / imageView.getLayoutParams().width;
@@ -122,9 +126,15 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) {
-                mClickListener.onItemClick(view, getAdapterPosition());
-            }
+//            if (mClickListener != null) {
+//                mClickListener.onItemClick(view, getAdapterPosition());
+//            }
+            //Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
+            Toast.makeText(mContext, mIDs.get(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(mContext, ProfileListingActivity.class);
+            intent.putExtra("ITEM_ID", mIDs.get(getAdapterPosition()));
+            intent.putExtra("CITY", zips.get(getAdapterPosition()));
+            mContext.startActivity(intent);
         }
 
         @Override
@@ -133,7 +143,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
             final ArrayList<String> usersIDArray = new ArrayList<>();
             final ArrayList<String> usersNameArray = new ArrayList<>();
 
-            String location = ShareMethods.getCurrentLocation();
+            String location = zips.get(getAdapterPosition());
             String itemID = mIDs.get(getAdapterPosition());
             myRef.child("posts").child(location).child(itemID).child("user_offers").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -171,28 +181,34 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
             builder.setItems(colors, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     if(which == 0) {
-                        Log.d("ViewHolder", "mark as rented item");
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setTitle("Who do you sold it to:");
-                        String usersIDStringArray[] = usersIDArray.toArray(new String[usersIDArray.size()]);
-                        String usersNameStringArray[] = usersNameArray.toArray(new String[usersNameArray.size()]);
-                        builder.setItems(usersNameStringArray, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final String userStringSold = usersIDArray.get(which);
-                                myRef.child("users").child(userStringSold).child("users_to_be_rated").push().setValue(mAuth.getCurrentUser().getUid(),new DatabaseReference.CompletionListener(){
-                                    @Override
-                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        if(databaseError == null) {
-                                            ((ProfileActivity) mContext).setUserID(userStringSold);
-                                            showDialog();
+                        Log.d(TAG, "this is the message " + rented.get(getAdapterPosition()));
+                        if(!rented.get(getAdapterPosition())) {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                            builder.setTitle("Who do you sold it to:");
+                            String usersIDStringArray[] = usersIDArray.toArray(new String[usersIDArray.size()]);
+                            String usersNameStringArray[] = usersNameArray.toArray(new String[usersNameArray.size()]);
+                            builder.setItems(usersNameStringArray, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    final String userStringSold = usersIDArray.get(which);
+                                    myRef.child("users").child(userStringSold).child("users_to_be_rated").push().setValue(mAuth.getCurrentUser().getUid(), new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                            if (databaseError == null) {
+                                                ((ProfileActivity) mContext).setUserID(userStringSold);
+                                                ((ProfileActivity) mContext).setItem(mIDs.get(getAdapterPosition()), zips.get(getAdapterPosition()));
+                                                showDialog();
+                                            }
                                         }
-                                    }
-                                });
-                            }
-                        });
-                        builder.show();
+                                    });
+                                }
+                            });
+                            builder.show();
+                        }else{
+                            Toast.makeText(mContext, "Item has been marked rented", Toast.LENGTH_SHORT).show();
+                        }
                     } else if(which == 1){
                         Log.d("ViewHolder", "delete item");
                     }

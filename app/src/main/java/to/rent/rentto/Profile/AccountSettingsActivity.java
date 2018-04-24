@@ -17,11 +17,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 
-import to.rent.rentto.Login.LoginActivity;
+import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.SectionsStatePagerAdapter;
@@ -92,10 +96,18 @@ public class AccountSettingsActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: navigating to fragment#: " + position);
                 if(position == 1) {
-                    Intent intent = new Intent(mContext, LoginActivity.class);
-                    FirebaseAuth.getInstance().signOut();
-                    mContext.startActivity(intent);
-                    finish();
+                    String token = FirebaseInstanceId.getInstance().getToken();
+                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("notificationTokens").child(token).setValue(null, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if(databaseError == null) {
+                                FirebaseAuth.getInstance().signOut();
+                                Intent intent = new Intent(mContext, HomeActivity.class);
+                                mContext.startActivity(intent);
+                                finish();
+                            }
+                        }
+                    });
                 } else {
                     setViewPager(position);
                 }

@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,11 +45,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        //FCM
-        LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver),
-                new IntentFilter("MyData")
-        );
-
         // Check if user is signed in (non-null) and update UI accordingly.
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -58,6 +52,10 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "user sign in");
             Log.d(TAG, "user is: " + currentUser.getDisplayName());
             Log.d(TAG, "email: " + currentUser.getEmail());
+            //FCM
+            LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver),
+                    new IntentFilter("MyData")
+            );
             String token = FirebaseInstanceId.getInstance().getToken();
             Log.d(TAG, "Token : " + token);
 //            Toast.makeText(mContext, token, Toast.LENGTH_SHORT).show();
@@ -66,6 +64,7 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             Log.d(TAG, "user not sign in");
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }

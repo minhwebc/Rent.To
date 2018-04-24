@@ -32,6 +32,8 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
     private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
+    private String location;
+    private String itemID;
 
 
     @Override
@@ -45,10 +47,6 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
         myRef = mFirebaseDatabase.getReference();
 
         init();
-//        mProgressBar = (ProgressBar) findViewById(R.id.profileProgressBar);
-//        mProgressBar.setVisibility(View.GONE);
-//        setupBottomNavigationView();
-//        setupToolbar();
     }
 
     private void init(){
@@ -59,22 +57,7 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
         transaction.replace(R.id.container, fragment);
         transaction.commit();
     }
-//    private void setupToolbar() {
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.profileToolBar);
-//        setSupportActionBar(toolbar);
-//
-//        ImageView profileMenu = (ImageView) findViewById(R.id.profileMenu);
-//        profileMenu.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: navigating to account settings.");
-//                Intent intent = new Intent(mContext, AccountSettingsActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//    }
-//
-//
+
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
@@ -87,6 +70,11 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
 
     public void setUserID(String userID){
         offerUserID = userID;
+    }
+
+    public void setItem(String itemID, String location) {
+        this.itemID = itemID;
+        this.location = location;
     }
 
     @Override
@@ -124,8 +112,22 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                 if(databaseError == null) {
-                                                    Toast.makeText(ProfileActivity.this, "Rating submitted",
-                                                            Toast.LENGTH_SHORT).show();
+                                                    myRef.child("posts").child(location).child(itemID).child("sold").setValue(true, new DatabaseReference.CompletionListener() {
+                                                        @Override
+                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                            if (databaseError == null){
+                                                                myRef.child(getString(R.string.dbname_user_items)).child(mAuth.getCurrentUser().getUid()).child(itemID).child("sold").setValue(true, new DatabaseReference.CompletionListener() {
+                                                                    @Override
+                                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                        if (databaseError == null){
+                                                                            Toast.makeText(ProfileActivity.this, "Rating submitted",
+                                                                                    Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
                                         });

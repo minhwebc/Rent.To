@@ -163,16 +163,6 @@ public class EditProfileFragment extends Fragment implements
         return view;
     }
 
-
-//    private void setProfileImage() {
-//        Log.d(TAG, "setProfileImage: setting profile image.");
-//        String imgURL = "https://josephratliff.name/wp-content/uploads/2017/11/android-central.jpg";
-//        Glide.with(getActivity())
-//                .load(imgURL)
-//                .into(mProfilePhoto);
-//        //UniversalImageLoader.setImage(imgURL, mProfilePhoto, null, "https://");
-//    }
-
     /**
      * Retrieves the data contained in the widgets and submits it to the database
      * Before doing so it checks to make sure the username chosen in unique
