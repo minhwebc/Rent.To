@@ -121,7 +121,6 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "password " + password);
                     mProgressBar.setVisibility(View.VISIBLE);
                     mPleaseWait.setVisibility(View.VISIBLE);
-
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override

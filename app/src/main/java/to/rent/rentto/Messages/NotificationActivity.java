@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -37,9 +36,10 @@ public class NotificationActivity extends AppCompatActivity {
     private static final String TAG = "NotificationActivity";
     private Context mContext;
     private ListView messagesListView;
-    private ArrayAdapter arrayAdapter;
+    private MessagePreviewAdapter arrayAdapter;
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
+    private ArrayList<String> messageIDList;
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -70,14 +70,13 @@ public class NotificationActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mContext = NotificationActivity.this;
         Log.d(TAG, "onCreate: Started.");
-
+        messageIDList = new ArrayList<>();
         //Sets up list view
         messagesListView = (ListView) findViewById(R.id.msgview);
         // Dummy array data
-        final ArrayList<String> data = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, data);
+        final ArrayList<PostInMessage> data = new ArrayList<>();
+        arrayAdapter = new MessagePreviewAdapter(this, data);
         messagesListView.setAdapter(arrayAdapter);
-
         Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see");
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,14 +86,24 @@ public class NotificationActivity extends AppCompatActivity {
                     String userKey = ds.getKey();
                     Log.d(TAG, "user key is " + userKey);
 
-                    String messageId = (String) ds.getValue();
+                    final String messageId = (String) ds.getValue();
+                    final PostInMessage[] message = new PostInMessage[1];
+                    final Message[] lastMessageContent = {new Message()};
                     mReference.child("messages").child(messageId).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
                             for(DataSnapshot ds1 : dataSnapshot1.getChildren()) {
-                                Message retrivedMessage = ds1.getValue(Message.class);
-                                Log.d(TAG, retrivedMessage.author + " send you a message");
+                                if(ds1.getKey().equals("post")){
+                                    message[0] = ds1.getValue(PostInMessage.class);
+                                }else{
+                                    lastMessageContent[0] = ds1.getValue(Message.class);
+                                }
                             }
+                            messageIDList.add(messageId);
+                            message[0].author = lastMessageContent[0].author;
+                            message[0].message = lastMessageContent[0].text;
+                            data.add(message[0]);
+                            arrayAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -102,25 +111,6 @@ public class NotificationActivity extends AppCompatActivity {
 
                         }
                     });
-
-//                    mReference.child("users").child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(DataSnapshot dsSnap) {
-//                            Log.d(TAG, (String) dsSnap.getKey());
-//                            Log.d(TAG, dsSnap.toString());
-//                            User user = dsSnap.getValue(User.class);
-//                            data.add(user.getUsername() + " made you an offer");
-//                            Log.d(TAG, "size of data " + data.size());
-//                            arrayAdapter.notifyDataSetChanged();
-//                        }
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
-                    data.add(messageId);
-                    arrayAdapter.notifyDataSetChanged();
-
                 }
             }
 
@@ -133,14 +123,13 @@ public class NotificationActivity extends AppCompatActivity {
         messagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedText = messagesListView.getItemAtPosition(position).toString();
+                String selectedText = messageIDList.get(position);
                 Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NotificationActivity.this, ChatActivity.class);
                 intent.putExtra("MessageChannelID", selectedText);
                 startActivity(intent);
             }
         });
-
         // Set up bottom nav bar
         setupBottomNavigationView();
     }

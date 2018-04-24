@@ -79,9 +79,6 @@ public class ProfileListingActivity extends AppCompatActivity {
     }
 
     private void grabTheItem(){
-//        Query query = mReference.child(mContext.getString(R.string.dbname_user_items)).child(mAuth.getCurrentUser().getUid()).child(ITEM_ID);
-//        query.addValueEventListener(new ValueEventListener() {
-
         Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
         query.addValueEventListener(new ValueEventListener() {
             @Override

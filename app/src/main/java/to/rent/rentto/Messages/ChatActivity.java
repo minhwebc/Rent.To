@@ -86,14 +86,16 @@ public class ChatActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         messageAdapter.messages.clear();
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            Message message = ds.getValue(Message.class);
-                            Log.d(TAG, message.getText());
-                            if(message.getAuthorID().equals(currentUser.getUser_id())) {
-                                message.belongsToCurrentUser = true;
-                            } else {
-                                message.belongsToCurrentUser = false;
+                            if(!ds.getKey().equals("post")) {
+                                Message message = ds.getValue(Message.class);
+                                Log.d(TAG, message.getText());
+                                if (message.getAuthorID().equals(currentUser.getUser_id())) {
+                                    message.belongsToCurrentUser = true;
+                                } else {
+                                    message.belongsToCurrentUser = false;
+                                }
+                                messageAdapter.add(message);
                             }
-                            messageAdapter.add(message);
                         }
                     }
 

@@ -10,7 +10,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,9 +22,6 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Filter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,54 +92,12 @@ public class ItemsListActivity extends AppCompatActivity {
         });
     }
 
-    //To-do here find the current city
-    private String findCurrentCity(){
-        if(ContextCompat.checkSelfPermission(ItemsListActivity.this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(ItemsListActivity.this,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
-            } else {
-                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
-            }
-        } else {
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            try {
-                return getZipcode(location.getLatitude(), location.getLongitude());
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(ItemsListActivity.this, "Location not found, using default zip", Toast.LENGTH_SHORT).show();
-                return "98105";
-            }
-        }
-        return "";
-    };
-
-    private String getZipcode(double lat, double lon){
-        String location = "";
-
-        Geocoder geocoder = new Geocoder(ItemsListActivity.this, Locale.getDefault());
-        List<Address> addresses;
-        try {
-            addresses = geocoder.getFromLocation(lat, lon, 1);
-            if(addresses.size() > 0){
-                location = addresses.get(0).getPostalCode();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(ItemsListActivity.this, "Location not found, using default zip", Toast.LENGTH_SHORT).show();
-            return "98105";
-        }
-        return location;
-    }
-
     private void initImageBitMaps(){
         //grabs all the photos back
         Log.d(TAG, "initimagebitmaps");
         Query query = mReference.child(mContext.getString(R.string.dbname_items));
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String currCity = findCurrentCity();
@@ -180,6 +134,50 @@ public class ItemsListActivity extends AppCompatActivity {
         });
 
     }
+
+    //To-do here find the current city
+    private String findCurrentCity(){
+        if(ContextCompat.checkSelfPermission(ItemsListActivity.this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(ItemsListActivity.this,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+            } else {
+                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+            }
+        } else {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            try {
+                Toast.makeText(ItemsListActivity.this, "Location found", Toast.LENGTH_SHORT).show();
+                return getZipcode(location.getLatitude(), location.getLongitude());
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(ItemsListActivity.this, "Location not found, using default zip", Toast.LENGTH_SHORT).show();
+                return "98105";
+            }
+        }
+        return "";
+    };
+
+    private String getZipcode(double lat, double lon){
+        String location = "";
+
+        Geocoder geocoder = new Geocoder(ItemsListActivity.this, Locale.getDefault());
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(lat, lon, 1);
+            if(addresses.size() > 0){
+                location = addresses.get(0).getPostalCode();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(ItemsListActivity.this, "Location not found, using default zip", Toast.LENGTH_SHORT).show();
+            return "98105";
+        }
+        return location;
+    }
+
 
     private double distanceBetweenZip(String zipOne, String zipTwo){
         String locationOne = zipOne + ", " + "United States";

@@ -24,11 +24,13 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.UUID;
 
+import to.rent.rentto.Messages.PostInMessage;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import to.rent.rentto.Utils.ShareMethods;
 
 /**
  * Created by Sora on 2/14/2018.
@@ -44,11 +46,13 @@ public class ListingActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private User currentUser;
     FloatingActionButton requestButton;
+    private ShareMethods shareMethods;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listing);
+        shareMethods = new ShareMethods(ListingActivity.this);
         mContext = ListingActivity.this;
         requestButton = (FloatingActionButton) findViewById(R.id.requestButton);
         mAuth = FirebaseAuth.getInstance();
@@ -84,7 +88,7 @@ public class ListingActivity extends AppCompatActivity {
         });
     }
     private String getCurrentLocation(){
-        return "seattle";
+        return CITY;
     }
     private void grabTheItem(){
         Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
@@ -157,9 +161,21 @@ public class ListingActivity extends AppCompatActivity {
                                                                                             @Override
                                                                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                                                 if(databaseError == null) {
-                                                                                                    int duration = Toast.LENGTH_SHORT;
-                                                                                                    Toast toast = Toast.makeText(mContext, "Offer sent", duration);
-                                                                                                    toast.show();
+                                                                                                    PostInMessage post = new PostInMessage(mItem.imageURL, mItem.title, ITEM_ID);
+                                                                                                    newMessageID.child("post").setValue(post, new DatabaseReference.CompletionListener() {
+                                                                                                        @Override
+                                                                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                            if(databaseError == null){
+                                                                                                                int duration = Toast.LENGTH_SHORT;
+                                                                                                                Toast toast = Toast.makeText(mContext, "Offer sent", duration);
+                                                                                                                toast.show();
+                                                                                                            } else {
+                                                                                                                int duration = Toast.LENGTH_SHORT;
+                                                                                                                Toast toast = Toast.makeText(mContext, "An error occurred when sending the offer.", duration);
+                                                                                                                toast.show();
+                                                                                                            }
+                                                                                                        }
+                                                                                                    });
                                                                                                 }
                                                                                             }
                                                                                         });
