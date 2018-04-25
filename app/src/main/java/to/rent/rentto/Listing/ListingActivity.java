@@ -143,22 +143,21 @@ public class ListingActivity extends AppCompatActivity {
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                 if(databaseError == null) {
                                                     DatabaseReference messageRef = mReference.child("messages");
-                                                    final String currentKey = messageRef.push().getKey();
-                                                    final DatabaseReference newMessageID = messageRef.child(currentKey); //this will be included into both the offered and the renter as well
+                                                    final DatabaseReference newMessageID = messageRef.push(); //this will be included into both the offered and the renter as well
                                                     newMessageID.setValue(currentUser.getUser_id());
                                                     Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your " + mItem.title, "date here", true, currentUser.getUser_id());
                                                     //push message to the message table
-                                                    newMessageID.child(currentKey).setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
+                                                    newMessageID.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
                                                         @Override
                                                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                             if(databaseError == null) {
                                                                 //set message to the current user
-                                                                mReference.child("users").child(currentUser.getUser_id()).child("messages_this_user_can_see").child(currentKey).setValue(mItem.title + " - " + currentUser.getUsername(), new DatabaseReference.CompletionListener() {
+                                                                mReference.child("users").child(currentUser.getUser_id()).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
                                                                     @Override
                                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                         if(databaseError == null) {
                                                                             //Set the message to the renter
-                                                                            mReference.child("users").child(mItem.userUID).child("messages_this_user_can_see").child(currentKey).setValue(mItem.title + " - " + currentUser.getUsername(), new DatabaseReference.CompletionListener() {
+                                                                            mReference.child("users").child(mItem.userUID).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
                                                                                 @Override
                                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                                     if(databaseError == null) {
