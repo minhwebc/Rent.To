@@ -108,7 +108,8 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                     if(databaseError == null) {
-                                        myRef.child("ratingNotifications").child(mAuth.getCurrentUser().getUid()).child(offerUserID).setValue(UUID.randomUUID().toString(), new DatabaseReference.CompletionListener() {
+                                        String id = UUID.randomUUID().toString();
+                                        myRef.child("ratingNotifications").child(mAuth.getCurrentUser().getUid()).child(offerUserID).child(itemID).setValue(id, new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                 if(databaseError == null) {
@@ -120,8 +121,23 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
                                                                     @Override
                                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                         if (databaseError == null){
-                                                                            Toast.makeText(ProfileActivity.this, "Rating submitted",
-                                                                                    Toast.LENGTH_SHORT).show();
+                                                                            final String[] uniqueID = {mAuth.getCurrentUser().getUid() + offerUserID + itemID};
+                                                                            myRef.child("users").child(mAuth.getCurrentUser().getUid()).child("rating_session").child(uniqueID[0]).setValue(true, new DatabaseReference.CompletionListener() {
+                                                                                @Override
+                                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                    if(databaseError == null) {
+                                                                                        uniqueID[0] = offerUserID+mAuth.getCurrentUser().getUid()+itemID;
+                                                                                        myRef.child("users").child(offerUserID).child("rating_session").child(uniqueID[0]).setValue(false, new DatabaseReference.CompletionListener() {
+                                                                                            @Override
+                                                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                if(databaseError == null){
+                                                                                                    Toast.makeText(mContext, "Rating submitted", Toast.LENGTH_SHORT).show();
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                }
+                                                                            });
                                                                         }
                                                                     }
                                                                 });

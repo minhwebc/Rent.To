@@ -28,6 +28,8 @@ public class RatingActivity extends AppCompatActivity implements RatingDialogLis
     private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
+    public String notiID;
+    public String uniqueID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +37,35 @@ public class RatingActivity extends AppCompatActivity implements RatingDialogLis
         setContentView(R.layout.activity_rating);
         Intent intent = getIntent();
         offerUserID = intent.getStringExtra("userid_to_be_rated");
+        notiID = intent.getStringExtra("postid");
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
-        showDialog();
+        this.uniqueID = mAuth.getCurrentUser().getUid()+offerUserID+notiID;
+        final boolean[] rated = {false};
+        DatabaseReference ref = myRef.child("users").child(mAuth.getCurrentUser().getUid()).child("rating_session");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    if(ds.getKey().equals(uniqueID)){
+                        rated[0] = ds.getValue(boolean.class);
+                    }
+                    if(!rated[0]){
+                        showDialog();
+                    } else {
+                        Toast.makeText(RatingActivity.this, "You have both rated each other. Thank you", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(RatingActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void showDialog() {
@@ -94,14 +120,23 @@ public class RatingActivity extends AppCompatActivity implements RatingDialogLis
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                     if (databaseError == null) {
-                                        myRef.child("ratingNotifications").child(mAuth.getCurrentUser().getUid()).child(offerUserID).setValue(UUID.randomUUID().toString(), new DatabaseReference.CompletionListener() {
+                                        String id = UUID.randomUUID().toString();
+                                        myRef.child("ratingNotifications").child(mAuth.getCurrentUser().getUid()).child(offerUserID).child(notiID).setValue(id, new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                 if (databaseError == null) {
-                                                    Toast.makeText(RatingActivity.this, "Rating submitted",
-                                                            Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(RatingActivity.this, HomeActivity.class);
-                                                    startActivity(intent);
+                                                    final String[] uniqueID = {mAuth.getCurrentUser().getUid() + offerUserID + notiID};
+                                                    myRef.child("users").child(mAuth.getCurrentUser().getUid()).child("rating_session").child(uniqueID[0]).setValue(true, new DatabaseReference.CompletionListener() {
+                                                        @Override
+                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                            if(databaseError == null) {
+                                                                Toast.makeText(RatingActivity.this, "Rating submitted",
+                                                                        Toast.LENGTH_LONG).show();
+                                                                Intent intent = new Intent(RatingActivity.this, HomeActivity.class);
+                                                                startActivity(intent);
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
                                         });

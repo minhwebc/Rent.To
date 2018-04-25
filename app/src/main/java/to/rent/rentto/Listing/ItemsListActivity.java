@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -112,19 +111,16 @@ public class ItemsListActivity extends AppCompatActivity {
                             Item mItem = singleSnapShot.getValue(Item.class);
                             String photo_path = mItem.imageURL;
                             System.out.println(mItem.category);
-                            if(!mItem.userUID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
-                            {
-                                if (filter != null) {
-                                    if (filter.equals(mItem.category)) {
-                                        mImageUrls.add(photo_path);
-                                        iDs.add(keyID);
-                                    }
-                                } else {
+                            if (filter != null) {
+                                if (filter.equals(mItem.category)) {
                                     mImageUrls.add(photo_path);
                                     iDs.add(keyID);
                                 }
-                                zipcodes.add(zips.getKey());
+                            } else {
+                                mImageUrls.add(photo_path);
+                                iDs.add(keyID);
                             }
+                            zipcodes.add(zips.getKey());
                         }
                     }
                 }

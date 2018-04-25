@@ -110,7 +110,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     notificationBuilder.setContentText(messageToBeSent).setContentIntent(notiPendingIntent);;
                 } else if(remoteMessage.getNotification().getTitle().equals("Rated")){
                     Intent notiIntent = new Intent(getApplicationContext(), RatingActivity.class);
+                    String postID = remoteMessage.getNotification().getIcon();
                     notiIntent.putExtra("userid_to_be_rated", remoteMessage.getNotification().getBody());
+                    notiIntent.putExtra("postid", postID);
                     // Create a "Shopping Pending Intent"
                     PendingIntent notiPendingIntent = PendingIntent.getActivity(
                             mContext,
