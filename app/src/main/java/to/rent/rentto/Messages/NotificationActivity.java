@@ -78,24 +78,22 @@ public class NotificationActivity extends AppCompatActivity {
         arrayAdapter = new MessagePreviewAdapter(this, data);
         messagesListView.setAdapter(arrayAdapter);
         Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 data.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String userKey = ds.getKey();
                     Log.d(TAG, "user key is " + userKey);
+
                     final String messageId = (String) ds.getValue();
                     final PostInMessage[] message = new PostInMessage[1];
                     final Message[] lastMessageContent = {new Message()};
-                    mReference.child("messages").child(messageId).addValueEventListener(new ValueEventListener() {
+                    mReference.child("messages").child(messageId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
-                            Log.d(TAG, "here is the message id " + messageId);
                             for(DataSnapshot ds1 : dataSnapshot1.getChildren()) {
-                                Log.d(TAG, "here is the message key " + ds1.getKey());
                                 if(ds1.getKey().equals("post")){
-                                    Log.d(TAG, "got into post " + messageId);
                                     message[0] = ds1.getValue(PostInMessage.class);
                                 }else{
                                     lastMessageContent[0] = ds1.getValue(Message.class);
