@@ -1,4 +1,4 @@
-package to.rent.rentto.Camera;
+package to.rent.rentto.Profile;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -9,16 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import to.rent.rentto.R;
 
-public class ConfirmPhotoFragment extends android.support.v4.app.Fragment {
-    private static final String TAG = "ConfirmPhotoFragment";
+public class ConfirmProfilePhotoFragment extends android.support.v4.app.Fragment {
+    private static final String TAG = "ConfirmProfilePhotoFrag";
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_confirm_photo, container, false);
-        Log.d(TAG, "inside of ConfirmPhoto.java onCreateView");
+        View view = inflater.inflate(R.layout.fragment_confirm_profile_photo, container, false);
+        Log.d(TAG, "inside of ConfirmProfilePhotoFragment.java onCreateView");
         initiateImageView(view);
         return view;
     }

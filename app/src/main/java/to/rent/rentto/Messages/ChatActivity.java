@@ -3,6 +3,7 @@ package to.rent.rentto.Messages;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     private ListView messagesListView;
     private User currentUser;
     private String messageID;
+    private String messageUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //set up the channel info
         messageID = getIntent().getStringExtra("MessageChannelID");
+        messageUID = getIntent().getStringExtra("MessageChannelUID");
     }
 
     private void getCurrentUserInfo(){
@@ -126,6 +129,8 @@ public class ChatActivity extends AppCompatActivity {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
         Date currentTime = Calendar.getInstance().getTime();
         Message newMessageInsert = new Message(currentUser.getUsername(), message, dateFormat.format(currentTime), true, currentUser.getUser_id());
+        Log.d(TAG, "messageID is " + messageID + " messageUID: " + messageUID);
+
         DatabaseReference messageRef = mReference.child("messages").child(messageID);
         messageRef.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
             @Override

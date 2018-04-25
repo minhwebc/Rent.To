@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="to.rent.rentto.Profile.ChangeProfilePictureActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!-- Middle section (body) -->
+        <RelativeLayout
+            android:id="@+id/relLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+
+            <Button
+                android:id="@+id/buttonLeft"
+                android:layout_width="269dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="238dp"
+                android:drawableLeft="@android:drawable/ic_menu_gallery"
+                android:onClick="profilePictureRoll"
+                android:padding="16dp"
+                android:textColor="@color/white"
+                android:background="@color/colorAccent"
+                android:theme="@style/Widget.AppCompat.Button.Colored"
+                android:text="Select Photo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="224dp"
+                android:text="OR" />
+
+            <Button
+                android:id="@+id/buttonRight"
+                android:layout_width="267dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="140dp"
+                android:drawableLeft="@android:drawable/ic_menu_camera"
+                android:onClick="profilePictureCamera"
+                android:padding="16dp"
+                android:textColor="@color/white"
+                android:background="@color/colorAccent"
+
+                android:text="Take Photo" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
