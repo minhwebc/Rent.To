@@ -80,9 +80,9 @@ public class NotificationActivity extends AppCompatActivity {
         Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see");
         query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 data.clear();
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                for(final DataSnapshot ds : dataSnapshot.getChildren()) {
                     String userKey = ds.getKey();
                     Log.d(TAG, "user key is " + userKey);
 
@@ -92,17 +92,28 @@ public class NotificationActivity extends AppCompatActivity {
                     mReference.child("messages").child(messageId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
-                            for(DataSnapshot ds1 : dataSnapshot1.getChildren()) {
-                                if(ds1.getKey().equals("post")){
-                                    message[0] = ds1.getValue(PostInMessage.class);
-                                }else{
-                                    lastMessageContent[0] = ds1.getValue(Message.class);
+                            Log.d(TAG, "this is the message id " + messageId);
+                            if(dataSnapshot1.exists()) {
+                                for (DataSnapshot ds1 : dataSnapshot1.getChildren()) {
+                                    Log.d(TAG, "this is the within post " + ds1.getKey());
+                                    if (ds1.getKey().equals("post")) {
+                                        message[0] = ds1.getValue(PostInMessage.class);
+                                    } else {
+                                        lastMessageContent[0] = ds1.getValue(Message.class);
+                                    }
                                 }
+                                messageIDList.add(messageId);
+                                message[0].author = lastMessageContent[0].author;
+                                message[0].message = lastMessageContent[0].text;
+                                data.add(message[0]);
+                            } else {
+                                mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see").child(ds.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        return;
+                                    }
+                                });
                             }
-                            messageIDList.add(messageId);
-                            message[0].author = lastMessageContent[0].author;
-                            message[0].message = lastMessageContent[0].text;
-                            data.add(message[0]);
                             arrayAdapter.notifyDataSetChanged();
                         }
 

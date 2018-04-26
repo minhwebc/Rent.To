@@ -130,7 +130,6 @@
                 android:id="@+id/project_photo_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
@@ -143,6 +142,16 @@
                     tools:src="@drawable/profile_thumbnail"
                     android:tint="@color/black_11"
                     />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/soldInfo"
+                    android:text=""
+                    android:textSize="@dimen/font_22"
+                    android:textStyle="bold"
+                    android:scaleType="center"
+                    android:textColor="@color/white"/>
 
             </FrameLayout>
 

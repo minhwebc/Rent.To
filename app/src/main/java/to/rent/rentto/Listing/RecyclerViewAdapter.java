@@ -1,6 +1,5 @@
 package to.rent.rentto.Listing;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,15 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import to.rent.rentto.Profile.ProfileFragment;
+import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 
 /**
@@ -36,8 +35,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private int width;
     private String city;
     private ArrayList<String> zips = new ArrayList<>();
+    private ArrayList<Item> mItems;
 
-    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, String city, ArrayList<String> zipcodes){
+    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, String city, ArrayList<String> zipcodes, ArrayList<Item> mItems){
         Log.d(TAG, "constructor: called.");
         this.zips = zipcodes;
         this.city = city;
@@ -47,6 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Log.d(TAG, mIDs.size()+"");
         mIDs = ids;
         mImageUrls = imageUrls;
+        this.mItems = mItems;
     }
 
     //To-do here find the current city
@@ -71,7 +72,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .load(mImageUrls.get(position))
                 .apply(requestOptions)
                 .into(holder.imageView);
-
+        if(mItems.get(position).sold) {
+            holder.soldInfo.setText("RENTED");
+        }else{
+            holder.soldInfo.setVisibility(View.GONE);
+        }
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,16 +98,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
+        TextView soldInfo;
 
         ViewHolder(View itemView, int width) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
+            soldInfo = (TextView) itemView.findViewById(R.id.ratedInformation);
             int newWidth = width / 3;
             if(imageView.getLayoutParams().width > newWidth) {
                 int ratio = newWidth / imageView.getLayoutParams().width;
                 imageView.getLayoutParams().width = newWidth;
                 imageView.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
             }
+
+
             itemView.setOnClickListener(this);
         }
 

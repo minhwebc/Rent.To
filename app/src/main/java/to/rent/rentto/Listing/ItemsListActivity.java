@@ -10,9 +10,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,6 +67,8 @@ public class ItemsListActivity extends AppCompatActivity {
     private String filter;
     private double miles;
     private TextView textView;
+    private SwipeRefreshLayout swipeLayout;
+    private ArrayList<Item> mItems = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -75,9 +79,27 @@ public class ItemsListActivity extends AppCompatActivity {
         mContext = ItemsListActivity.this;
         mReference = FirebaseDatabase.getInstance().getReference();
         setupBottomNavigationView();
-
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         miles = 20;
-        int width = getScreenSizeX();
+        final int width = getScreenSizeX();
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        initImageLoader();
+                        initRecyclerView(width);
+                        initImageBitMaps();
+                        swipeLayout.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
+
+
 
         initImageLoader();
         initRecyclerView(width);
@@ -92,18 +114,20 @@ public class ItemsListActivity extends AppCompatActivity {
         });
     }
 
+
     private void initImageBitMaps(){
         //grabs all the photos back
         Log.d(TAG, "initimagebitmaps");
         Query query = mReference.child(mContext.getString(R.string.dbname_items));
 
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String currCity = findCurrentCity();
                 mImageUrls.clear();
                 iDs.clear();
                 zipcodes.clear();
+                mItems.clear();
                 for(DataSnapshot zips : dataSnapshot.getChildren()) {
                     if (distanceBetweenZip(zips.getKey(), currCity) < miles) {
                         for (DataSnapshot singleSnapShot : dataSnapshot.child(zips.getKey()).getChildren()) {
@@ -115,12 +139,15 @@ public class ItemsListActivity extends AppCompatActivity {
                                 if (filter.equals(mItem.category)) {
                                     mImageUrls.add(photo_path);
                                     iDs.add(keyID);
+                                    mItems.add(mItem);
+                                    zipcodes.add(zips.getKey());
                                 }
                             } else {
                                 mImageUrls.add(photo_path);
                                 iDs.add(keyID);
+                                mItems.add(mItem);
+                                zipcodes.add(zips.getKey());
                             }
-                            zipcodes.add(zips.getKey());
                         }
                     }
                 }
@@ -224,7 +251,7 @@ public class ItemsListActivity extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity(), zipcodes);
+                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity(), zipcodes, mItems);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);
@@ -273,7 +300,6 @@ public class ItemsListActivity extends AppCompatActivity {
     }
 
     private void getDistanceFromZip(String zip1, String zip2){
+
     }
-
-
 }

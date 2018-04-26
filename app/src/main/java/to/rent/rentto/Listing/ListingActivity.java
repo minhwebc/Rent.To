@@ -90,9 +90,10 @@ public class ListingActivity extends AppCompatActivity {
     private String getCurrentLocation(){
         return CITY;
     }
+
     private void grabTheItem(){
         Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -103,6 +104,7 @@ public class ListingActivity extends AppCompatActivity {
                 TextView condition = findViewById(R.id.textView3);
                 TextView price = findViewById(R.id.textView5);
                 ImageView post_image = findViewById(R.id.imageView);
+                TextView soldInfo = findViewById(R.id.soldInfo);
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
                 Glide.with(mContext)
@@ -113,7 +115,9 @@ public class ListingActivity extends AppCompatActivity {
                 description.setText(mItem.description);
                 price.setText(mItem.rate+"");
                 condition.setText(mItem.condition);
-                //post_image.setScaleType(ImageView.ScaleType.FIT_XY);
+                if(mItem.sold){
+                    soldInfo.setText("RENTED");
+                }
 
                 Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -124,6 +128,9 @@ public class ListingActivity extends AppCompatActivity {
                         TextView userField = findViewById(R.id.textView4);
                         userField.setText(user.getUsername());
                         FloatingActionButton mButton = findViewById(R.id.requestButton);
+                        if(mItem.sold){
+                            mButton.setVisibility(View.GONE);
+                        }
                         mButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -131,6 +138,12 @@ public class ListingActivity extends AppCompatActivity {
                                     Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+
+                                if(mItem.sold){
+                                    Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
                                 DatabaseReference renterUIDRef = mReference.child("notificationMessages").child(mItem.userUID);
                                 DatabaseReference pushedKey = renterUIDRef.push();
 
@@ -165,18 +178,25 @@ public class ListingActivity extends AppCompatActivity {
                                                                                             @Override
                                                                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                                                 if(databaseError == null) {
-                                                                                                    PostInMessage post = new PostInMessage(mItem.imageURL, mItem.title, ITEM_ID);
-                                                                                                    newMessageID.child("post").setValue(post, new DatabaseReference.CompletionListener() {
+                                                                                                    mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("offer_messages").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
                                                                                                         @Override
                                                                                                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                                                            if(databaseError == null){
-                                                                                                                int duration = Toast.LENGTH_SHORT;
-                                                                                                                Toast toast = Toast.makeText(mContext, "Offer sent", duration);
-                                                                                                                toast.show();
-                                                                                                            } else {
-                                                                                                                int duration = Toast.LENGTH_SHORT;
-                                                                                                                Toast toast = Toast.makeText(mContext, "An error occurred when sending the offer.", duration);
-                                                                                                                toast.show();
+                                                                                                            if(databaseError == null) {
+                                                                                                                PostInMessage post = new PostInMessage(mItem.imageURL, mItem.title, ITEM_ID);
+                                                                                                                newMessageID.child("post").setValue(post, new DatabaseReference.CompletionListener() {
+                                                                                                                    @Override
+                                                                                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                                        if(databaseError == null){
+                                                                                                                            int duration = Toast.LENGTH_SHORT;
+                                                                                                                            Toast toast = Toast.makeText(mContext, "Offer sent", duration);
+                                                                                                                            toast.show();
+                                                                                                                        } else {
+                                                                                                                            int duration = Toast.LENGTH_SHORT;
+                                                                                                                            Toast toast = Toast.makeText(mContext, "An error occurred when sending the offer.", duration);
+                                                                                                                            toast.show();
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                });
                                                                                                             }
                                                                                                         }
                                                                                                     });
@@ -202,10 +222,6 @@ public class ListingActivity extends AppCompatActivity {
                                                             }
                                                         }
                                                     });
-//                                                    CharSequence text = "Offer Sent!";
-//                                                    int duration = Toast.LENGTH_SHORT;
-//                                                    Toast toast = Toast.makeText(mContext, text, duration);
-//                                                    toast.show();
                                                 }
                                             }
                                         });
