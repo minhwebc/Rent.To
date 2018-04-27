@@ -99,6 +99,10 @@ public class ListingActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.getValue()+"");
                 mItem = dataSnapshot.getValue(Item.class);
+                if(mItem == null) {
+                    Log.d(TAG, "grabTheItem/onDataChange mItem is null");
+                    return;
+                }
                 TextView item_name = findViewById(R.id.textView1);
                 TextView description = findViewById(R.id.textView2);
                 TextView condition = findViewById(R.id.textView3);
@@ -134,12 +138,13 @@ public class ListingActivity extends AppCompatActivity {
                         mButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(currentUser.getUser_id().equals(mItem.userUID)){
+                                if(mItem == null) {
+                                    Toast.makeText(mContext, "Cannot make an offer for this item. It may have been deleted", Toast.LENGTH_SHORT).show();
+                                    return;
+                                } else if(currentUser.getUser_id().equals(mItem.userUID)){
                                     Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
                                     return;
-                                }
-
-                                if(mItem.sold){
+                                } else if(mItem.sold){
                                     Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
