@@ -28,6 +28,7 @@ import to.rent.rentto.Messages.PostInMessage;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
+import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.ShareMethods;
@@ -45,6 +46,8 @@ public class ListingActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private User currentUser;
+    private ImageView authorPic;
+    private String authorPicURL;
     FloatingActionButton requestButton;
     private ShareMethods shareMethods;
 
@@ -55,6 +58,7 @@ public class ListingActivity extends AppCompatActivity {
         shareMethods = new ShareMethods(ListingActivity.this);
         mContext = ListingActivity.this;
         requestButton = (FloatingActionButton) findViewById(R.id.requestButton);
+        authorPic = (ImageView) findViewById(R.id.author_photo_iv);
         mAuth = FirebaseAuth.getInstance();
         Log.d(TAG, "onCreate: Started.");
 
@@ -62,20 +66,23 @@ public class ListingActivity extends AppCompatActivity {
         CITY = getIntent().getStringExtra("CITY");
 
         mReference = FirebaseDatabase.getInstance().getReference();
-        Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currentUser = dataSnapshot.getValue(User.class);
-                Log.d(TAG, currentUser.getUsername());
-            }
+        try {
+            Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    currentUser = dataSnapshot.getValue(User.class);
+                    Log.d(TAG, currentUser.getUsername());
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-
+                }
+            });
+        } catch (Exception e) {
+            Log.d(TAG, "Could not get user");
+        }
         setupBottomNavigationView();
         grabTheItem();
         ImageView backarrow = (ImageView) findViewById(R.id.backArrow);
@@ -124,9 +131,30 @@ public class ListingActivity extends AppCompatActivity {
                 if(mItem.sold){
                     soldInfo.setText("RENTED");
                 }
+                Query query1 = mReference.child("user_account_settings").child(mItem.userUID);
+                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserAccountSettings userAccountSettings = dataSnapshot.getValue(UserAccountSettings.class);
+                        authorPicURL = userAccountSettings.getProfile_photo();
+                        if(authorPicURL != null && authorPicURL.length() > 1 && authorPic != null) {
+                            Log.d(TAG, "authorPicURL is " + authorPicURL);
+                            Glide.with(mContext)
+                                    .load(authorPicURL)
+                                    .into(authorPic);
+                        } else {
+                            Log.d(TAG, "using default profile pic");
+                            authorPic.setImageResource(R.drawable.profile_default_pic);
+                        }
+                    }
 
-                Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                Query query2 = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
+                query2.addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
