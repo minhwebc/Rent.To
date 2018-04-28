@@ -81,6 +81,9 @@ public class User implements Parcelable {
 
     public double getRating() {return this.rating;}
 
+    public void setRating(double rating) {this.rating = rating;}
+
+
     public void setUsername(String username) {
         this.username = username;
     }

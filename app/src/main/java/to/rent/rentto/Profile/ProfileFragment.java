@@ -3,6 +3,7 @@ package to.rent.rentto.Profile;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.media.Rating;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import to.rent.rentto.Models.Item;
+import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
@@ -76,6 +79,7 @@ public class ProfileFragment extends Fragment {
     private ProgressBar mProgressBar;
     private CircleImageView mProfilePhoto;
     private GridView gridView;
+    private RatingBar mRatingBar;
     private Toolbar toolbar;
     private ImageView profileMenu;
     private BottomNavigationViewEx bottomNavigationView;
@@ -92,6 +96,7 @@ public class ProfileFragment extends Fragment {
         mProfilePhoto = (CircleImageView) view.findViewById(R.id.profile_photo);
         //mPosts = (TextView) view.findViewById(R.id.tvPosts);
         //mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
+        mRatingBar = (RatingBar) view.findViewById(R.id.rtbDvcMgmt);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
@@ -209,12 +214,17 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "setProfileWidgets: settings widgets with data retrieving from firebase database: " + userSettings.toString());
         Log.d(TAG, "setProfileWidgets: settings widgets with data retrieving from firebase database: " + userSettings.getSettings().getUsername());
         UserAccountSettings settings = userSettings.getSettings();
+        User currentUser = userSettings.getUser();
+        double rating = currentUser.getRating();
+
         //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
         Glide.with(getActivity())
                 .load(settings.getProfile_photo())
                 .into(mProfilePhoto);
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
+        mRatingBar.setRating((float) rating);
+        Log.d(TAG, "displayname is " + settings.getUsername() + " username is " + settings.getUsername() + " rating is " + (float) rating);
     }
 
     private void setupToolbar(){
