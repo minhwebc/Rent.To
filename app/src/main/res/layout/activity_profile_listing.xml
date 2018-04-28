@@ -66,7 +66,7 @@
                             android:id="@+id/author_photo_iv"
                             android:layout_width="@dimen/project_auth_photo_size"
                             android:layout_height="@dimen/project_auth_photo_size"
-                            android:background="@drawable/profile_thumbnail"
+                            android:src="@drawable/profile_thumbnail"
 
                             />
 

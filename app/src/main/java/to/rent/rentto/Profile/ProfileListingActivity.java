@@ -22,6 +22,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.User;
+import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
@@ -38,6 +39,8 @@ public class ProfileListingActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private User currentUser;
+    private String authorPicURL;
+    private ImageView authorPic;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,12 +97,35 @@ public class ProfileListingActivity extends AppCompatActivity {
                 TextView condition = findViewById(R.id.textView3);
                 TextView price = findViewById(R.id.textView5);
                 ImageView post_image = findViewById(R.id.imageView);
+                authorPic = findViewById(R.id.author_photo_iv);
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
                 Glide.with(mContext)
                         .load(mItem.imageURL)
                         .apply(requestOptions)
                         .into(post_image);
+                Query query1 = mReference.child("user_account_settings").child(mAuth.getCurrentUser().getUid());
+                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserAccountSettings userAccountSettings = dataSnapshot.getValue(UserAccountSettings.class);
+                        authorPicURL = userAccountSettings.getProfile_photo();
+                        if(authorPicURL != null && authorPicURL.length() > 1 && authorPic != null) {
+                            Log.d(TAG, "authorPicURL is " + authorPicURL);
+                            Glide.with(mContext)
+                                    .load(authorPicURL)
+                                    .into(authorPic);
+                        } else {
+                            Log.d(TAG, "using default profile pic");
+                            authorPic.setImageResource(R.drawable.profile_default_pic);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 item_name.setText(mItem.title);
                 description.setText(mItem.description);
                 price.setText(mItem.rate+"");
