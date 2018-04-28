@@ -107,9 +107,10 @@ public class RatingActivity extends AppCompatActivity implements RatingDialogLis
                     }
                 }
                 //calculation
-                Double latestRating = ratingNumber + newRating;
+                Double prevRatingTotal = ratingNumber * totalRating;
+                Double latestRatingTotal = prevRatingTotal + newRating;
                 totalRating = totalRating + 1;
-                Double newAverageRating = latestRating / totalRating;
+                Double newAverageRating = latestRatingTotal / totalRating;
                 newAverageRating = Math.round(newAverageRating * 100.0) / 100.0;
                 final int finalTotalRating = totalRating;
                 myRef.child("users").child(offerUserID).child("rating").setValue(newAverageRating, new DatabaseReference.CompletionListener() {
