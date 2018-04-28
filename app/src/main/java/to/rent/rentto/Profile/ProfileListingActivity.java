@@ -85,6 +85,10 @@ public class ProfileListingActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.getValue()+"");
                 mItem = dataSnapshot.getValue(Item.class);
+                if(mItem == null) {
+                    Log.d(TAG, "grabTheItem/onDataChange mItem is null");
+                    return;
+                }
                 TextView item_name = findViewById(R.id.textView1);
                 TextView description = findViewById(R.id.textView2);
                 TextView condition = findViewById(R.id.textView3);

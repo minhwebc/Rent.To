@@ -101,6 +101,8 @@ public class ListingActivity extends AppCompatActivity {
                 mItem = dataSnapshot.getValue(Item.class);
                 if(mItem == null) {
                     Log.d(TAG, "grabTheItem/onDataChange mItem is null");
+                    Toast.makeText(mContext, "Cannot view this item. It may have been deleted", Toast.LENGTH_SHORT).show();
+                    finish();
                     return;
                 }
                 TextView item_name = findViewById(R.id.textView1);
