@@ -31,7 +31,7 @@ import to.rent.rentto.Utils.BottomNavigationViewHelper;
  */
 
 public class ProfileListingActivity extends AppCompatActivity {
-    private static final String TAG = "ListingActivity";
+    private static final String TAG = "ProfileListingActivity";
     private Context mContext;
     private String ITEM_ID;
     private String CITY;
@@ -119,6 +119,12 @@ public class ProfileListingActivity extends AppCompatActivity {
                             Log.d(TAG, "using default profile pic");
                             authorPic.setImageResource(R.drawable.profile_default_pic);
                         }
+                        authorPic.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d(TAG, "The author pic icon was clicked");
+                            }
+                        });
                     }
 
                     @Override

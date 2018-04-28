@@ -146,6 +146,12 @@ public class ListingActivity extends AppCompatActivity {
                             Log.d(TAG, "using default profile pic");
                             authorPic.setImageResource(R.drawable.profile_default_pic);
                         }
+                        authorPic.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d(TAG, "The author pic icon was clicked");
+                            }
+                        });
                     }
 
                     @Override
