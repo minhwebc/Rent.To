@@ -16,25 +16,21 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".Home.HomeActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".Profile.ProfileListingActivity"
-            android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".Profile.ProfilePreviewActivity"
+        <activity
+            android:name=".Profile.ProfileListingActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Profile.ProfilePreviewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Profile.ProfileActivity"
@@ -46,7 +42,8 @@
         <activity
             android:name=".Profile.AccountSettingsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Profile.ChangeProfilePictureActivity"
+        <activity
+            android:name=".Profile.ChangeProfilePictureActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Listing.ListingActivity"
@@ -94,7 +91,14 @@
 
         <activity android:name=".Messages.ChatActivity" />
         <activity android:name=".Login.VideoActivity" />
-        <activity android:name=".Messages.RatingActivity"></activity>
+        <activity android:name=".Messages.RatingActivity" />
+        <activity android:name=".Home.WelcomeActivity" android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

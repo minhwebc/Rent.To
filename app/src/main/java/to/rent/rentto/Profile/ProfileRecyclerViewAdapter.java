@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -80,7 +79,6 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
     @Override
     public ProfileRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup par, int viewType){
         View view = mInflater.inflate(R.layout.recyclerview_item, par, false);
-        TextView soldInfo = (TextView) view.findViewById(R.id.ratedInformation);
         return new ViewHolder(view, this.width);
     }
 
@@ -91,7 +89,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.ic_launcher_background);
         if(rented.get(position)) {
-            holder.soldInfo.setText("RENTED");
+            holder.soldInfo.setVisibility(View.VISIBLE);
         }else{
             holder.soldInfo.setVisibility(View.GONE);
         }
@@ -109,17 +107,21 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, RatingDialogListener {
         ImageView imageView;
-        TextView soldInfo;
+        ImageView soldInfo;
 
         ViewHolder(View itemView, int width) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
-            soldInfo = (TextView) itemView.findViewById(R.id.ratedInformation);
+            soldInfo = (ImageView) itemView.findViewById(R.id.ratedInformationImage);
             int newWidth = width / 3;
             if(imageView.getLayoutParams().width > newWidth) {
                 int ratio = newWidth / imageView.getLayoutParams().width;
                 imageView.getLayoutParams().width = newWidth;
                 imageView.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
+
+                soldInfo.getLayoutParams().width = newWidth;
+                soldInfo.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
+
             }
             itemView.setOnClickListener(this);
             if(longClickable) {

@@ -1,6 +1,7 @@
 package to.rent.rentto.Listing;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,7 +35,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +44,6 @@ import java.util.Locale;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
-import to.rent.rentto.Utils.UniversalImageLoader;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -73,9 +72,10 @@ public class ItemsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         Log.d(TAG, "onCreate: Started.");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items_list);
+
+        //Debug.startMethodTracing("startup");
         mContext = ItemsListActivity.this;
         mReference = FirebaseDatabase.getInstance().getReference();
         setupBottomNavigationView();
@@ -90,18 +90,16 @@ public class ItemsListActivity extends AppCompatActivity {
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
-                        initImageLoader();
                         initRecyclerView(width);
                         initImageBitMaps();
                         swipeLayout.setRefreshing(false);
                     }
-                }, 2000);
+                }, 1000);
             }
         });
 
 
 
-        initImageLoader();
         initRecyclerView(width);
         initImageBitMaps();
 
@@ -116,6 +114,12 @@ public class ItemsListActivity extends AppCompatActivity {
 
 
     private void initImageBitMaps(){
+        final ProgressDialog dialog=new ProgressDialog(ItemsListActivity.this);
+        dialog.setMessage("Loading");
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(false);
+        dialog.show();
+
         //grabs all the photos back
         Log.d(TAG, "initimagebitmaps");
         Query query = mReference.child(mContext.getString(R.string.dbname_items));
@@ -152,6 +156,7 @@ public class ItemsListActivity extends AppCompatActivity {
                     }
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
+                dialog.hide();
             }
 
             @Override
@@ -232,11 +237,6 @@ public class ItemsListActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_bar, menu);
         return true; //we've provided a menu!
-    }
-
-    private void initImageLoader(){
-        UniversalImageLoader universalImageLoader = new UniversalImageLoader(mContext);
-        ImageLoader.getInstance().init(universalImageLoader.getConfig());
     }
 
 
