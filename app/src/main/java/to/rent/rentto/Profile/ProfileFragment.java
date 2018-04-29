@@ -224,6 +224,11 @@ public class ProfileFragment extends Fragment {
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
         mRatingBar.setRating((float) rating);
+        String website = settings.getWebsite();
+        if(website == null || website.length() < 1) {
+            website = "No Website Listed";
+        }
+        mWebsite.setText(website);
         Log.d(TAG, "displayname is " + settings.getUsername() + " username is " + settings.getUsername() + " rating is " + (float) rating);
     }
 
