@@ -103,9 +103,13 @@ public class NotificationActivity extends AppCompatActivity {
                                     }
                                 }
                                 messageIDList.add(messageId);
-                                message[0].author = lastMessageContent[0].author;
-                                message[0].message = lastMessageContent[0].text;
-                                data.add(message[0]);
+                                try {
+                                    message[0].author = lastMessageContent[0].author;
+                                    message[0].message = lastMessageContent[0].text;
+                                    data.add(message[0]);
+                                } catch(Exception e) {
+                                    e.printStackTrace();
+                                }
                             } else {
                                 mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see").child(ds.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                                     @Override
