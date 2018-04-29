@@ -171,12 +171,14 @@ public class ItemsListActivity extends AppCompatActivity {
     private String findCurrentCity(){
         if(ContextCompat.checkSelfPermission(ItemsListActivity.this,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(ItemsListActivity.this,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
-            } else {
-                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
-            }
+            Toast.makeText(ItemsListActivity.this, "Rent.to Needs Location Access To Show Nearby Offers", Toast.LENGTH_SHORT).show();
+
+//            if(ActivityCompat.shouldShowRequestPermissionRationale(ItemsListActivity.this,
+//                    android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
+//                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+//            } else {
+//                ActivityCompat.requestPermissions(ItemsListActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+//            }
         } else {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
