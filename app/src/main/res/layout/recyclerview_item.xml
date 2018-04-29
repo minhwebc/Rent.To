@@ -12,15 +12,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="center" />
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ratedInformationImage"
-            android:layout_alignTop="@id/image"
-            android:layout_alignBottom="@id/image"
-            android:layout_alignLeft="@id/image"
-            android:layout_alignRight="@id/image"
-            android:scaleType="fitXY"/>
+            android:textSize="@dimen/font_22"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:scaleType="center"
+            android:gravity="center_horizontal"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

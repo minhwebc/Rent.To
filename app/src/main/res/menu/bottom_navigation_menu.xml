@@ -4,7 +4,7 @@
         android:icon="@drawable/ic_home"
         android:title=""></item>
 
-    <item android:id="@+id/something"
+    <item android:id="@+id/remind"
         android:icon="@drawable/profile_thumbnail"
         android:title="">
 
