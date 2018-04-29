@@ -171,14 +171,16 @@ public class EditProfileFragment extends Fragment implements
     }
 
     private void setupProfilePhotoClick() {
-        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: switching to ChangeProfilePictureActivity.");
                 Intent intent = new Intent(getActivity(), ChangeProfilePictureActivity.class);
                 startActivityForResult(intent, CHANGE_PROFILE_PIC);
             }
-        });
+        };
+        mProfilePhoto.setOnClickListener(listener);
+        mChangeProfilePhoto.setOnClickListener(listener);
     }
 
     @Override
