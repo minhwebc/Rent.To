@@ -1,9 +1,11 @@
 package to.rent.rentto.Listing;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +30,10 @@ import to.rent.rentto.Messages.PostInMessage;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
+import to.rent.rentto.Models.UserAccountSettings;
+import to.rent.rentto.Profile.ProfileActivity;
+import to.rent.rentto.Profile.ProfileFragment;
+import to.rent.rentto.Profile.ProfilePreviewActivity;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.ShareMethods;
@@ -45,6 +51,8 @@ public class ListingActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private User currentUser;
+    private ImageView authorPic;
+    private String authorPicURL;
     FloatingActionButton requestButton;
     private ShareMethods shareMethods;
 
@@ -55,6 +63,7 @@ public class ListingActivity extends AppCompatActivity {
         shareMethods = new ShareMethods(ListingActivity.this);
         mContext = ListingActivity.this;
         requestButton = (FloatingActionButton) findViewById(R.id.requestButton);
+        authorPic = (ImageView) findViewById(R.id.author_photo_iv);
         mAuth = FirebaseAuth.getInstance();
         Log.d(TAG, "onCreate: Started.");
 
@@ -62,20 +71,23 @@ public class ListingActivity extends AppCompatActivity {
         CITY = getIntent().getStringExtra("CITY");
 
         mReference = FirebaseDatabase.getInstance().getReference();
-        Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currentUser = dataSnapshot.getValue(User.class);
-                Log.d(TAG, currentUser.getUsername());
-            }
+        try {
+            Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    currentUser = dataSnapshot.getValue(User.class);
+                    Log.d(TAG, currentUser.getUsername());
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-
+                }
+            });
+        } catch (Exception e) {
+            Log.d(TAG, "Could not get user");
+        }
         setupBottomNavigationView();
         grabTheItem();
         ImageView backarrow = (ImageView) findViewById(R.id.backArrow);
@@ -99,6 +111,12 @@ public class ListingActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.getValue()+"");
                 mItem = dataSnapshot.getValue(Item.class);
+                if(mItem == null) {
+                    Log.d(TAG, "grabTheItem/onDataChange mItem is null");
+                    Toast.makeText(mContext, "Cannot view this item. It may have been deleted", Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
+                }
                 TextView item_name = findViewById(R.id.textView1);
                 TextView description = findViewById(R.id.textView2);
                 TextView condition = findViewById(R.id.textView3);
@@ -118,9 +136,40 @@ public class ListingActivity extends AppCompatActivity {
                 if(mItem.sold){
                     soldInfo.setText("RENTED");
                 }
+                Query query1 = mReference.child("user_account_settings").child(mItem.userUID);
+                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserAccountSettings userAccountSettings = dataSnapshot.getValue(UserAccountSettings.class);
+                        authorPicURL = userAccountSettings.getProfile_photo();
+                        if(authorPicURL != null && authorPicURL.length() > 1 && authorPic != null) {
+                            Log.d(TAG, "authorPicURL is " + authorPicURL);
+                            Glide.with(mContext)
+                                    .load(authorPicURL)
+                                    .into(authorPic);
+                        } else {
+                            Log.d(TAG, "using default profile pic");
+                            authorPic.setImageResource(R.drawable.profile_default_pic);
+                        }
+                        authorPic.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d(TAG, "The author pic icon was clicked");
+                                Intent intent1 = new Intent(mContext, ProfilePreviewActivity.class);
+                                intent1.putExtra("authorUID", mItem.userUID);
+                                intent1.putExtra("ACTIVITY_NUM", 0); // so it will highlight bottom nav as itemlisting
+                                startActivity(intent1);
+                            }
+                        });
+                    }
 
-                Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                Query query2 = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
+                query2.addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -134,12 +183,13 @@ public class ListingActivity extends AppCompatActivity {
                         mButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(currentUser.getUser_id().equals(mItem.userUID)){
+                                if(mItem == null) {
+                                    Toast.makeText(mContext, "Cannot make an offer for this item. It may have been deleted", Toast.LENGTH_SHORT).show();
+                                    return;
+                                } else if(currentUser.getUser_id().equals(mItem.userUID)){
                                     Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
                                     return;
-                                }
-
-                                if(mItem.sold){
+                                } else if(mItem.sold){
                                     Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
                                     return;
                                 }

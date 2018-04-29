@@ -28,6 +28,7 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import to.rent.rentto.Listing.ListingActivity;
 import to.rent.rentto.R;
 
 /**
@@ -53,9 +54,14 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
     private FirebaseAuth mAuth;
+    private boolean longClickable;
 
 
-    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, ArrayList<String> zips, ArrayList<Boolean> rented){
+    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, ArrayList<String> zips, ArrayList<Boolean> rented) {
+        this(context, ids, imageUrls, width, zips, rented, true);
+    }
+
+    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, ArrayList<String> zips, ArrayList<Boolean> rented, boolean longClickable){
         Log.d(TAG, "constructor: called.");
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -68,6 +74,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
         this.zips = zips;
         this.rented = rented;
         mImageUrls = imageUrls;
+        this.longClickable = longClickable;
     }
 
     @Override
@@ -115,7 +122,9 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                 imageView.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
             }
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
+            if(longClickable) {
+                itemView.setOnLongClickListener(this);
+            }
         }
 
         @Override
@@ -125,10 +134,17 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 //            }
             //Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
             Toast.makeText(mContext, mIDs.get(getAdapterPosition()), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(mContext, ProfileListingActivity.class);
+            Intent intent;
+            new Intent(mContext, ProfileListingActivity.class);
+            if(!longClickable) {
+                intent = new Intent(mContext, ListingActivity.class);
+            } else {
+                intent = new Intent(mContext, ProfileListingActivity.class);
+            }
             intent.putExtra("ITEM_ID", mIDs.get(getAdapterPosition()));
             intent.putExtra("CITY", zips.get(getAdapterPosition()));
             mContext.startActivity(intent);
+
         }
 
         @Override
