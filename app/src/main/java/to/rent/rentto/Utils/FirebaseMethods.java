@@ -211,6 +211,16 @@ public class FirebaseMethods {
      * @return
      */
     public UserSettings getUserAccountSettings(DataSnapshot dataSnapshot) {
+        String authorUID = mAuth.getCurrentUser().getUid();
+        return getUserAccountSettings(dataSnapshot, authorUID);
+    }
+
+    /**
+     * Retrieves the account settings for the user with the given UID
+     * Database: user_account_settings
+     * @return
+     */
+    public UserSettings getUserAccountSettings(DataSnapshot dataSnapshot, String authorUID) {
         Log.d(TAG, "getUserAccountSettings: retrieving user account settings from firebase");
         Log.d(TAG, "currentUserID: " + mAuth.getCurrentUser().getUid());
         UserAccountSettings settings  = new UserAccountSettings();
@@ -221,36 +231,36 @@ public class FirebaseMethods {
             if(ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
                 //Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
 
-                UserAccountSettings hello = ds.child(userID).getValue(UserAccountSettings.class);
-                Log.d(TAG, "account setting is : " + ds.child(userID).child("username").getValue());
+                UserAccountSettings hello = ds.child(authorUID).getValue(UserAccountSettings.class);
+                Log.d(TAG, "account setting is : " + ds.child(authorUID).child("username").getValue());
                 try {
                     settings.setUsername(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                     .getValue(UserAccountSettings.class)
                                     .getUsername()
                     );
                     settings.setDisplay_name(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                 .getValue(UserAccountSettings.class)
                                 .getDisplay_name()
                     );
                     settings.setProfile_photo(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                     .getValue(UserAccountSettings.class)
                                     .getProfile_photo()
                     );
                     settings.setPosts(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                     .getValue(UserAccountSettings.class)
                                     .getPosts()
                     );
                     settings.setWebsite(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                 .getValue(UserAccountSettings.class)
                                 .getWebsite()
                     );
                     settings.setDescription(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                 .getValue(UserAccountSettings.class)
                                 .getDescription()
                     );
@@ -266,25 +276,25 @@ public class FirebaseMethods {
                     Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
 
                     user.setUsername(
-                            (String) ds.child(userID).child("username").getValue()
+                            (String) ds.child(authorUID).child("username").getValue()
                     );
                     user.setEmail(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                     .getValue(User.class)
                                     .getEmail()
                     );
                     user.setPhone_number(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                     .getValue(User.class)
                                     .getPhone_number()
                     );
                     user.setUser_id(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                     .getValue(User.class)
                                     .getUser_id()
                     );
                     user.setRating(
-                            ds.child(userID)
+                            ds.child(authorUID)
                                 .getValue(User.class)
                                 .getRating()
                     );

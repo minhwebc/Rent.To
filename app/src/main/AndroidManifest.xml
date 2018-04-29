@@ -34,6 +34,8 @@
             android:screenOrientation="portrait">
 
         </activity>
+        <activity android:name=".Profile.ProfilePreviewActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Profile.ProfileActivity"
             android:launchMode="singleTask"

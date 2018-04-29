@@ -1,9 +1,11 @@
 package to.rent.rentto.Listing;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,9 @@ import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserAccountSettings;
+import to.rent.rentto.Profile.ProfileActivity;
+import to.rent.rentto.Profile.ProfileFragment;
+import to.rent.rentto.Profile.ProfilePreviewActivity;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.ShareMethods;
@@ -150,6 +155,10 @@ public class ListingActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Log.d(TAG, "The author pic icon was clicked");
+                                Intent intent1 = new Intent(mContext, ProfilePreviewActivity.class);
+                                intent1.putExtra("authorUID", mItem.userUID);
+                                intent1.putExtra("ACTIVITY_NUM", 0); // so it will highlight bottom nav as itemlisting
+                                startActivity(intent1);
                             }
                         });
                     }

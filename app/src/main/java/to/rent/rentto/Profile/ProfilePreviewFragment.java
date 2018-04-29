@@ -3,7 +3,6 @@ package to.rent.rentto.Profile;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.media.Rating;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -55,10 +54,10 @@ import static android.app.Activity.RESULT_OK;
  * Created by allencho on 2/27/18.
  */
 
-public class ProfileFragment extends Fragment {
-    private static final String TAG = "ProfileFragment";
+public class ProfilePreviewFragment extends Fragment {
+    private static final String TAG = "ProfilePreviewFragment";
 
-    private static final int ACTIVITY_NUM = 3;
+    private int ACTIVITY_NUM;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -84,10 +83,17 @@ public class ProfileFragment extends Fragment {
     private ImageView profileMenu;
     private BottomNavigationViewEx bottomNavigationView;
     private Context mContext;
+    private String offerUID;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Bundle bundle = this.getArguments();
+        if(bundle != null) {
+            ACTIVITY_NUM = bundle.getInt("ACTIVITY_NUM");
+            offerUID = bundle.getString("authorUID");
+            Log.d(TAG, "authorUID: " + offerUID + ", activity_Num: " + ACTIVITY_NUM);
+        }
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mDisplayName = (TextView) view.findViewById(R.id.display_name);
         mUsername = (TextView) view.findViewById(R.id.username);
@@ -99,6 +105,7 @@ public class ProfileFragment extends Fragment {
         mRatingBar = (RatingBar) view.findViewById(R.id.rtbDvcMgmt);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
+        profileMenu.setVisibility(View.GONE);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         mFirebaseMethods = new FirebaseMethods(getActivity());
         mContext = getActivity();
@@ -120,14 +127,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupProfilePhotoClick() {
-        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: switching to ChangeProfilePictureActivity.");
-                Intent intent = new Intent(getActivity(), ChangeProfilePictureActivity.class);
-                startActivityForResult(intent, CHANGE_PROFILE_PIC);
-            }
-        });
+        mProfilePhoto.setOnClickListener(null);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class ProfileFragment extends Fragment {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
                 .child(getString(R.string.dbname_user_items))
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .child(offerUID);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -188,7 +188,7 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.profileRecylerVieww);
         staggeredRecyclerViewAdapter =
-                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width, zips, rented);
+                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width, zips, rented, false);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         if(recyclerView == null) {
             Log.d(TAG, "RecyclerView is null");
@@ -218,9 +218,14 @@ public class ProfileFragment extends Fragment {
         double rating = currentUser.getRating();
 
         //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
-        Glide.with(getActivity())
-                .load(settings.getProfile_photo())
-                .into(mProfilePhoto);
+        if(settings.getProfile_photo() == null || settings.getProfile_photo().length() < 1) {
+            mProfilePhoto.setImageResource(R.drawable.profile_default_pic);
+
+        } else {
+            Glide.with(getActivity())
+                    .load(settings.getProfile_photo())
+                    .into(mProfilePhoto);
+        }
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
         mRatingBar.setRating((float) rating);
@@ -294,7 +299,7 @@ public class ProfileFragment extends Fragment {
 
                 //retrieve user information from the database
                 try {
-                    setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot));
+                    setProfileWidgets(mFirebaseMethods.getUserAccountSettings(dataSnapshot, offerUID));
                 } catch(Exception e) {
 
                 }
