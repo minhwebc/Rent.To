@@ -82,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
     }
 
     @Override
-    public void onPositiveButtonClicked(int i, String s) {
+    public void onPositiveButtonClicked(int i, final String s) {
         final double newRating = i;
         Log.d(TAG, "This is the user that is going to get rated :" + offerUserID);
         Log.d(TAG, s);
@@ -143,7 +143,7 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
                                                                                                     newRemindMessage.push().setValue(message, new DatabaseReference.CompletionListener() {
                                                                                                         @Override
                                                                                                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                                                            RemindMessageItem remindMessageItem = new RemindMessageItem(location, itemID);
+                                                                                                            RemindMessageItem remindMessageItem = new RemindMessageItem(location, itemID, mAuth.getCurrentUser().getUid() ,offerUserID, s);
                                                                                                             newRemindMessage.child("item").setValue(remindMessageItem, new DatabaseReference.CompletionListener() {
                                                                                                                 @Override
                                                                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

@@ -42,10 +42,17 @@
         android:layout_below="@id/layout1"
         android:id="@+id/listReturn"
         >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remind return"
+            android:textSize="@dimen/font_22"
+            android:id="@+id/returnText"/>
         <ListView
             android:id="@+id/remindReturnList"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/returnText">
 
         </ListView>
     </RelativeLayout>
@@ -53,10 +60,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/listReturn">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remind take"
+            android:textSize="@dimen/font_22"
+            android:id="@+id/takeText"/>
         <ListView
             android:id="@+id/remindTakeBList"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/takeText">
         </ListView>
     </RelativeLayout>
 
