@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -90,6 +92,8 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                 .placeholder(R.drawable.ic_launcher_background);
         if(rented.get(position)) {
             holder.soldInfo.setVisibility(View.VISIBLE);
+            holder.soldInfo.setText("RENTED");
+            holder.imageView.setColorFilter(ContextCompat.getColor(mContext, R.color.black_50));
         }else{
             holder.soldInfo.setVisibility(View.GONE);
         }
@@ -107,12 +111,12 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, RatingDialogListener {
         ImageView imageView;
-        ImageView soldInfo;
+        TextView soldInfo;
 
         ViewHolder(View itemView, int width) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
-            soldInfo = (ImageView) itemView.findViewById(R.id.ratedInformationImage);
+            soldInfo = (TextView) itemView.findViewById(R.id.ratedInformationImage);
             int newWidth = width / 3;
             if(imageView.getLayoutParams().width > newWidth) {
                 int ratio = newWidth / imageView.getLayoutParams().width;
@@ -131,10 +135,6 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 
         @Override
         public void onClick(View view) {
-//            if (mClickListener != null) {
-//                mClickListener.onItemClick(view, getAdapterPosition());
-//            }
-            //Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
             Toast.makeText(mContext, mIDs.get(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             Intent intent;
             new Intent(mContext, ProfileListingActivity.class);
@@ -200,7 +200,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                         if(!rented.get(getAdapterPosition())) {
                             final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                             builder.setTitle("Who do you sold it to:");
-                            String usersIDStringArray[] = usersIDArray.toArray(new String[usersIDArray.size()]);
+                            //String usersIDStringArray[] = usersIDArray.toArray(new String[usersIDArray.size()]);
                             String usersNameStringArray[] = usersNameArray.toArray(new String[usersNameArray.size()]);
                             builder.setItems(usersNameStringArray, new DialogInterface.OnClickListener() {
                                 @Override
@@ -224,7 +224,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                 if (databaseError == null) {
                                                     ((ProfileActivity) mContext).setUserID(userStringSold);
-                                                    ((ProfileActivity) mContext).setItem(mIDs.get(getAdapterPosition()), zips.get(getAdapterPosition()));
+                                                    ((ProfileActivity) mContext).setItem(mIDs.get(getAdapterPosition()), zips.get(getAdapterPosition()), "");
                                                     showDialog();
                                                 }
                                             }
@@ -234,7 +234,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                             });
                             builder.show();
                         }else{
-                            Toast.makeText(mContext, "Item has been marked rented", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Item has already been marked rented", Toast.LENGTH_SHORT).show();
                         }
                     } else if(which == 1){
                         Log.d("ViewHolder", "delete item here");
@@ -321,12 +321,12 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                     .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
                     .setDefaultRating(2)
                     .setTitle("How would you rate this person")
-                    .setDescription("Please select some stars and give your feedback")
+                    .setDescription("Please select some stars and give a reminder below")
                     .setStarColor(R.color.colorAccent)
                     .setNoteDescriptionTextColor(R.color.colorPrimary)
                     .setTitleTextColor(R.color.black)
                     .setDescriptionTextColor(R.color.colorPrimary)
-                    .setHint("Please write your comment here ...")
+                    .setHint("Please write something you want to be reminded here about the item. We will send you both a message to remind")
                     .setHintTextColor(R.color.black_11)
                     .setCommentTextColor(R.color.black)
                     .setCommentBackgroundColor(R.color.white)

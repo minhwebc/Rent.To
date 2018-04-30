@@ -1,12 +1,14 @@
 package to.rent.rentto.Listing;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -73,7 +75,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .into(holder.imageView);
         if(mItems.get(position).sold) {
             holder.soldInfo.setVisibility(View.VISIBLE);
-            holder.soldInfo.setImageDrawable(mContext.getDrawable(R.drawable.rented_tag));
+            holder.soldInfo.setText("RENTED");
+            holder.imageView.setColorFilter(ContextCompat.getColor(mContext, R.color.black_50));
+
         }else{
             holder.soldInfo.setVisibility(View.GONE);
         }
@@ -98,20 +102,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
-        ImageView soldInfo;
+        TextView soldInfo;
 
         ViewHolder(View itemView, int width) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
-            soldInfo = (ImageView) itemView.findViewById(R.id.ratedInformationImage);
+            soldInfo = (TextView) itemView.findViewById(R.id.ratedInformationImage);
             int newWidth = width / 3;
             if(imageView.getLayoutParams().width > newWidth) {
                 int ratio = newWidth / imageView.getLayoutParams().width;
                 imageView.getLayoutParams().width = newWidth;
                 imageView.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
-
-                soldInfo.getLayoutParams().width = newWidth;
-                soldInfo.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
             }
             itemView.setOnClickListener(this);
         }

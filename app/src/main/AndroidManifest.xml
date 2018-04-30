@@ -23,12 +23,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Home.HomeActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Profile.ProfileListingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Profile.ProfilePreviewActivity"
             android:screenOrientation="portrait" />
@@ -92,13 +90,16 @@
         <activity android:name=".Messages.ChatActivity" />
         <activity android:name=".Login.VideoActivity" />
         <activity android:name=".Messages.RatingActivity" />
-        <activity android:name=".Home.WelcomeActivity" android:theme="@style/SplashTheme">
+        <activity
+            android:name=".Home.WelcomeActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Remind.RemindActivity"></activity>
     </application>
 
 </manifest>

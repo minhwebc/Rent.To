@@ -21,6 +21,8 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import java.util.UUID;
 
+import to.rent.rentto.Models.Message;
+import to.rent.rentto.Models.RemindMessageItem;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
@@ -34,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
     private DatabaseReference myRef;
     private String location;
     private String itemID;
+    private String message;
 
 
     @Override
@@ -72,15 +75,18 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
         offerUserID = userID;
     }
 
-    public void setItem(String itemID, String location) {
+    public void setItem(String itemID, String location, String message) {
         this.itemID = itemID;
         this.location = location;
+        this.message = message;
     }
 
     @Override
-    public void onPositiveButtonClicked(int i, String s) {
+    public void onPositiveButtonClicked(int i, final String s) {
         final double newRating = i;
         Log.d(TAG, "This is the user that is going to get rated :" + offerUserID);
+        Log.d(TAG, s);
+        final String remindMessage = s;
         myRef.child("users").child(offerUserID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -131,7 +137,33 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
                                                                                             @Override
                                                                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                                                 if(databaseError == null){
-                                                                                                    Toast.makeText(mContext, "Rating submitted", Toast.LENGTH_SHORT).show();
+                                                                                                    final DatabaseReference newRemindMessage = myRef.child("remind_messages").push();
+                                                                                                    final String newRemindMessageKey = newRemindMessage.getKey();
+                                                                                                    Message message = new Message("RentTo", remindMessage, "date", true, "authorID");
+                                                                                                    newRemindMessage.push().setValue(message, new DatabaseReference.CompletionListener() {
+                                                                                                        @Override
+                                                                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                            RemindMessageItem remindMessageItem = new RemindMessageItem(location, itemID, mAuth.getCurrentUser().getUid() ,offerUserID, s);
+                                                                                                            newRemindMessage.child("item").setValue(remindMessageItem, new DatabaseReference.CompletionListener() {
+                                                                                                                @Override
+                                                                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                                    myRef.child("users").child(offerUserID).child("return_remind_message_user_can_see").push().setValue(newRemindMessageKey, new DatabaseReference.CompletionListener() {
+                                                                                                                        @Override
+                                                                                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                                            myRef.child("users").child(mAuth.getCurrentUser().getUid()).child("rented_out_remind_message_user_can_see").push().setValue(newRemindMessageKey, new DatabaseReference.CompletionListener() {
+                                                                                                                                @Override
+                                                                                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                                                    if(databaseError == null) {
+                                                                                                                                        Toast.makeText(mContext, "Rating submitted", Toast.LENGTH_SHORT).show();
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    });
+                                                                                                                }
+                                                                                                            });
+                                                                                                        }
+                                                                                                    });
                                                                                                 }
                                                                                             }
                                                                                         });

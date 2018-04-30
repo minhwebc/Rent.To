@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import to.rent.rentto.Camera.CameraActivity;
-import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.Listing.ItemsListActivity;
 import to.rent.rentto.Messages.NotificationActivity;
 import to.rent.rentto.Profile.ProfileActivity;
 import to.rent.rentto.R;
+import to.rent.rentto.Remind.RemindActivity;
 
 /**
  * Created by iguest on 2/11/18.
@@ -41,7 +41,11 @@ public class BottomNavigationViewHelper {
                         intent1.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent1);
                         break;
-
+                    case R.id.remind:
+                        Intent intent3 = new Intent(context, RemindActivity.class); //ACTIVITY_NUM = 1
+                        intent3.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        context.startActivity(intent3);
+                        break;
                     case R.id.ic_addImage:
                         Intent intent4 = new Intent(context, CameraActivity.class); //ACTIVITY_NUM = 1
                         intent4.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
