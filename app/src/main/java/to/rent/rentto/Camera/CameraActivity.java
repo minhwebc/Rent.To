@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -322,6 +324,12 @@ public class CameraActivity extends AppCompatActivity {
                                     Toast.makeText(mContext, "Rent.to cannot get your location", Toast.LENGTH_SHORT).show();
                                 }
                             }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(mContext, "Rent.to cannot get your location", Toast.LENGTH_SHORT).show();
                         }
                     });
             mFusedLocationClient.getLastLocation();
