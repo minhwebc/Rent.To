@@ -5,7 +5,7 @@
         android:title=""></item>
 
     <item android:id="@+id/remind"
-        android:icon="@drawable/profile_thumbnail"
+        android:icon="@drawable/timer"
         android:title="">
 
     </item>
