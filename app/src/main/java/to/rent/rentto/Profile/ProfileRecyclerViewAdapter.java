@@ -210,7 +210,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                                         myRef.child("posts").child(zips.get(getAdapterPosition())).child(mIDs.get(getAdapterPosition())).child("sold").setValue(true, new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                myRef.child("user_items").child(mAuth.getCurrentUser().getUid()).child(mIDs.get(getAdapterPosition())).setValue(true, new DatabaseReference.CompletionListener() {
+                                                myRef.child("user_items").child(mAuth.getCurrentUser().getUid()).child(mIDs.get(getAdapterPosition())).child("sold").setValue(true, new DatabaseReference.CompletionListener() {
                                                     @Override
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         Toast.makeText(mContext, "Item has been marked rented", Toast.LENGTH_SHORT).show();
