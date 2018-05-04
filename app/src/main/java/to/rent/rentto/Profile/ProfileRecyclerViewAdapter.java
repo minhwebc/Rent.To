@@ -151,7 +151,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 
         @Override
         public boolean onLongClick(View view) {
-            final CharSequence colors[] = new CharSequence[] {"Mark as sold", "Delete item"};
+            final CharSequence colors[] = new CharSequence[] {"Mark as Rented", "Delete item"};
             final ArrayList<String> usersIDArray = new ArrayList<>();
             final ArrayList<String> usersNameArray = new ArrayList<>();
 
