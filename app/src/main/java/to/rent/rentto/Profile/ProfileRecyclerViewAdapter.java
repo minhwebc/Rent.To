@@ -135,7 +135,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(mContext, mIDs.get(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, mIDs.get(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             Intent intent;
             new Intent(mContext, ProfileListingActivity.class);
             if(!longClickable) {

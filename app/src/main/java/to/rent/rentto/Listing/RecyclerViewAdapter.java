@@ -85,7 +85,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
-                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, ListingActivity.class);
                 intent.putExtra("ITEM_ID", mIDs.get(position));
                 intent.putExtra("CITY", zips.get(position));

@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "Click on send message button" , Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "Click on send message button" , Toast.LENGTH_SHORT).show();
                 sendMessage();
             }
         });
