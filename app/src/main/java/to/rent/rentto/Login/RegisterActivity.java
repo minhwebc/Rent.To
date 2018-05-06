@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK) { // They agreed
                 Log.d(TAG, "Got activity result, going to register");
                 initWidgets();
-//                register();
+                register();
             } else if(resultCode == RESULT_CANCELED) {
                 Log.d(TAG, "Got activity result, result canceled");
                 initWidgets();
