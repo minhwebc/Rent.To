@@ -220,7 +220,6 @@ public class ProfileFragment extends Fragment {
         //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
         if(settings.getProfile_photo() == null || settings.getProfile_photo().length() < 1) {
             mProfilePhoto.setImageResource(R.drawable.profile_default_pic);
-
         } else {
             Glide.with(getActivity())
                     .load(settings.getProfile_photo())
