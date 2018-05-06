@@ -27,6 +27,8 @@
         <activity
             android:name=".Profile.ProfileListingActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".Login.PolicyAgreementActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Profile.ProfilePreviewActivity"
             android:screenOrientation="portrait" />

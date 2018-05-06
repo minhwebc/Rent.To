@@ -77,15 +77,33 @@ public class RegisterActivity extends AppCompatActivity {
                 email = mEmail.getText().toString();
                 username = mUsername.getText().toString();
                 password = mPassword.getText().toString();
-
                 if(checkInputs(email, username, password)){
                     mProgressBar.setVisibility(View.VISIBLE);
                     loadingPleaseWait.setVisibility(View.VISIBLE);
-
-                    firebaseMethods.registerNewEmail(email, password, username);
+                    Intent intent = new Intent(mContext, PolicyAgreementActivity.class);
+                    startActivityForResult(intent, 5);
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 5) { // Showed them the policy agreement
+            if(resultCode == RESULT_OK) { // They agreed
+                Log.d(TAG, "Got activity result, going to register");
+                initWidgets();
+//                register();
+            } else if(resultCode == RESULT_CANCELED) {
+                Log.d(TAG, "Got activity result, result canceled");
+                initWidgets();
+            }
+        }
+    }
+
+    private void register() {
+        firebaseMethods.registerNewEmail(email, password, username);
     }
 
     private boolean checkInputs(String email, String username, String password){
