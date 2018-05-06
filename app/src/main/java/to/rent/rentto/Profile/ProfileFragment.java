@@ -218,9 +218,14 @@ public class ProfileFragment extends Fragment {
         double rating = currentUser.getRating();
 
         //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
-        Glide.with(getActivity())
-                .load(settings.getProfile_photo())
-                .into(mProfilePhoto);
+        if(settings.getProfile_photo() == null || settings.getProfile_photo().length() < 1) {
+            mProfilePhoto.setImageResource(R.drawable.profile_default_pic);
+
+        } else {
+            Glide.with(getActivity())
+                    .load(settings.getProfile_photo())
+                    .into(mProfilePhoto);
+        }
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
         mRatingBar.setRating((float) rating);
