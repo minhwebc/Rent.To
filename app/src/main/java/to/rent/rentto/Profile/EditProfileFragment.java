@@ -86,7 +86,7 @@ public class EditProfileFragment extends Fragment implements
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful()) {
                                                                     Log.d(TAG, "User email address updated.");
-                                                                    Toast.makeText(getActivity(), "email updated", Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(getActivity(), "Email updated", Toast.LENGTH_SHORT).show();
                                                                     mFirebaseMethods.updateEmail(mEmail.getText().toString());
                                                                 }
                                                             }

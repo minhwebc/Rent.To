@@ -260,14 +260,14 @@ public class ListingActivity extends AppCompatActivity {
                                                                             });
                                                                         } else {
                                                                             int duration = Toast.LENGTH_SHORT;
-                                                                            Toast toast = Toast.makeText(mContext, "error at pushing new message to the currentUser", duration);
+                                                                            Toast toast = Toast.makeText(mContext, "Could not send your message", duration);
                                                                             toast.show();
                                                                         }
                                                                     }
                                                                 });
                                                             } else {
                                                                 int duration = Toast.LENGTH_SHORT;
-                                                                Toast toast = Toast.makeText(mContext, "error at pushing new message", duration);
+                                                                Toast toast = Toast.makeText(mContext, "Could not send your message", duration);
                                                                 toast.show();
                                                             }
                                                         }

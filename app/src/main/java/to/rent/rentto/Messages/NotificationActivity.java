@@ -139,7 +139,7 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedText = messageIDList.get(position);
-                Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NotificationActivity.this, ChatActivity.class);
                 intent.putExtra("MessageChannelID", selectedText);
                 startActivity(intent);
