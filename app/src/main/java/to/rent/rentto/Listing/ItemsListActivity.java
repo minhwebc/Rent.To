@@ -71,7 +71,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeLayout;
     private ArrayList<Item> mItems = new ArrayList<>();
     private ArrayList<Boolean> clickable = new ArrayList<>();
-    private BottomNavigationViewHelper bottomNavigationViewHelper;
+    BottomNavigationViewEx bottomNavigationViewEx;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -127,39 +127,21 @@ public class ItemsListActivity extends AppCompatActivity {
         });
 
         SharedPreferences prefs = getSharedPreferences("Rent.toPrefs", MODE_PRIVATE);
-        if(true || !prefs.getBoolean("hasSeenFilterTooltip", false)) {
+        if(!prefs.getBoolean("hasSeenFilterTooltip", false)) {
             showFilterTooltip();
-        }
-        if(true || !prefs.getBoolean("hasSeenCameraTooltip", false)) {
-//            showCameraTooltip();
-            // MY_PREFS_NAME - a static String variable like:
-            //public static final String MY_PREFS_NAME = "MyPrefsFile";
             SharedPreferences.Editor editor = getSharedPreferences("Rent.toPrefs", MODE_PRIVATE).edit();
-            editor.putBoolean("hasSeenCameraTooltip", true);
+            editor.putBoolean("hasSeenFilterTooltip", true);
             editor.apply();
         }
-    }
-
-    private void showCameraTooltip() {
-        View bottomNavCameraButton = findViewById(R.id.ic_addImage);
-        new SimpleTooltip.Builder(this)
-                .anchorView(bottomNavCameraButton)
-                .text("Earn money! \nTry submitting a new post\nIt's easy!")
-                .gravity(Gravity.TOP)
-                .animated(true)
-                .transparentOverlay(false)
-                .animationDuration(3000)
-                .build()
-                .show();
     }
 
     private void showFilterTooltip() {
         View filterButton = findViewById(R.id.textView6);
         clickable.set(0, false);
-
+        BottomNavigationViewHelper.disableNavigation(mContext, bottomNavigationViewEx);
         new SimpleTooltip.Builder(this)
                 .anchorView(filterButton)
-                .text("Find your item faster.\nUse a filter")
+                .text("Find your item faster.\nUse a filter\n\nClick this message to dismiss")
                 .gravity(Gravity.BOTTOM)
                 .transparentOverlay(false)
                 .dismissOnOutsideTouch(false)
@@ -170,12 +152,13 @@ public class ItemsListActivity extends AppCompatActivity {
                         View bottomNavCameraButton = findViewById(R.id.ic_addImage);
                         new SimpleTooltip.Builder(mContext)
                                 .anchorView(bottomNavCameraButton)
-                                .text("Earn money! \nTry submitting a new post\nIt's easy!")
+                                .text("Earn money! \nTry submitting a new post\nIt's easy!\n\nClick this message to dismiss")
                                 .gravity(Gravity.TOP)
                                 .onDismissListener(new SimpleTooltip.OnDismissListener() {
                                     @Override
                                     public void onDismiss(SimpleTooltip tooltip) {
                                         clickable.set(0, true);
+                                        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
                                     }
                                 })
                                 .transparentOverlay(false)
@@ -322,7 +305,7 @@ public class ItemsListActivity extends AppCompatActivity {
 
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
-        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
     }
