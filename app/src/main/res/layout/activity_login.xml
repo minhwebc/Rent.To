@@ -30,11 +30,18 @@
             android:textAlignment="center"
             />
 
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/phoneDirect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This is the phone number login process" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:id="@+id/emailInput">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,8 +53,24 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/phoneNumber"
+            android:visibility="gone"
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Code that was sent to the number of this phone"
+                android:inputType="textEmailAddress"
+                android:id="@+id/phoneNumberField"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:id="@+id/paswordInput">
 
             <EditText
                 android:id="@+id/input_password"
@@ -56,6 +79,40 @@
                 android:hint="Password"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:layout_gravity="right"
+            android:textColor="@color/link_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PHONE LOGIN "
+            android:id="@+id/phoneLoginLink"/>
+        <TextView
+            android:visibility="gone"
+            android:layout_gravity="left"
+            android:textColor="@color/link_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BACK"
+            android:id="@+id/backLoginLink"/>
+
+        <Button
+            android:visibility="gone"
+            android:layout_gravity="right"
+            android:textColor="@color/link_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VERIFY"
+            android:id="@+id/verifyLink"/>
+
+        <Button
+            android:visibility="gone"
+            android:layout_gravity="right"
+            android:textColor="@color/link_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RESEND"
+            android:id="@+id/resendLink"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -108,12 +165,4 @@
         android:layout_alignLeft="@+id/progressBar"
         android:id="@+id/pleaseWait"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bottomBar"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/ic_messages"
-        android:layout_margin="16dp" />
 </RelativeLayout>
