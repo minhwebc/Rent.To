@@ -1,10 +1,7 @@
 package to.rent.rentto.Messages;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +9,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,13 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.Message;
-import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.Profile.ProfilePreviewActivity;
-import to.rent.rentto.Profile.ProfilePreviewFragment;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.FirebaseMethods;
 
@@ -51,6 +41,7 @@ public class MessageAdapter extends BaseAdapter {
     private DatabaseReference mRef;
     private FirebaseMethods mFirebaseMethods;
     private ImageView authorAvatarPic;
+    private int myMessagesCount;
 
 
     public MessageAdapter(Context context) {
@@ -65,6 +56,10 @@ public class MessageAdapter extends BaseAdapter {
             Log.d(TAG, "inside add, authorid =" + message.getAuthorID());
             otherProfileUID = message.getAuthorID();
             getProfilePic();
+        } else { // this user has messaged
+            if(!message.text.startsWith("I am interested in your")) {
+                myMessagesCount++;
+            }
         }
         this.messages.add(message);
         Collections.sort(this.messages, new Comparator<Message>() {
@@ -136,6 +131,10 @@ public class MessageAdapter extends BaseAdapter {
     @Override
     public long getItemId(int i) {
         return i;
+    }
+
+    public int getMyMessagesCount() {
+        return myMessagesCount;
     }
 
     // This is the backbone of the class, it handles the creation of single ListView row (chat bubble)

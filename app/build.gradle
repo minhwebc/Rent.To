@@ -61,5 +61,9 @@ dependencies {
     //rating dialog
     implementation 'com.stepstone.apprating:app-rating:2.2.0'
 
+    //tooltip
+    implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.2'
+
+
 }
 apply plugin: 'com.google.gms.google-services'

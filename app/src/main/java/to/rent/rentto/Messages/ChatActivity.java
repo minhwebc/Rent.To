@@ -1,18 +1,15 @@
 package to.rent.rentto.Messages;
-
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,14 +17,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.R;
@@ -99,6 +95,19 @@ public class ChatActivity extends AppCompatActivity {
                                 }
                                 messageAdapter.add(message);
                             }
+                        }
+
+                        // If current user has not sent any messages (other than interest message), then shows tooltip
+                        if(messageAdapter.getMyMessagesCount() == 0) {
+                            new SimpleTooltip.Builder(mContext)
+                                    .anchorView(sendMessageButton)
+                                    .text("Remember to discuss where to meet and how the items will be returned\n\n Tap to dismiss")
+                                    .showArrow(false)
+                                    .gravity(Gravity.TOP)
+                                    .animated(true)
+                                    .dismissOnOutsideTouch(false)
+                                    .build()
+                                    .show();
                         }
                     }
 
