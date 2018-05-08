@@ -2,6 +2,7 @@ package to.rent.rentto.Listing;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,6 +45,7 @@ import java.util.Locale;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import to.rent.rentto.Utils.DeviceID;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -102,6 +104,9 @@ public class ItemsListActivity extends AppCompatActivity {
 
         initRecyclerView(width);
         initImageBitMaps();
+        DeviceID dev = new DeviceID(this);
+        System.out.println("hey it's my phone number" + dev.getPhoneNumber());
+
 
         textView = (TextView) findViewById(R.id.textView6);
         textView.setOnClickListener(new View.OnClickListener() {
