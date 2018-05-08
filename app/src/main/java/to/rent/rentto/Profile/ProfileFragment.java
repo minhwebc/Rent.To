@@ -2,6 +2,7 @@ package to.rent.rentto.Profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.media.Rating;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +42,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.github.douglasjunior.androidSimpleTooltip.ArrowDrawable;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserAccountSettings;
@@ -50,6 +54,7 @@ import to.rent.rentto.Utils.FirebaseMethods;
 import to.rent.rentto.Utils.UniversalImageLoader;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by allencho on 2/27/18.
@@ -167,6 +172,22 @@ public class ProfileFragment extends Fragment {
                     String photo_path = mItem.imageURL;
                     mImageUrls.add(photo_path);
                     Log.d(TAG, mItem.sold + " something");
+                }
+                //tooltip
+                if(staggeredRecyclerViewAdapter.getItemCount() > 0) {
+                    SharedPreferences prefs = mContext.getSharedPreferences("Rent.toPrefs", MODE_PRIVATE);
+                    if(!prefs.getBoolean("hasSeenProfileItemTooltip", false)) {
+                        SharedPreferences.Editor editor = mContext.getSharedPreferences("Rent.toPrefs", MODE_PRIVATE).edit();
+                        editor.putBoolean("hasSeenProfileItemTooltip", true);
+                        editor.apply();
+                        new SimpleTooltip.Builder(mContext)
+                                .anchorView(mProfilePhoto)
+                                .gravity(Gravity.BOTTOM)
+                                .arrowDirection(ArrowDrawable.BOTTOM)
+                                .text("Long press your items to\n mark as rented or deleted")
+                                .build()
+                                .show();
+                    }
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
             }

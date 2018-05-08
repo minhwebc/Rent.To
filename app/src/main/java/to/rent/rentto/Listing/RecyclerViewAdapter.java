@@ -54,6 +54,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.clickable = clickable;
     }
 
+    private int itemsCount() {
+        return this.mIDs.size();
+    }
+
     //To-do here find the current city
     private String findCurrentCity(){
         return this.city;
