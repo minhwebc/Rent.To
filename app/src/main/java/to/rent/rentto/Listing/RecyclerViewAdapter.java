@@ -33,16 +33,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private ItemsListActivity mContext;
-    private int width;
     private String city;
     private ArrayList<String> zips = new ArrayList<>();
     private ArrayList<Item> mItems;
 
-    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, String city, ArrayList<String> zipcodes, ArrayList<Item> mItems){
+    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, String city, ArrayList<String> zipcodes, ArrayList<Item> mItems){
         Log.d(TAG, "constructor: called.");
         this.zips = zipcodes;
         this.city = city;
-        this.width = width;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
         Log.d(TAG, mIDs.size()+"");
@@ -59,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup par, int viewType){
         View view = mInflater.inflate(R.layout.recyclerview_item, par, false);
-        return new ViewHolder(view, this.width);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -104,16 +102,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageView imageView;
         TextView soldInfo;
 
-        ViewHolder(View itemView, int width) {
+        ViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
             soldInfo = (TextView) itemView.findViewById(R.id.ratedInformationImage);
-            int newWidth = width / 3;
-            if(imageView.getLayoutParams().width > newWidth) {
-                int ratio = newWidth / imageView.getLayoutParams().width;
-                imageView.getLayoutParams().width = newWidth;
-                imageView.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
-            }
             itemView.setOnClickListener(this);
         }
 

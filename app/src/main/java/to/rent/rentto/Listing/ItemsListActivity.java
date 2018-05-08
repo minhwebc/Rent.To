@@ -83,7 +83,6 @@ public class ItemsListActivity extends AppCompatActivity {
         setupBottomNavigationView();
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         miles = 20;
-        final int width = getScreenSizeX();
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -92,7 +91,7 @@ public class ItemsListActivity extends AppCompatActivity {
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
-                        initRecyclerView(width);
+                        initRecyclerView();
                         initImageBitMaps();
                         swipeLayout.setRefreshing(false);
                     }
@@ -102,7 +101,7 @@ public class ItemsListActivity extends AppCompatActivity {
 
 
 
-        initRecyclerView(width);
+        initRecyclerView();
         initImageBitMaps();
         DeviceID dev = new DeviceID(this);
         System.out.println("hey it's my phone number" + dev.getPhoneNumber());
@@ -254,11 +253,11 @@ public class ItemsListActivity extends AppCompatActivity {
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
     }
 
-    private void initRecyclerView(int width) {
+    private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity(), zipcodes, mItems);
+                new RecyclerViewAdapter(this, iDs, mImageUrls, findCurrentCity(), zipcodes, mItems);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);
