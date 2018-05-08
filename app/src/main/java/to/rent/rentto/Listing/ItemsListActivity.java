@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Address;
@@ -22,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
@@ -110,6 +113,27 @@ public class ItemsListActivity extends AppCompatActivity {
                 launchFilter(v);
             }
         });
+
+        SharedPreferences prefs = getSharedPreferences("Rent.toPrefs", MODE_PRIVATE);
+        if(!prefs.getBoolean("hasSeenCameraTooltip", false)) {
+            showCameraTooltip();
+            // MY_PREFS_NAME - a static String variable like:
+            //public static final String MY_PREFS_NAME = "MyPrefsFile";
+            SharedPreferences.Editor editor = getSharedPreferences("Rent.toPrefs", MODE_PRIVATE).edit();
+            editor.putBoolean("hasSeenCameraTooltip", true);
+            editor.apply();
+        }
+    }
+
+    private void showCameraTooltip() {
+        View bottomNavCameraButton = findViewById(R.id.ic_addImage);
+        new SimpleTooltip.Builder(this)
+                .anchorView(bottomNavCameraButton)
+                .text("Earn money! \nTry submitting a new post\nIt's easy!")
+                .gravity(Gravity.TOP)
+                .animated(true)
+                .build()
+                .show();
     }
 
 
