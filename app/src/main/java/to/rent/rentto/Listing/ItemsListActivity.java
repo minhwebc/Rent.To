@@ -103,8 +103,6 @@ public class ItemsListActivity extends AppCompatActivity {
 
         initRecyclerView();
         initImageBitMaps();
-        DeviceID dev = new DeviceID(this);
-        System.out.println("hey it's my phone number" + dev.getPhoneNumber());
 
 
         textView = (TextView) findViewById(R.id.textView6);
