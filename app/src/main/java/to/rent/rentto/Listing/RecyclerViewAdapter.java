@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import to.rent.rentto.Models.Item;
@@ -37,8 +38,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private String city;
     private ArrayList<String> zips = new ArrayList<>();
     private ArrayList<Item> mItems;
+    private ArrayList<Boolean> clickable;
 
-    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, String city, ArrayList<String> zipcodes, ArrayList<Item> mItems){
+    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, String city, ArrayList<String> zipcodes, ArrayList<Item> mItems, ArrayList<Boolean> clickable){
         Log.d(TAG, "constructor: called.");
         this.zips = zipcodes;
         this.city = city;
@@ -49,6 +51,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         mIDs = ids;
         mImageUrls = imageUrls;
         this.mItems = mItems;
+        this.clickable = clickable;
     }
 
     //To-do here find the current city
@@ -84,12 +87,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
+                if(clickable.get(0)) {
+                    Log.d(TAG, "onClick: clicked on: " + mIDs.get(position));
 //                Toast.makeText(mContext, mIDs.get(position), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mContext, ListingActivity.class);
-                intent.putExtra("ITEM_ID", mIDs.get(position));
-                intent.putExtra("CITY", zips.get(position));
-                mContext.startActivity(intent);
+                    Intent intent = new Intent(mContext, ListingActivity.class);
+                    intent.putExtra("ITEM_ID", mIDs.get(position));
+                    intent.putExtra("CITY", zips.get(position));
+                    mContext.startActivity(intent);
+                }
             }
         });
 

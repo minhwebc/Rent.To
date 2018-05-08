@@ -70,11 +70,14 @@ public class ItemsListActivity extends AppCompatActivity {
     private TextView textView;
     private SwipeRefreshLayout swipeLayout;
     private ArrayList<Item> mItems = new ArrayList<>();
+    private ArrayList<Boolean> clickable = new ArrayList<>();
+    private BottomNavigationViewHelper bottomNavigationViewHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         Log.d(TAG, "onCreate: Started.");
         super.onCreate(savedInstanceState);
+        clickable.add(true);
         setContentView(R.layout.activity_items_list);
 
         //Debug.startMethodTracing("startup");
@@ -109,13 +112,16 @@ public class ItemsListActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchFilter(v);
+                if(clickable.get(0)) {
+                    launchFilter(v);
+                }
             }
         });
 
         findViewById(R.id.mainLayout).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG, "mainlayout on touch");
                 return true;
             }
         });
@@ -148,9 +154,11 @@ public class ItemsListActivity extends AppCompatActivity {
     }
 
     private void showFilterTooltip() {
-        View bottomNavCameraButton = findViewById(R.id.textView6);
+        View filterButton = findViewById(R.id.textView6);
+        clickable.set(0, false);
+
         new SimpleTooltip.Builder(this)
-                .anchorView(bottomNavCameraButton)
+                .anchorView(filterButton)
                 .text("Find your item faster.\nUse a filter")
                 .gravity(Gravity.BOTTOM)
                 .transparentOverlay(false)
@@ -164,6 +172,12 @@ public class ItemsListActivity extends AppCompatActivity {
                                 .anchorView(bottomNavCameraButton)
                                 .text("Earn money! \nTry submitting a new post\nIt's easy!")
                                 .gravity(Gravity.TOP)
+                                .onDismissListener(new SimpleTooltip.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(SimpleTooltip tooltip) {
+                                        clickable.set(0, true);
+                                    }
+                                })
                                 .transparentOverlay(false)
                                 .dismissOnOutsideTouch(false)
                                 .animated(true)
@@ -317,7 +331,7 @@ public class ItemsListActivity extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity(), zipcodes, mItems);
+                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity(), zipcodes, mItems, clickable);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);
