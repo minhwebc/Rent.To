@@ -30,13 +30,6 @@
             android:textAlignment="center"
             />
 
-        <TextView
-            android:visibility="gone"
-            android:id="@+id/phoneDirect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="This is the phone number login process" />
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -49,29 +42,12 @@
                 android:inputType="textEmailAddress"
                 android:id="@+id/input_email"/>
         </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/phoneNumber"
-            android:visibility="gone"
-            >
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Code that was sent to the number of this phone"
-                android:inputType="textEmailAddress"
-                android:id="@+id/phoneNumberField"/>
-        </android.support.design.widget.TextInputLayout>
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="8dp"
             android:id="@+id/paswordInput">
-
             <EditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
@@ -79,40 +55,52 @@
                 android:hint="Password"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
-        <TextView
-            android:layout_gravity="right"
-            android:textColor="@color/link_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PHONE LOGIN "
-            android:id="@+id/phoneLoginLink"/>
-        <TextView
-            android:visibility="gone"
-            android:layout_gravity="left"
-            android:textColor="@color/link_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="BACK"
-            android:id="@+id/backLoginLink"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="horizontal">
 
-        <Button
+            <Button
+                android:id="@+id/sendCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:text="verify Phone"
+                android:textColor="@color/link_blue" />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/phoneVerifiedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sendCode"
+                android:text="Phone is verified, please enter your credential and press sign in" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/enterPhoneCode"
             android:visibility="gone"
-            android:layout_gravity="right"
-            android:textColor="@color/link_blue"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="VERIFY"
-            android:id="@+id/verifyLink"/>
+            android:orientation="horizontal">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
+                android:id="@+id/phoneNumber"
+                >
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter code sent phone #"
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/phoneNumberField"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="We have sent you the code to this phone #. Please enter it below and press sign in"/>
+            </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:visibility="gone"
-            android:layout_gravity="right"
-            android:textColor="@color/link_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RESEND"
-            android:id="@+id/resendLink"/>
-
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -148,6 +136,7 @@
     </LinearLayout>
 
     <ProgressBar
+        android:visibility="gone"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:id="@+id/progressBar"

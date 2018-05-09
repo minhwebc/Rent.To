@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,6 +26,10 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -80,16 +83,16 @@ public class LoginActivity extends AppCompatActivity {
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
+            public void onVerificationCompleted(PhoneAuthCredential pCredential) {
                 // This callback will be invoked in two situations:
                 // 1 - Instant verification. In some cases the phone number can be instantly
                 //     verified without needing to send or enter a verification code.
                 // 2 - Auto-retrieval. On some devices Google Play services can automatically
                 //     detect the incoming verification SMS and perform verification without
                 //     user action.
-                Log.d(TAG, "onVerificationCompleted:" + credential);
-
-                //signInWithPhoneAuthCredential(credential);
+                Log.d(TAG, "onVerificationCompleted:" + pCredential);
+                updateUI(STATE_VERIFY_SUCCESS);
+                signIn(pCredential);
             }
 
             @Override
@@ -117,6 +120,8 @@ public class LoginActivity extends AppCompatActivity {
                 // now need to ask the user to enter the code and then construct a credential
                 // by combining the code with a verification ID.
                 Log.d(TAG, "onCodeSent:" + verificationId);
+                Toast.makeText(mContext, "Code sent please enter the code into the field", Toast.LENGTH_SHORT).show();
+                updateUI(STATE_CODE_SENT);
 
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
@@ -124,10 +129,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         };
-
-        mPleaseWait.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.GONE);
-
         setupFirebaseAuth();
         init();
     }
@@ -187,55 +188,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUIButtons(){
-        final TextView phoneLoginLink = (TextView) findViewById(R.id.phoneLoginLink);
-        final TextView backLoginLink = (TextView) findViewById(R.id.backLoginLink);
-        backLoginLink.setOnClickListener(new View.OnClickListener() {
+        Button sendCodeButton = (Button) findViewById(R.id.sendCode);
+        sendCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                findViewById(R.id.emailInput).setVisibility(View.VISIBLE);
-                findViewById(R.id.paswordInput).setVisibility(View.VISIBLE);
-                phoneLoginLink.setVisibility(View.VISIBLE);
-                TextInputLayout phoneNumberLayout = (TextInputLayout) findViewById(R.id.phoneNumber);
-                phoneNumberLayout.setVisibility(View.GONE);
-                findViewById(R.id.phoneDirect).setVisibility(View.GONE);
-                //findViewById(R.id.verifyLink).setVisibility(View.GONE);
-                findViewById(R.id.resendLink).setVisibility(View.GONE);
-                backLoginLink.setVisibility(View.GONE);
-
-            }
-        });
-
-        Button verifyLinkButton = (Button) findViewById(R.id.verifyLink);
-        verifyLinkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                grabPhoneCodeInfo();
-            }
-        });
-        Button resendLinkButton = (Button) findViewById(R.id.resendLink);
-        resendLinkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        phoneLoginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextInputLayout phoneNumberLayout = (TextInputLayout) findViewById(R.id.phoneNumber);
-                phoneNumberLayout.setVisibility(View.VISIBLE);
-                backLoginLink.setVisibility(View.VISIBLE);
-                phoneLoginLink.setVisibility(View.GONE);
-                findViewById(R.id.emailInput).setVisibility(View.GONE);
-                findViewById(R.id.paswordInput).setVisibility(View.GONE);
-                findViewById(R.id.phoneDirect).setVisibility(View.VISIBLE);
-                //findViewById(R.id.verifyLink).setVisibility(View.VISIBLE);
-                findViewById(R.id.resendLink).setVisibility(View.VISIBLE);
+                Toast.makeText(mContext, "Sending code to your phone number", Toast.LENGTH_SHORT).show();
                 startPhoneNumberVerification("2069811465");
             }
         });
     }
+
     @Override
     public void onBackPressed() {
         // does nothing
@@ -277,6 +239,104 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void signIn(PhoneAuthCredential pCredential){
+        AuthCredential credential;
+        if(pCredential == null){
+            credential = grabPhoneCodeInfo();
+        } else {
+            credential = pCredential;
+        }
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "linkWithCredential:success");
+                            //updateUI(user);
+                            Toast.makeText(mContext, "Phone verification successful", Toast.LENGTH_SHORT).show();
+                            mAuth.signOut();
+                            String email = mEmail.getText().toString();
+                            String password = mPassword.getText().toString();
+                            if(isStringNull(email) || isStringNull(password) || !validate()){
+                                Toast.makeText(mContext, "There are incorrect or unfilled fields", Toast.LENGTH_SHORT).show();
+                            }else{
+
+                                Log.d(TAG, "email " + email);
+                                Log.d(TAG, "password " + password);
+                                mProgressBar.setVisibility(View.VISIBLE);
+                                mPleaseWait.setVisibility(View.VISIBLE);
+                                mAuth.signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                                                FirebaseUser user = mAuth.getCurrentUser();
+
+                                                // If sign in fails, display a message to the user. If sign in succeeds
+                                                // the auth state listener will be notified and logic to handle the
+                                                // signed in user can be handled in the listener.
+                                                if (!task.isSuccessful()) {
+                                                    Log.w(TAG, "signInWithEmail:failed", task.getException());
+
+                                                    Toast.makeText(LoginActivity.this, getString(R.string.auth_failed),
+                                                            Toast.LENGTH_SHORT).show();
+                                                    //mProgressBar.setVisibility(View.GONE);
+                                                    //mPleaseWait.setVisibility(View.GONE);
+                                                }
+
+                                                else{
+                                                    try{
+                                                        if(user.isEmailVerified()){
+                                                            Log.d(TAG, "onComplete: success. email is verified.");
+                                                            Toast.makeText(mContext, "Email and Password verification successfull", Toast.LENGTH_SHORT).show();
+                                                            FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("phone_number").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                    String userPhoneNumber = dataSnapshot.getValue(String.class);
+                                                                    Toast.makeText(mContext, userPhoneNumber, Toast.LENGTH_SHORT).show();
+                                                                    if(!userPhoneNumber.equals(getPhoneNumber())) {
+                                                                        Toast.makeText(mContext, "Phone number of this phone is not associated with this email", Toast.LENGTH_SHORT).show();
+                                                                        mProgressBar.setVisibility(View.GONE);
+                                                                        mPleaseWait.setVisibility(View.GONE);
+                                                                    } else {
+                                                                        Toast.makeText(mContext, "Login Successfully", Toast.LENGTH_SHORT).show();
+                                                                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                                                        startActivity(intent);
+                                                                        finish();
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                                }
+                                                            });
+                                                        }else {
+                                                            user.sendEmailVerification();
+                                                            Toast.makeText(mContext, "Email is not verified \n check your email inbox. We are sending another email", Toast.LENGTH_SHORT).show();
+                                                            mProgressBar.setVisibility(View.GONE);
+                                                            mPleaseWait.setVisibility(View.GONE);
+                                                            mAuth.signOut();
+                                                        }
+                                                    }catch (NullPointerException e){
+
+                                                        Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage() );
+                                                    }
+                                                }
+
+                                                // ...
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.w(TAG, "linkWithCredential:failure", task.getException());
+                            Toast.makeText(mContext, "Phone authenthication failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+    }
     private void init(){
         //initialize the button for logging in
         Button btnLogin = (Button) findViewById(R.id.btn_login);
@@ -284,87 +344,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: attempting to log in.");
-
-                String email = mEmail.getText().toString();
-                String password = mPassword.getText().toString();
-                if(isStringNull(email) || isStringNull(password) || !validate()){
-                    Toast.makeText(mContext, "There are incorrect or unfilled fields", Toast.LENGTH_SHORT).show();
-                }else{
-                    Log.d(TAG, "email " + email);
-                    Log.d(TAG, "password " + password);
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mPleaseWait.setVisibility(View.VISIBLE);
-                    mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                                    FirebaseUser user = mAuth.getCurrentUser();
-
-                                    // If sign in fails, display a message to the user. If sign in succeeds
-                                    // the auth state listener will be notified and logic to handle the
-                                    // signed in user can be handled in the listener.
-                                    if (!task.isSuccessful()) {
-                                        Log.w(TAG, "signInWithEmail:failed", task.getException());
-
-                                        Toast.makeText(LoginActivity.this, getString(R.string.auth_failed),
-                                                Toast.LENGTH_SHORT).show();
-                                        mProgressBar.setVisibility(View.GONE);
-                                        mPleaseWait.setVisibility(View.GONE);
-                                    }
-                                    else{
-                                        try{
-                                            if(CHECK_IF_VERIFIED){
-                                                if(user.isEmailVerified()){
-                                                    Log.d(TAG, "onComplete: success. email is verified.");
-                                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                                    startActivity(intent);
-                                                }else{
-                                                    Toast.makeText(mContext, "Email is not verified \n check your email inbox.", Toast.LENGTH_SHORT).show();
-                                                    mProgressBar.setVisibility(View.GONE);
-                                                    mPleaseWait.setVisibility(View.GONE);
-                                                    mAuth.signOut();
-                                                }
-                                            }
-                                            else{
-                                                Toast.makeText(mContext, "Email and Password verification successfull", Toast.LENGTH_SHORT).show();
-
-                                                AuthCredential credential = grabPhoneCodeInfo();
-                                                mAuth.signInWithCredential(credential)
-                                                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    Log.d(TAG, "linkWithCredential:success");
-                                                                    //updateUI(user);
-                                                                    Toast.makeText(mContext, "Phone verification successful", Toast.LENGTH_SHORT).show();
-                                                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                                                    startActivity(intent);
-                                                                    finish();
-                                                                } else {
-                                                                    Log.w(TAG, "linkWithCredential:failure", task.getException());
-                                                                    Toast.makeText(mContext, "Authentication failed.",
-                                                                            Toast.LENGTH_SHORT).show();
-                                                                    //updateUI(null);
-                                                                }
-
-                                                                // ...
-                                                            }
-                                                        });
-
-                                                Log.d(TAG, "onComplete: success. email is verified.");
-
-                                            }
-
-                                        }catch (NullPointerException e){
-                                            Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage() );
-                                        }
-                                    }
-
-                                    // ...
-                                }
-                            });
-                }
+                signIn(null);
 
             }
         });
@@ -389,6 +369,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private String getPhoneNumber(){
+        return "2069811465";
+    }
+
     private void startPhoneNumberVerification(String phoneNumber) {
         // [START start_phone_auth]
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -406,8 +390,10 @@ public class LoginActivity extends AppCompatActivity {
         switch (uiState) {
             case STATE_INITIALIZED:
             case STATE_CODE_SENT:
+                findViewById(R.id.enterPhoneCode).setVisibility(View.VISIBLE);
             case STATE_VERIFY_FAILED:
             case STATE_VERIFY_SUCCESS:
+                findViewById(R.id.phoneVerifiedText).setVisibility(View.VISIBLE);
             case STATE_SIGNIN_FAILED:
             case STATE_SIGNIN_SUCCESS:
         }
