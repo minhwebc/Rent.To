@@ -64,6 +64,7 @@ dependencies {
     //tooltip
     implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.2'
 
-
+    //SlidingIntroScreen
+    implementation 'com.matthew-tamlin:sliding-intro-screen:3.2.0'
 }
 apply plugin: 'com.google.gms.google-services'

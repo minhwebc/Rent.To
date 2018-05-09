@@ -6,22 +6,18 @@
     android:orientation="vertical"
     tools:context=".Home.TutorialActivity">
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-
-
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
+    <com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator
+        android:id="@+id/dot_tab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:numberOfDots="6"
+        app:selectedDotIndex="1"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
@@ -32,5 +28,7 @@
         app:tabTextAppearance="@style/TextAppearance.Design.Tab"
         app:tabSelectedTextColor="@color/colorAccent"
         app:tabMode="scrollable" />
+
+
 
 </LinearLayout>
