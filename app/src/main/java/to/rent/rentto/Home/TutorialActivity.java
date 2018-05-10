@@ -24,7 +24,6 @@ import com.matthewtamlin.sliding_intro_screen_library.background.BackgroundManag
 import com.matthewtamlin.sliding_intro_screen_library.background.ColorBlender;
 import com.matthewtamlin.sliding_intro_screen_library.buttons.IntroButton;
 import com.matthewtamlin.sliding_intro_screen_library.core.IntroActivity;
-import com.matthewtamlin.sliding_intro_screen_library.pages.ParallaxPage;
 import com.matthewtamlin.sliding_intro_screen_library.transformers.MultiViewParallaxTransformer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +55,7 @@ public class TutorialActivity extends IntroActivity {
             startActivity(nextActivity);
         }
         configureTransformer();
-        configureBackground();
+        //configureBackground();
     }
 
     /**
@@ -75,7 +74,8 @@ public class TutorialActivity extends IntroActivity {
     protected Collection<Fragment> generatePages(Bundle savedInstanceState) {
         // This variable holds the pages while they are being created
         final ArrayList<Fragment> pages = new ArrayList<>();
-        for(int i = 0; i < BACKGROUND_COLORS.length; i++) {
+//        for(int i = 0; i < BACKGROUND_COLORS.length; i++) {
+        for(int i = 0; i < 9; i++) {
             pages.add(WelcomeFragment.newInstance(i));
         }
 

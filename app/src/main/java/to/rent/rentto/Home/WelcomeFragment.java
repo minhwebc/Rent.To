@@ -39,9 +39,34 @@ public class WelcomeFragment extends Fragment {
         int resource = R.layout.fragment_confirm_photo;
         switch(position) {
             case 0:
-                resource = R.layout.fragment_camera;
+                resource = R.layout.fragment_welcome_tutorial;
+                break;
+            case 1:
+                resource = R.layout.fragment_lender_tutorial;
+                break;
+            case 2:
+                resource = R.layout.fragment_borrower_tutorial;
+                break;
+            case 3:
+                resource = R.layout.fragment_home_tutorial;
+                break;
+            case 4:
+                resource = R.layout.fragment_post_tutorial;
+                break;
+            case 5:
+                resource = R.layout.fragment_reminders_tutorial;
+                break;
+            case 6:
+                resource = R.layout.fragment_profile_tutorial;
+                break;
+            case 7:
+                resource = R.layout.fragment_messages_tutorial;
+                break;
+            case 8:
+                resource = R.layout.fragment_getstarted_tutorial;
                 break;
             default:
+                resource = R.layout.fragment_getstarted_tutorial;
                 break;
         }
         View view = inflater.inflate(resource, container, false);
