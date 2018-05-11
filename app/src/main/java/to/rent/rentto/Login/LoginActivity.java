@@ -243,7 +243,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                 mProgressBar.setVisibility(View.GONE);
                                                                 mPleaseWait.setVisibility(View.GONE);
                                                             } else {
-                                                                FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("device_id").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("deviceID").addListenerForSingleValueEvent(new ValueEventListener() {
                                                                     @Override
                                                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                                                         String userDeviceID = null;
