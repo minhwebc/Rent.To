@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.media.Rating;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -89,11 +91,13 @@ public class ProfileFragment extends Fragment {
     private ImageView profileMenu;
     private BottomNavigationViewEx bottomNavigationView;
     private Context mContext;
+    private SwipeRefreshLayout swipeLayout;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mDisplayName = (TextView) view.findViewById(R.id.display_name);
         mUsername = (TextView) view.findViewById(R.id.username);
         mWebsite = (TextView) view.findViewById(R.id.website);
@@ -106,6 +110,7 @@ public class ProfileFragment extends Fragment {
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         mFirebaseMethods = new FirebaseMethods(getActivity());
+
         mContext = getActivity();
         Log.d(TAG, "onCreateView: stared.");
 
@@ -116,7 +121,26 @@ public class ProfileFragment extends Fragment {
         setupFirebaseAuth();
 
         //RecyclerView
-        int width = getScreenSizeX();
+        final int width = getScreenSizeX();
+
+
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        initRecyclerView(width, view);
+                        initImageBitMaps();
+                        swipeLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
+
         initImageLoader();
         initRecyclerView(width, view);
         initImageBitMaps();
@@ -207,7 +231,7 @@ public class ProfileFragment extends Fragment {
 
     private void initRecyclerView(int width, View view) {
         Log.d(TAG, "initRecyclerView staggered view");
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.profileRecylerVieww);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.profilerecyclerView);
         staggeredRecyclerViewAdapter =
                 new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width, zips, rented);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);

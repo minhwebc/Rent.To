@@ -62,12 +62,17 @@
                 android:layout_below="@+id/linLayout"
                 android:layout_marginBottom="50dp">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/profileRecylerVieww"
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/profilerecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                </android.support.v7.widget.RecyclerView>
+                    </android.support.v7.widget.RecyclerView>
+                </android.support.v4.widget.SwipeRefreshLayout>
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
