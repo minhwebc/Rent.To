@@ -160,7 +160,6 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private String getRandomColor() {

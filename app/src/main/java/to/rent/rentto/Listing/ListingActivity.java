@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -31,8 +30,6 @@ import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserAccountSettings;
-import to.rent.rentto.Profile.ProfileActivity;
-import to.rent.rentto.Profile.ProfileFragment;
 import to.rent.rentto.Profile.ProfilePreviewActivity;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
@@ -105,8 +102,7 @@ public class ListingActivity extends AppCompatActivity {
 
     private void grabTheItem(){
         Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
-        query.addValueEventListener(new ValueEventListener() {
-
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.getValue()+"");
@@ -125,10 +121,17 @@ public class ListingActivity extends AppCompatActivity {
                 TextView soldInfo = findViewById(R.id.soldInfo);
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
-                Glide.with(mContext)
-                        .load(mItem.imageURL)
-                        .apply(requestOptions)
-                        .into(post_image);
+
+                try {
+                    Glide.with(mContext)
+                            .load(mItem.imageURL)
+                            .apply(requestOptions)
+                            .into(post_image);
+                }catch (Exception e){
+                    finish();
+                    startActivity(getIntent());
+                }
+
                 item_name.setText(mItem.title);
                 description.setText(mItem.description);
                 price.setText(mItem.rate+"");

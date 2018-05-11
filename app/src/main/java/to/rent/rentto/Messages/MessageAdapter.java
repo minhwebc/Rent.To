@@ -45,6 +45,7 @@ public class MessageAdapter extends BaseAdapter {
 
 
     public MessageAdapter(Context context) {
+        myMessagesCount = 0;
         this.context = context;
         currentUID = FirebaseAuth.getInstance().getUid();
         mRef = FirebaseDatabase.getInstance().getReference();

@@ -298,8 +298,6 @@ public class LoginActivity extends AppCompatActivity {
                                             Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage() );
                                         }
                                     }
-
-                                    // ...
                                 }
                             });
                 }
