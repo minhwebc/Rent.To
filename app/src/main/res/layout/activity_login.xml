@@ -12,6 +12,7 @@
         android:paddingTop="55dp"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
+
         >
 
         <ImageView
@@ -30,11 +31,11 @@
             android:textAlignment="center"
             />
 
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/emailInput">
+            android:layout_marginBottom="8dp">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,65 +43,29 @@
                 android:inputType="textEmailAddress"
                 android:id="@+id/input_email"/>
         </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/paswordInput">
+            android:layout_marginBottom="8dp" >
+
             <EditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                />
         </android.support.design.widget.TextInputLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/sendCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:text="verify Phone"
-                android:textColor="@color/link_blue" />
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/phoneVerifiedText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/sendCode"
-                android:text="Phone is verified, please enter your credential and press sign in" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/enterPhoneCode"
-            android:visibility="gone"
+        <TextView
+            android:id="@+id/loginEmailLink"
+            android:textAlignment="center"
+            android:textColor="@color/link_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:id="@+id/phoneNumber"
-                >
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Enter code sent phone #"
-                    android:inputType="textEmailAddress"
-                    android:id="@+id/phoneNumberField"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="We have sent you the code to this phone #. Please enter it below and press sign in"/>
-            </android.support.design.widget.TextInputLayout>
-
-        </RelativeLayout>
+            android:text="Changed your phone or phone number? Login with email link instead"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -136,7 +101,6 @@
     </LinearLayout>
 
     <ProgressBar
-        android:visibility="gone"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:id="@+id/progressBar"
@@ -154,4 +118,12 @@
         android:layout_alignLeft="@+id/progressBar"
         android:id="@+id/pleaseWait"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomBar"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_messages"
+        android:layout_margin="16dp" />
 </RelativeLayout>
