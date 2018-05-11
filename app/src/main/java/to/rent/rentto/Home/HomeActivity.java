@@ -70,6 +70,8 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "user sign in");
             Log.d(TAG, "user is: " + currentUser.getDisplayName());
             Log.d(TAG, "email: " + currentUser.getEmail());
+            Log.d(TAG, "user: " + currentUser.getUid());
+
             //FCM
             LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver),
                     new IntentFilter("MyData")

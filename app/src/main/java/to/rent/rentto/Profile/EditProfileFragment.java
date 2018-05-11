@@ -250,7 +250,7 @@ public class EditProfileFragment extends Fragment implements
         String firebaseDisplayName = mUserSettings.getSettings().getDisplay_name();
         String firebaseWebsite = mUserSettings.getSettings().getWebsite();
         String firebaseDescription = mUserSettings.getSettings().getDescription();
-        Long firebasePhoneNumber = mUserSettings.getUser().getPhone_number();
+        String firebasePhoneNumber = mUserSettings.getUser().getPhone_number();
 
         if(firebaseDisplayName == null || !mUserSettings.getSettings().getDisplay_name().equals(displayName)){
             Log.d(TAG, "saveProfileSettings: displayName: "+ displayName);
@@ -267,7 +267,7 @@ public class EditProfileFragment extends Fragment implements
             //update description
             mFirebaseMethods.updateUserAccountSettings(null, null, description, 0);
         }
-        if(firebasePhoneNumber == null || !(mUserSettings.getUser().getPhone_number() == phoneNumber)) {
+        if(firebasePhoneNumber == null || !(mUserSettings.getUser().getPhone_number().equals(phoneNumber))) {
 
                 //.getUser().getPhone_number()().equals(phoneNumber)){
             Log.d(TAG, "saveProfileSettings: phoneNumber: " + phoneNumber);

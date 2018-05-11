@@ -1,40 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="25dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingBottom="0dp">
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <ImageView android:src="@drawable/logo"
+            android:layout_marginTop="10dp"
 
-    <ImageView android:src="@drawable/logo"
-        android:layout_width="wrap_content"
+            android:layout_width="wrap_content"
         android:layout_height="72dp"
         android:layout_marginBottom="15dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+            android:id="@+id/logo"/>
 
 
-    <TextView
-        android:id="@+id/policyTextView"
-        android:layout_width="fill_parent"
-        android:layout_height="500dp"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:layout_marginTop="10dp"
-        android:scrollbars="vertical"
-        android:layout_weight="1"
-        android:textSize="16dip"
-        android:text="@string/policy"/>
+        <TextView
+            android:id="@+id/policyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/policy"
+            android:textAlignment="center"
+            android:textSize="16dip"
+            android:layout_below="@id/logo"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center|bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@id/policyTextView">
 
         <Button
             android:id="@+id/button_decline"
@@ -52,5 +49,6 @@
             android:text="Accept" />
 
     </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+</ScrollView>

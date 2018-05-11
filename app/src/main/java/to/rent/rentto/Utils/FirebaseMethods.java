@@ -156,15 +156,15 @@ public class FirebaseMethods {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Toast.makeText(mContext, R.string.signup_failed,
-                                    Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(mContext, "Error registering users", Toast.LENGTH_SHORT).show();
                         }
                         else if(task.isSuccessful()){
                             //send verificaton email
                             sendVerificationEmail();
 
                             userID = mAuth.getCurrentUser().getUid();
+                            Toast.makeText(mContext, "Register successfully",
+                                    Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onComplete: Authstate changed: " + userID);
                         }
 
@@ -183,7 +183,7 @@ public class FirebaseMethods {
      */
     public void addNewUser(String email, String username, String description, String website, String profile_photo){
 
-        User user = new User( userID,  1,  email,  StringManipulation.condenseUsername(username), 0.0, 0);
+        User user = new User( userID,  "2069811465",  email,  StringManipulation.condenseUsername(username), 0.0, 0);
 
         myRef.child(mContext.getString(R.string.dbname_users))
                 .child(userID)

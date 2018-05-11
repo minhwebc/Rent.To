@@ -16,16 +16,21 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.R;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private static final Boolean CHECK_IF_VERIFIED = false;
+    private static final Boolean CHECK_IF_VERIFIED = true;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -39,6 +44,42 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        Intent intent = getIntent();
+        String emailLink = "";
+        if(intent.getData() != null) {
+            emailLink = intent.getData().toString();
+        }
+
+        // Confirm the link is a sign-in with email link.
+        if (auth.isSignInWithEmailLink(emailLink)) {
+            String email; // retrieve this from wherever you stored it
+            // The client SDK will parse the code from the link for you.
+            auth.signInWithEmailLink("minhwebc90@gmail.com", emailLink)
+                    .addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Successfully signed in with email link!");
+                                AuthResult result = (AuthResult) task.getResult();
+                                // You can access the new user via result.getUser()
+                                // Additional user info profile *not* available via:
+                                // result.getAdditionalUserInfo().getProfile() == null
+                                // You can check if the user is new or existing:
+                                // result.getAdditionalUserInfo().isNewUser()
+                                Log.d(TAG, "user id : " + mAuth.getCurrentUser().getUid());
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Log.e(TAG, "Error signing in with email link: "
+                                        + task.getException().getMessage());
+                                Toast.makeText(mContext,  "Failed loging in with email", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mPleaseWait = (TextView) findViewById(R.id.pleaseWait);
@@ -56,10 +97,43 @@ public class LoginActivity extends AppCompatActivity {
         });
         mPleaseWait.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.GONE);
-
         setupFirebaseAuth();
         init();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        TextView loginEmail = (TextView) findViewById(R.id.loginEmailLink);
+        loginEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActionCodeSettings actionCodeSettings =
+                        ActionCodeSettings.newBuilder()
+                                // URL you want to redirect back to. The domain (www.example.com) for this
+                                // URL must be whitelisted in the Firebase Console.
+                                .setUrl("https://localhost/login")
+                                // This must be true
+                                .setHandleCodeInApp(true)
+                                .setIOSBundleId("to.rent.rentto")
+                                .setAndroidPackageName(
+                                        "to.rent.rentto",
+                                        true, /* installIfNotAvailable */
+                                        "12"    /* minimumVersion */)
+                                .build();
+
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                auth.sendSignInLinkToEmail("minhwebc90@gmail.com", actionCodeSettings)
+                        .addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(mContext, "Email link send", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     @Override
@@ -144,12 +218,65 @@ public class LoginActivity extends AppCompatActivity {
                                             if(CHECK_IF_VERIFIED){
                                                 if(user.isEmailVerified()){
                                                     Log.d(TAG, "onComplete: success. email is verified.");
-                                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                                    startActivity(intent);
+                                                    FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("phone_number").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            String userPhoneNumber = null;
+                                                            try{
+                                                                userPhoneNumber = dataSnapshot.getValue(String.class);
+                                                            }catch (Exception e) {
+                                                                mAuth.signOut();
+                                                                Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage());
+                                                            }
+                                                            Toast.makeText(mContext, userPhoneNumber, Toast.LENGTH_SHORT).show();
+                                                            if (!userPhoneNumber.equals(getPhoneNumber())) {
+                                                                Toast.makeText(mContext, "Phone number of this phone is not associated with this account", Toast.LENGTH_SHORT).show();
+                                                                mAuth.signOut();
+                                                                mProgressBar.setVisibility(View.GONE);
+                                                                mPleaseWait.setVisibility(View.GONE);
+                                                            } else {
+                                                                FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("device_id").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                        String userDeviceID = null;
+                                                                        try{
+                                                                            userDeviceID = dataSnapshot.getValue(String.class);
+                                                                        }catch (Exception e) {
+                                                                            mAuth.signOut();
+                                                                            Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage());
+                                                                        }
+                                                                        Toast.makeText(mContext, userDeviceID, Toast.LENGTH_SHORT).show();
+                                                                        if (!userDeviceID.equals(getDeviceID())) {
+                                                                            Toast.makeText(mContext, "Device ID of this phone is not associated with this account", Toast.LENGTH_SHORT).show();
+                                                                            mProgressBar.setVisibility(View.GONE);
+                                                                            mPleaseWait.setVisibility(View.GONE);
+                                                                            mAuth.signOut();
+                                                                        } else {
+                                                                            Toast.makeText(mContext, "Login Successfully", Toast.LENGTH_SHORT).show();
+                                                                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                                                            startActivity(intent);
+                                                                            finish();
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
                                                 }else{
-                                                    Toast.makeText(mContext, "Email is not verified \n check your email inbox.", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(mContext, "Email is not verified \n check your email inbox. We are sending you a new verified link", Toast.LENGTH_SHORT).show();
                                                     mProgressBar.setVisibility(View.GONE);
                                                     mPleaseWait.setVisibility(View.GONE);
+                                                    mAuth.getCurrentUser().sendEmailVerification();
                                                     mAuth.signOut();
                                                 }
                                             }
@@ -192,6 +319,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private String getDeviceID(){
+        return "1111111111";
+    }
+
+    private String getPhoneNumber(){
+        return "2069811465";
+    }
     /**
      * Setup the firebase auth object
      */
