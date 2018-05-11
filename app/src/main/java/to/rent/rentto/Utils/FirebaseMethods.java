@@ -36,8 +36,10 @@ public class FirebaseMethods {
     private StorageReference mStorageReference;
     private String userID;
     private Context mContext;
+    private DeviceID deviceIDHelper;
 
     public FirebaseMethods(Context context) {
+        deviceIDHelper = new DeviceID(context);
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
@@ -183,12 +185,10 @@ public class FirebaseMethods {
      */
     public void addNewUser(String email, String username, String description, String website, String profile_photo){
 
-        User user = new User( userID,  "2069811465",  email,  StringManipulation.condenseUsername(username), 0.0, 0);
-
+        User user = new User( userID,  deviceIDHelper.getPhoneNumber(),  email,  StringManipulation.condenseUsername(username), 0.0, 0, deviceIDHelper.getDeviceID());
         myRef.child(mContext.getString(R.string.dbname_users))
                 .child(userID)
                 .setValue(user);
-
 
         UserAccountSettings settings = new UserAccountSettings(
                 description,
@@ -226,11 +226,7 @@ public class FirebaseMethods {
         UserAccountSettings settings  = new UserAccountSettings();
         User user = new User();
         for(DataSnapshot ds: dataSnapshot.getChildren()){
-
-            // user_account_settings node
             if(ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
-                //Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
-
                 UserAccountSettings hello = ds.child(authorUID).getValue(UserAccountSettings.class);
                 Log.d(TAG, "account setting is : " + ds.child(authorUID).child("username").getValue());
                 try {

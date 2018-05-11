@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.R;
+import to.rent.rentto.Utils.DeviceID;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -40,11 +41,13 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmail, mPassword;
     private TextView mPleaseWait;
     private FloatingActionButton floatingActionButton;
+    private String phoneNumber;
+    private String deviceID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
         String emailLink = "";
@@ -99,6 +102,11 @@ public class LoginActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
         setupFirebaseAuth();
         init();
+
+
+        DeviceID deviceIDHelp = new DeviceID(mContext);
+        phoneNumber = deviceIDHelp.getPhoneNumber();
+        deviceID = deviceIDHelp.getDeviceID();
     }
 
     @Override
@@ -320,11 +328,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private String getDeviceID(){
-        return "1111111111";
+        return deviceID;
     }
 
     private String getPhoneNumber(){
-        return "2069811465";
+        return phoneNumber;
     }
     /**
      * Setup the firebase auth object

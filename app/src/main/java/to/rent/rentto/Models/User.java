@@ -15,20 +15,21 @@ public class User implements Parcelable {
     private String username;
     private Double rating;
     private int totalRating;
+    private String deviceID;
 
-    public User(String user_id, String phone_number, String email, String username, Double rating, int totalRating) {
+    public User(String user_id, String phone_number, String email, String username, Double rating, int totalRating, String deviceID) {
         this.user_id = user_id;
         this.phone_number = phone_number;
         this.email = email;
         this.username = username;
         this.rating = rating;
         this.totalRating = totalRating;
+        this.deviceID = deviceID;
     }
 
     public User() {
 
     }
-
 
     protected User(Parcel in) {
         user_id = in.readString();
@@ -49,38 +50,30 @@ public class User implements Parcelable {
         }
     };
 
-    public int getTotalRating() {return totalRating;
-    }
+    public String getDeviceID() {return deviceID; }
+    public int getTotalRating() {return totalRating; }
     public String getUser_id() {
         return user_id;
     }
-
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
-
     public String getPhone_number() {
         return phone_number;
     }
-
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public String getUsername() {
         return username;
     }
-
     public double getRating() {return this.rating;}
-
     public void setRating(double rating) {this.rating = rating;}
 
 
