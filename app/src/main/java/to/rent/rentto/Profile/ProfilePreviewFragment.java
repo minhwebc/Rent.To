@@ -188,7 +188,7 @@ public class ProfilePreviewFragment extends Fragment {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.profilerecyclerView);
         staggeredRecyclerViewAdapter =
-                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width, zips, rented, false);
+                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, zips, rented, false);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         if(recyclerView == null) {
             Log.d(TAG, "RecyclerView is null");

@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -73,6 +74,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeLayout;
     private ArrayList<Item> mItems = new ArrayList<>();
     private ArrayList<Boolean> clickable = new ArrayList<>();
+    private FirebaseAuth mAuth;
     BottomNavigationViewEx bottomNavigationViewEx;
 
     @Override
@@ -81,6 +83,8 @@ public class ItemsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         clickable.add(true);
         setContentView(R.layout.activity_items_list);
+        mAuth = FirebaseAuth.getInstance();
+
 
         //Debug.startMethodTracing("startup");
         mContext = ItemsListActivity.this;
@@ -201,19 +205,21 @@ public class ItemsListActivity extends AppCompatActivity {
                             String keyID = singleSnapShot.getKey(); //photoIDs
                             Item mItem = singleSnapShot.getValue(Item.class);
                             String photo_path = mItem.imageURL;
-                            System.out.println(mItem.category);
-                            if (filter != null) {
-                                if (filter.equals(mItem.category)) {
+                            if(!(mItem.userUID.equals(mAuth.getCurrentUser().getUid())) && !mItem.sold){
+                                if (filter != null) {
+                                    if (filter.equals(mItem.category)) {
+                                        mImageUrls.add(photo_path);
+                                        iDs.add(keyID);
+                                        mItems.add(mItem);
+                                        zipcodes.add(zips.getKey());
+                                    }
+                                } else {
                                     mImageUrls.add(photo_path);
                                     iDs.add(keyID);
                                     mItems.add(mItem);
                                     zipcodes.add(zips.getKey());
                                 }
-                            } else {
-                                mImageUrls.add(photo_path);
-                                iDs.add(keyID);
-                                mItems.add(mItem);
-                                zipcodes.add(zips.getKey());
+
                             }
                         }
                     }

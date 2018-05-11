@@ -35,6 +35,7 @@ import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
+import to.rent.rentto.Utils.DeviceID;
 import to.rent.rentto.Utils.FirebaseMethods;
 
 import static android.app.Activity.RESULT_OK;
@@ -210,6 +211,7 @@ public class EditProfileFragment extends Fragment implements
         final String website = mWebsite.getText().toString();
         final String description = mDescription.getText().toString();
         final String email = mEmail.getText().toString();
+
         Long phoneNumber = new Long(0);
         try {
             phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
@@ -217,7 +219,31 @@ public class EditProfileFragment extends Fragment implements
             Toast.makeText(getActivity(), "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+        final Long checkPhone = phoneNumber;
+        Query query = myRef.child("users");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean exists = false;
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    User user = snapshot.getValue(User.class);
+                    if(user.getPhone_number().equals(Long.toString(checkPhone))){
+                        exists = true;
+                        break;
+                    }
+                }
+                if (exists) {
+                    Toast.makeText(getActivity(), "Phone number already exists", Toast.LENGTH_SHORT).show();
+                } else {
+                    myRef.child("users").child(mAuth.getCurrentUser().getUid()).child("phone_number").setValue(Long.toString(checkPhone));
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         Log.d(TAG, "saveProfileSettings: displayName: "+ displayName);
         Log.d(TAG, "saveProfileSettings: website: " + website);
         Log.d(TAG, "saveProfileSettings: description " + description);
