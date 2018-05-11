@@ -21,8 +21,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.FirebaseMethods;
@@ -148,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
      */
 
     /**
-     * Check is @param username already exists in teh database
+     * Check is @param username already exists in the database
      * @param username
      */
     private void checkIfUsernameExists(final String username) {
@@ -178,6 +184,10 @@ public class RegisterActivity extends AppCompatActivity {
                 firebaseMethods.addNewUser(email, mUsername, "No Description", "No Website", "");
 
                 Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
+
+
+                DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();
+                mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see").push().setValue("welcomeMessage");
 
                 mAuth.signOut();
             }
