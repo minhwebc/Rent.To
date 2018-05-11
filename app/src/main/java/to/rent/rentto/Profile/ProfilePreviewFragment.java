@@ -87,6 +87,7 @@ public class ProfilePreviewFragment extends Fragment {
     private Context mContext;
     private String offerUID;
     private SwipeRefreshLayout swipeLayout;
+    private TextView ratingText;
 
 
     @Nullable
@@ -110,6 +111,7 @@ public class ProfilePreviewFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         profileMenu.setVisibility(View.GONE);
+        ratingText = (TextView) view.findViewById(R.id.rating_text);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         mFirebaseMethods = new FirebaseMethods(getActivity());
         mContext = getActivity();
@@ -238,6 +240,7 @@ public class ProfilePreviewFragment extends Fragment {
         UserAccountSettings settings = userSettings.getSettings();
         User currentUser = userSettings.getUser();
         double rating = currentUser.getRating();
+        int ratingTimes = currentUser.getTotalRating();
 
         //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
         if(settings.getProfile_photo() == null || settings.getProfile_photo().length() < 1) {
@@ -251,6 +254,8 @@ public class ProfilePreviewFragment extends Fragment {
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
         mRatingBar.setRating((float) rating);
+        String stringRating = "" + rating + " (" + ratingTimes + ")";
+        ratingText.setText(stringRating);
         String website = settings.getWebsite();
         if(website == null || website.length() < 1) {
             website = "No Website Listed";
