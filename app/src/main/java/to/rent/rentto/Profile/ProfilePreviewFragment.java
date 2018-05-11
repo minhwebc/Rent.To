@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -84,6 +86,8 @@ public class ProfilePreviewFragment extends Fragment {
     private BottomNavigationViewEx bottomNavigationView;
     private Context mContext;
     private String offerUID;
+    private SwipeRefreshLayout swipeLayout;
+
 
     @Nullable
     @Override
@@ -94,7 +98,7 @@ public class ProfilePreviewFragment extends Fragment {
             offerUID = bundle.getString("authorUID");
             Log.d(TAG, "authorUID: " + offerUID + ", activity_Num: " + ACTIVITY_NUM);
         }
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mDisplayName = (TextView) view.findViewById(R.id.display_name);
         mUsername = (TextView) view.findViewById(R.id.username);
         mWebsite = (TextView) view.findViewById(R.id.website);
@@ -118,7 +122,25 @@ public class ProfilePreviewFragment extends Fragment {
         setupFirebaseAuth();
 
         //RecyclerView
-        int width = getScreenSizeX();
+        final int width = getScreenSizeX();
+
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        initRecyclerView(width, view);
+                        initImageBitMaps();
+                        swipeLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
+
         initImageLoader();
         initRecyclerView(width, view);
         initImageBitMaps();
