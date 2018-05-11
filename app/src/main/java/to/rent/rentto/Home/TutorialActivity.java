@@ -75,7 +75,7 @@ public class TutorialActivity extends IntroActivity {
         // This variable holds the pages while they are being created
         final ArrayList<Fragment> pages = new ArrayList<>();
 //        for(int i = 0; i < BACKGROUND_COLORS.length; i++) {
-        for(int i = 0; i < 9; i++) {
+        for(int i = 0; i < 7; i++) {
             pages.add(WelcomeFragment.newInstance(i));
         }
 

@@ -5,6 +5,13 @@
     android:background="@drawable/texturebackground"
     >
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/borrower_icon" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,6 +37,16 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="Earn Money, You've got nothing to lose" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="117dp"
+        android:text="+$"
+        android:textColor="@color/green_dark"
+        android:textSize="100sp" />
 
 
     <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx

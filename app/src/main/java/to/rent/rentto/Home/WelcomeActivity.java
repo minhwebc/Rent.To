@@ -38,7 +38,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void start() {
         SharedPreferences prefs = getSharedPreferences("Rent.toPrefs", MODE_PRIVATE);
-        if(true || !prefs.getBoolean("hasSeenTutorial", false)) {
+        if(!prefs.getBoolean("hasSeenTutorial", false)) {
             showTutorial();
             SharedPreferences.Editor editor = getSharedPreferences("Rent.toPrefs", MODE_PRIVATE).edit();
             editor.putBoolean("hasSeenTutorial", true);

@@ -53,16 +53,16 @@ public class WelcomeFragment extends Fragment {
             case 4:
                 resource = R.layout.fragment_post_tutorial;
                 break;
+//            case 5:
+//                resource = R.layout.fragment_reminders_tutorial;
+//                break;
+//            case 6:
+//                resource = R.layout.fragment_profile_tutorial;
+//                break;
             case 5:
-                resource = R.layout.fragment_reminders_tutorial;
-                break;
-            case 6:
-                resource = R.layout.fragment_profile_tutorial;
-                break;
-            case 7:
                 resource = R.layout.fragment_messages_tutorial;
                 break;
-            case 8:
+            case 6:
                 resource = R.layout.fragment_getstarted_tutorial;
                 break;
             default:
