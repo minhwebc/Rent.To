@@ -131,12 +131,17 @@ public class LoginActivity extends AppCompatActivity {
                                 .build();
 
                 FirebaseAuth auth = FirebaseAuth.getInstance();
-                auth.sendSignInLinkToEmail("minhwebc90@gmail.com", actionCodeSettings)
+                String email = mEmail.getText().toString();
+                if(email.isEmpty()) {
+                    Toast.makeText(mContext, "Please enter in your email to the email input", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                auth.sendSignInLinkToEmail(email, actionCodeSettings)
                         .addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(mContext, "Email link send", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "Email link sent", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
