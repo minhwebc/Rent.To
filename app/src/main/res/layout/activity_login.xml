@@ -12,6 +12,7 @@
         android:paddingTop="55dp"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
+
         >
 
         <ImageView
@@ -47,15 +48,24 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp" >
 
             <EditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                />
         </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:id="@+id/loginEmailLink"
+            android:textAlignment="center"
+            android:textColor="@color/link_blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Changed your phone or phone number? Login with email link instead"
+            />
     </LinearLayout>
 
     <LinearLayout

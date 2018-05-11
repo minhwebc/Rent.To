@@ -46,7 +46,6 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
     private ArrayList<String> mImageUrls = new ArrayList<>();
     private ArrayList<String> zips = new ArrayList<>();
     private ArrayList<Boolean> rented = new ArrayList<>();
-
     private String[] mData = new String[0];
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
     <uses-feature android:name="android.hardware.location.gps" />
@@ -59,7 +60,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Login.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="jv8hx.app.goo.gl" android:scheme="http"/>
+                <data android:host="jv8hx.app.goo.gl" android:scheme="https"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Login.RegisterActivity"
             android:screenOrientation="portrait" />
@@ -71,6 +80,8 @@
             android:name=".Listing.FilterActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity android:name=".Home.TutorialActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".Messages.MyFirebaseMessagingService"

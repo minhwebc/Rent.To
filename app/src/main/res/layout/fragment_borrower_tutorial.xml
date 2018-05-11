@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/texturebackground"
+    >
+
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="127dp"
+        android:src="@drawable/piggy_bank" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="28dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="Reduce waste and save money"
+        android:textAlignment="center"
+        android:textSize="34sp" />
+
+    <!--<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a>
+    from <a href="https://www.flaticon.com/" title="Flaticon">
+    www.flaticon.com</a> is licensed by
+    <a href="http://creativecommons.org/licenses/by/3.0/"
+    title="Creative Commons BY 3.0" target="_blank">
+    CC 3.0 BY</a></div>-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="267dp"
+        android:textAlignment="center"
+        android:textSize="34sp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="Don't buy, just rent." />
+
+
+    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+        android:id="@+id/bottomNavViewBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/white_grey_border_top">
+
+    </com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx>
+
+</RelativeLayout>

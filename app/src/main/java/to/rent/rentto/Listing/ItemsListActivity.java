@@ -1,9 +1,10 @@
 package to.rent.rentto.Listing;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Address;
@@ -13,7 +14,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,8 +22,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,9 +43,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import to.rent.rentto.Utils.DeviceID;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -68,11 +72,14 @@ public class ItemsListActivity extends AppCompatActivity {
     private TextView textView;
     private SwipeRefreshLayout swipeLayout;
     private ArrayList<Item> mItems = new ArrayList<>();
+    private ArrayList<Boolean> clickable = new ArrayList<>();
+    BottomNavigationViewEx bottomNavigationViewEx;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         Log.d(TAG, "onCreate: Started.");
         super.onCreate(savedInstanceState);
+        clickable.add(true);
         setContentView(R.layout.activity_items_list);
 
         //Debug.startMethodTracing("startup");
@@ -81,7 +88,6 @@ public class ItemsListActivity extends AppCompatActivity {
         setupBottomNavigationView();
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         miles = 20;
-        final int width = getScreenSizeX();
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -90,7 +96,7 @@ public class ItemsListActivity extends AppCompatActivity {
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
-                        initRecyclerView(width);
+                        initRecyclerView();
                         initImageBitMaps();
                         swipeLayout.setRefreshing(false);
                     }
@@ -100,16 +106,73 @@ public class ItemsListActivity extends AppCompatActivity {
 
 
 
-        initRecyclerView(width);
+        initRecyclerView();
         initImageBitMaps();
+
 
         textView = (TextView) findViewById(R.id.textView6);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchFilter(v);
+                if(clickable.get(0)) {
+                    launchFilter(v);
+                }
             }
         });
+
+        findViewById(R.id.mainLayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG, "mainlayout on touch");
+                return true;
+            }
+        });
+
+        SharedPreferences prefs = getSharedPreferences("Rent.toPrefs", MODE_PRIVATE);
+        if(!prefs.getBoolean("hasSeenFilterTooltip", false)) {
+            showFilterTooltip();
+            SharedPreferences.Editor editor = getSharedPreferences("Rent.toPrefs", MODE_PRIVATE).edit();
+            editor.putBoolean("hasSeenFilterTooltip", true);
+            editor.apply();
+        }
+    }
+
+    private void showFilterTooltip() {
+        View filterButton = findViewById(R.id.textView6);
+        clickable.set(0, false);
+        BottomNavigationViewHelper.disableNavigation(mContext, bottomNavigationViewEx);
+        new SimpleTooltip.Builder(this)
+                .anchorView(filterButton)
+                .text("Find your item faster.\nUse a filter\n\nClick this message to dismiss")
+                .gravity(Gravity.BOTTOM)
+                .transparentOverlay(false)
+                .dismissOnOutsideTouch(false)
+                .overlayMatchParent(false)
+                .onDismissListener(new SimpleTooltip.OnDismissListener() {
+                    @Override
+                    public void onDismiss(SimpleTooltip tooltip) {
+                        View bottomNavCameraButton = findViewById(R.id.ic_addImage);
+                        new SimpleTooltip.Builder(mContext)
+                                .anchorView(bottomNavCameraButton)
+                                .text("Earn money! \nTry submitting a new post\nIt's easy!\n\nClick this message to dismiss")
+                                .gravity(Gravity.TOP)
+                                .onDismissListener(new SimpleTooltip.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(SimpleTooltip tooltip) {
+                                        clickable.set(0, true);
+                                        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+                                    }
+                                })
+                                .transparentOverlay(false)
+                                .dismissOnOutsideTouch(false)
+                                .animated(true)
+                                .build()
+                                .show();
+                    }
+                })
+                .animated(true)
+                .build()
+                .show();
     }
 
 
@@ -244,16 +307,16 @@ public class ItemsListActivity extends AppCompatActivity {
 
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
-        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
     }
 
-    private void initRecyclerView(int width) {
+    private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity(), zipcodes, mItems);
+                new RecyclerViewAdapter(this, iDs, mImageUrls, findCurrentCity(), zipcodes, mItems, clickable);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);

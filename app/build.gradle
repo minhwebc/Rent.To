@@ -39,27 +39,36 @@ dependencies {
 
     implementation 'com.android.support:recyclerview-v7:27.0.2'
 
-    implementation 'com.google.firebase:firebase-auth:11.8.0'
+    implementation 'com.google.firebase:firebase-auth:15.1.0'
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+
     //firebase database
-    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-database:15.0.1'
     //firebase storage
-    implementation 'com.google.firebase:firebase-storage:11.8.0'
-    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-storage:15.0.2'
+    implementation 'com.google.firebase:firebase-core:15.0.2'
     //cardview
     implementation 'com.android.support:cardview-v7:27.0.2'
 
     //firebase messaging
-    implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'com.google.firebase:firebase-messaging:15.0.2'
+
+    implementation 'com.google.firebase:firebase-invites:15.0.1'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 
     //location
-    implementation 'com.google.android.gms:play-services-location:11.8.0'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
 
     //rating dialog
     implementation 'com.stepstone.apprating:app-rating:2.2.0'
 
+    //tooltip
+    implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.2'
+
+    //SlidingIntroScreen
+    implementation 'com.matthew-tamlin:sliding-intro-screen:3.2.0'
 }
 apply plugin: 'com.google.gms.google-services'
