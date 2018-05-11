@@ -106,7 +106,9 @@ public class LoginActivity extends AppCompatActivity {
 
         DeviceID deviceIDHelp = new DeviceID(mContext);
         phoneNumber = deviceIDHelp.getPhoneNumber();
+        Log.d(TAG, "phonenumber is " + phoneNumber);
         deviceID = deviceIDHelp.getDeviceID();
+        Log.d(TAG, "deviceid is " + deviceID);
     }
 
     @Override

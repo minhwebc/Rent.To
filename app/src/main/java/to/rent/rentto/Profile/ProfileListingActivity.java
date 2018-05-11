@@ -83,7 +83,7 @@ public class ProfileListingActivity extends AppCompatActivity {
 
     private void grabTheItem(){
         Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.getValue()+"");
@@ -139,7 +139,7 @@ public class ProfileListingActivity extends AppCompatActivity {
                 //post_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                 Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
-                query.addValueEventListener(new ValueEventListener() {
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
