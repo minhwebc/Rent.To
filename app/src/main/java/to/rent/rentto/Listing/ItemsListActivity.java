@@ -1,6 +1,7 @@
 package to.rent.rentto.Listing;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,6 +47,7 @@ import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
+import to.rent.rentto.Utils.DeviceID;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -86,7 +88,6 @@ public class ItemsListActivity extends AppCompatActivity {
         setupBottomNavigationView();
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         miles = 20;
-        final int width = getScreenSizeX();
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -95,7 +96,7 @@ public class ItemsListActivity extends AppCompatActivity {
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
-                        initRecyclerView(width);
+                        initRecyclerView();
                         initImageBitMaps();
                         swipeLayout.setRefreshing(false);
                     }
@@ -105,8 +106,9 @@ public class ItemsListActivity extends AppCompatActivity {
 
 
 
-        initRecyclerView(width);
+        initRecyclerView();
         initImageBitMaps();
+
 
         textView = (TextView) findViewById(R.id.textView6);
         textView.setOnClickListener(new View.OnClickListener() {
@@ -310,11 +312,11 @@ public class ItemsListActivity extends AppCompatActivity {
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
     }
 
-    private void initRecyclerView(int width) {
+    private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls, width, findCurrentCity(), zipcodes, mItems, clickable);
+                new RecyclerViewAdapter(this, iDs, mImageUrls, findCurrentCity(), zipcodes, mItems, clickable);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);

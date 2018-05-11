@@ -17,7 +17,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private final int granted = PackageManager.PERMISSION_GRANTED;
     private final String camera = Manifest.permission.CAMERA;
     private final String location = Manifest.permission.ACCESS_FINE_LOCATION;
-    private final String phone = Manifest.permission.READ_PHONE_NUMBERS;
+    private final String phone = Manifest.permission.READ_PHONE_STATE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
