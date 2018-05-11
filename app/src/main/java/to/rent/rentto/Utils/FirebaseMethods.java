@@ -150,7 +150,7 @@ public class FirebaseMethods {
      * @param username
      */
     public void registerNewEmail(final String email, String password, final String username){
-        if(deviceIDHelper.getPhoneNumber().equals("0")) {
+        if(deviceIDHelper.getPhoneNumber().equals("0") || deviceIDHelper.getPhoneNumber().length() < 2) {
             Toast.makeText(mContext,  "Could not sign up. Rent.to could not find your phone number.", Toast.LENGTH_SHORT).show();
         } else {
             mAuth.createUserWithEmailAndPassword(email, password)

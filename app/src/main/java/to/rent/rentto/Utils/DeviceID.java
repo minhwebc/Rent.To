@@ -25,7 +25,12 @@ public class DeviceID extends AppCompatActivity {
             Log.d(TAG, "Could not get phone number, permission not granted. Set to '0'");
             this.phoneNum = "0";
         } else {
-            this.phoneNum = tm.getLine1Number();
+            if(tm != null) {
+                this.phoneNum = tm.getLine1Number();
+            }
+        }
+        if(this.phoneNum == null || this.phoneNum.length() == 0) {
+            this.phoneNum = "0";
         }
         this.aid = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
