@@ -165,7 +165,7 @@ public class FirebaseMethods {
                             sendVerificationEmail();
 
                             userID = mAuth.getCurrentUser().getUid();
-                            Toast.makeText(mContext, "Register successfully",
+                            Toast.makeText(mContext, "Register email and password",
                                     Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onComplete: Authstate changed: " + userID);
                         }
@@ -183,25 +183,8 @@ public class FirebaseMethods {
      * @param website
      * @param profile_photo
      */
-    public void addNewUser(String email, String username, String description, String website, String profile_photo){
+    public void addNewUser(String userID, String email, String username, String description, String website, String profile_photo){
 
-        User user = new User( userID,  deviceIDHelper.getPhoneNumber(),  email,  StringManipulation.condenseUsername(username), 0.0, 0, deviceIDHelper.getDeviceID());
-        myRef.child(mContext.getString(R.string.dbname_users))
-                .child(userID)
-                .setValue(user);
-
-        UserAccountSettings settings = new UserAccountSettings(
-                description,
-                username,
-                0,
-                profile_photo,
-                StringManipulation.condenseUsername(username),
-                website
-        );
-
-        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
-                .child(userID)
-                .setValue(settings);
 
     }
 
