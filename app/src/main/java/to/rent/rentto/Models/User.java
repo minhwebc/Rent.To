@@ -52,6 +52,7 @@ public class User implements Parcelable {
 
     public String getDeviceID() {return deviceID; }
     public int getTotalRating() {return totalRating; }
+    public void setTotalRating(int totalRating) { this.totalRating = totalRating; }
     public String getUser_id() {
         return user_id;
     }

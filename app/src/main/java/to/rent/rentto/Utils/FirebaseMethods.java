@@ -299,6 +299,11 @@ public class FirebaseMethods {
                                 .getValue(User.class)
                                 .getRating()
                     );
+                    user.setTotalRating(
+                            ds.child(authorUID)
+                                .getValue(User.class)
+                                .getTotalRating()
+                    );
                     Log.d(TAG, "getUserAccountSettings: retrieved users information: " + user.toString());
                 }
         }

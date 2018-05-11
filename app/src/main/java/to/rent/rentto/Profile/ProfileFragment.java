@@ -41,6 +41,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -92,6 +94,7 @@ public class ProfileFragment extends Fragment {
     private BottomNavigationViewEx bottomNavigationView;
     private Context mContext;
     private SwipeRefreshLayout swipeLayout;
+    private TextView ratingText;
 
 
     @Nullable
@@ -109,6 +112,7 @@ public class ProfileFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
+        ratingText = (TextView) view.findViewById(R.id.rating_text);
         mFirebaseMethods = new FirebaseMethods(getActivity());
 
         mContext = getActivity();
@@ -261,6 +265,7 @@ public class ProfileFragment extends Fragment {
         UserAccountSettings settings = userSettings.getSettings();
         User currentUser = userSettings.getUser();
         double rating = currentUser.getRating();
+        int ratingTimes = currentUser.getTotalRating();
 
         //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
         if(settings.getProfile_photo() == null || settings.getProfile_photo().length() < 1) {
@@ -273,6 +278,8 @@ public class ProfileFragment extends Fragment {
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
         mRatingBar.setRating((float) rating);
+        String stringRating = "" + rating + " (" + ratingTimes + ")";
+        ratingText.setText(stringRating);
         String website = settings.getWebsite();
         if(website == null || website.length() < 1) {
             website = "No Website Listed";
