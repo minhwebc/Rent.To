@@ -220,6 +220,7 @@ public class EditProfileFragment extends Fragment implements
             e.printStackTrace();
         }
         final Long checkPhone = phoneNumber;
+
         Query query = myRef.child("users");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -235,7 +236,10 @@ public class EditProfileFragment extends Fragment implements
                 if (exists) {
                     Toast.makeText(getActivity(), "Phone number already exists", Toast.LENGTH_SHORT).show();
                 } else {
-                    myRef.child("users").child(mAuth.getCurrentUser().getUid()).child("phone_number").setValue(Long.toString(checkPhone));
+                    String newPhone = Long.toString(checkPhone);
+                    System.out.println("My new phone number is " + newPhone);
+                    myRef.child("users").child(mAuth.getCurrentUser().getUid()).child("phone_number").setValue(newPhone);
+                    mFirebaseMethods.updateUserAccountSettings(null, null, null, checkPhone);
                 }
             }
 

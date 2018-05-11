@@ -88,7 +88,7 @@ public class FirebaseMethods {
             myRef.child(mContext.getString(R.string.dbname_users))
                     .child(userID)
                     .child(mContext.getString(R.string.field_phone_number))
-                    .setValue(phoneNumber);
+                    .setValue(Long.toString(phoneNumber));
         }
     }
 
