@@ -63,8 +63,8 @@ public class HelpFragment extends Fragment {
                 manager.beginTransaction().replace(R.id.helpMain, new TipsForMessagingFragment()).addToBackStack(null).commit();
             }
         });
-        mProtectingYourPrivacy = (TextView) view.findViewById((R.id.protecting_your_privacy));
-        mHowContactInfoHelps = (TextView) view.findViewById((R.id.how_contact_info_helps));
+//        mProtectingYourPrivacy = (TextView) view.findViewById((R.id.protecting_your_privacy));
+//        mHowContactInfoHelps = (TextView) view.findViewById((R.id.how_contact_info_helps));
         mProhibitedItems = (TextView) view.findViewById((R.id.prohibited_items));
         mAboutRatings = (TextView) view.findViewById((R.id.about_ratings));
 
