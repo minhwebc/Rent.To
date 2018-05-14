@@ -10,6 +10,7 @@
     <string name="lending_and_renting">Lending &amp; Renting</string>
     <string name="message_and_meetup">Message &amp; meet up</string>
     <string name="titles_and_descriptions">Titles &amp; descriptions</string>
+    <string name="messaging_and_communication">Messaging &amp; Communication</string>
 
 
     <!-- Firebase database tables -->

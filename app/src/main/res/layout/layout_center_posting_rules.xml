@@ -225,6 +225,123 @@
             android:textColor="@color/register"
             android:background="@drawable/grey_border_bottom"/>
 
+        <TextView
+            android:id="@+id/titles_and_description_description"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/titles_and_descriptions"
+            android:text="Titles and descriptions should give renters a clear, honest, and accurate description so they can tell if the item is what they're looking for. Some things to avoid:"/>
+
+        <TextView
+        android:id="@+id/bullet5"
+        android:layout_marginTop="5dp"
+        android:textSize="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:textColor="@color/black"
+        android:paddingLeft="15dp"
+        android:background="@drawable/grey_border_bottom"
+        android:layout_below="@+id/titles_and_description_description"
+        android:text="-"/>
+
+        <TextView
+            android:id="@+id/image_bullet5"
+            android:layout_marginTop="5dp"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:paddingLeft="5dp"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_toRightOf="@+id/bullet4"
+            android:layout_below="@+id/titles_and_description_description"
+            android:text="Don't add keywords or price points intended to manipulate search results."/>
+
+        <TextView
+            android:id="@+id/bullet6"
+            android:layout_marginTop="5dp"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:paddingLeft="15dp"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/image_bullet5"
+            android:text="-"/>
+
+        <TextView
+            android:id="@+id/image_bullet6"
+            android:layout_marginTop="5dp"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:paddingLeft="5dp"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_toRightOf="@+id/bullet4"
+            android:layout_below="@+id/image_bullet5"
+            android:text="Don't link to websites or post URLs."/>
+
+        <TextView
+            android:id="@+id/bullet7"
+            android:layout_marginTop="5dp"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:paddingLeft="15dp"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/image_bullet6"
+            android:text="-"/>
+
+        <TextView
+            android:id="@+id/image_bullet7"
+            android:layout_marginTop="5dp"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:paddingLeft="5dp"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_toRightOf="@+id/bullet4"
+            android:layout_below="@+id/image_bullet6"
+            android:text="Don't solicit risky payment methods such as Western Union or Moneygram."/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/messaging_and_communication"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/messaging_and_communication"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:layout_below="@id/image_bullet7"
+            android:textColor="@color/register"
+            android:background="@drawable/grey_border_bottom"/>
+
+        <TextView
+            android:id="@+id/messaging_and_communication_description"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/messaging_and_communication"
+            android:text="Rent.To messaging lets you communicate with other swithout sharing personal information or leaving the app. Remember, use of in-app messaging to circumvent prohibited items or posting rules isn't allowed."/>
     </RelativeLayout>
 
 
