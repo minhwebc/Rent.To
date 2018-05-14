@@ -19,19 +19,19 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_centerVertical="true"
-                    android:id="@+id/posting_rules_backArrow"
+                    android:id="@+id/message_and_meetup_backArrow"
                     android:src="@drawable/ic_backarrow"/>
 
                 <TextView
-                    android:layout_toRightOf="@+id/posting_rules_backArrow"
+                    android:layout_toRightOf="@+id/message_and_meetup_backArrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="Posting Rules"
+                    android:text="@string/message_and_meetup"
                     android:textSize="20sp"
                     android:textColor="@color/white"
                     android:layout_marginStart="5dp"
-                    android:id="@+id/posting_rules"/>
+                    android:id="@+id/message_and_meetup"/>
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>

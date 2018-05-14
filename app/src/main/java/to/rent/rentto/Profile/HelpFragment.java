@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import to.rent.rentto.Help.FindMessagesFragment;
 import to.rent.rentto.Help.HowToPostFragment;
 import to.rent.rentto.Help.PostingRulesFragment;
+import to.rent.rentto.Help.TipsForMessagingFragment;
 import to.rent.rentto.R;
 
 public class HelpFragment extends Fragment {
@@ -44,7 +46,23 @@ public class HelpFragment extends Fragment {
             }
         });
         mFindMessages =(TextView) view.findViewById((R.id.find_messages));
+        mFindMessages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new HelpFragment();
+                FragmentManager manager = getFragmentManager();
+                manager.beginTransaction().replace(R.id.helpMain, new FindMessagesFragment()).addToBackStack(null).commit();
+            }
+        });
         mTipsForMessaging = (TextView) view.findViewById((R.id.tips_for_messaging));
+        mTipsForMessaging.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new HelpFragment();
+                FragmentManager manager = getFragmentManager();
+                manager.beginTransaction().replace(R.id.helpMain, new TipsForMessagingFragment()).addToBackStack(null).commit();
+            }
+        });
         mProtectingYourPrivacy = (TextView) view.findViewById((R.id.protecting_your_privacy));
         mHowContactInfoHelps = (TextView) view.findViewById((R.id.how_contact_info_helps));
         mProhibitedItems = (TextView) view.findViewById((R.id.prohibited_items));
@@ -69,6 +87,7 @@ public class HelpFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
+
 
 
 

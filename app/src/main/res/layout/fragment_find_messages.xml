@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/reLayout2">
-            <include layout="@layout/snippet_top_lending_and_renting"/>
+            <include layout="@layout/snippet_top_message_and_meetup"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -22,7 +22,7 @@
             android:layout_below="@+id/reLayout2"
             android:layout_marginBottom="50dp">
 
-            <include layout="@layout/layout_center_posting_rules"/>
+            <include layout="@layout/layout_center_find_messages"/>
         </RelativeLayout>
         <include layout="@layout/layout_bottom_navigation_view"/>
     </RelativeLayout>

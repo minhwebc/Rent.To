@@ -1,0 +1,125 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_height="match_parent" android:layout_width="match_parent">
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="20dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tips_for_messaging"
+            android:backgroundTint="@android:color/transparent"
+            android:text="Tips for messaging"
+            android:textStyle="bold"
+            android:textSize="35dp"
+            android:textColor="@color/register"
+            android:background="@drawable/grey_border_bottom"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/answer_quickly"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@android:color/transparent"
+            android:text="Answer quickly"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:layout_below="@id/tips_for_messaging"
+            android:textColor="@color/register"
+            android:background="@drawable/grey_border_bottom"/>
+
+        <TextView
+            android:id="@+id/answer_quickly_description"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/answer_quickly"
+            android:text="Respond to messages as soon as you can. Great renters and lenders typically respond within an hour, and sometimes within seconds"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tell_them"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@android:color/transparent"
+            android:text="Tell them if you change your mind"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:layout_below="@id/answer_quickly_description"
+            android:textColor="@color/register"
+            android:background="@drawable/grey_border_bottom"/>
+
+        <TextView
+            android:id="@+id/tell_them_description"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/tell_them"
+            android:text='If you change your mind, a simple "Thanks, but I changed my mind" will let everybody move on'/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/stay_safe"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@android:color/transparent"
+            android:text="Stay safe"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:layout_below="@id/tell_them_description"
+            android:textColor="@color/register"
+            android:background="@drawable/grey_border_bottom"/>
+
+        <TextView
+            android:id="@+id/stay_safe_description"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/stay_safe"
+            android:text="Don't text and drive, and never share your account info, password, phone number, or email address. Sometimes people will 'phish' for your confidential info, to ry to steal your online identity."/>
+
+        <TextView
+            android:id="@+id/stay_safe_description2"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/stay_safe_description"
+            android:text="The people you want to do business with will meet you at safe locations, without demanding additional info."/>
+
+        <TextView
+            android:id="@+id/notice"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/stay_safe_description2"
+            android:text="If you see any suspicious behavior in our app. please report it to the Rent.To Support Team."/>
+
+    </RelativeLayout>
+
+
+
+
+</ScrollView>

@@ -17,7 +17,7 @@ public class PostingRulesFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posting_rules, container, false);
 
-        ImageView backArrow = (ImageView) view.findViewById(R.id.posting_rules_backArrow);
+        ImageView backArrow = (ImageView) view.findViewById(R.id.lending_and_renting_backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
