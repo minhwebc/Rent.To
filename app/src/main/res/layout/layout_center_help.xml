@@ -1,0 +1,173 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_height="match_parent" android:layout_width="match_parent">
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="20dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/renting_and_borrowing"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/lending_and_renting"
+            android:textSize="35dp"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"/>
+        <TextView
+            android:id="@+id/how_to_post"
+            android:clickable="true"
+            android:layout_below="@+id/renting_and_borrowing"
+            android:layout_width="wrap_content"
+            android:textSize="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:text="How to post" />
+        <TextView
+            android:id="@+id/posting_rules"
+            android:layout_below="@+id/how_to_post"
+            android:textSize="25dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Posting Rules" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/message_and_meetup"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/message_and_meetup"
+            android:paddingTop="20dp"
+            android:layout_below="@id/posting_rules"
+            android:textSize="35dp"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"/>
+        <TextView
+            android:id="@+id/find_messages"
+            android:layout_below="@+id/message_and_meetup"
+            android:layout_width="wrap_content"
+            android:textSize="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:text="Find Messages" />
+        <TextView
+            android:id="@+id/tips_for_messaging"
+            android:layout_below="@+id/find_messages"
+            android:layout_width="wrap_content"
+            android:textSize="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:text="Tips for messaging"/>
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/account"-->
+            <!--android:backgroundTint="@android:color/transparent"-->
+            <!--android:text="Account"-->
+            <!--android:paddingTop="20dp"-->
+            <!--android:layout_below="@id/tips_for_messaging"-->
+            <!--android:textSize="35dp"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:background="@drawable/grey_border_bottom"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/protecting_your_privacy"-->
+            <!--android:layout_below="@+id/account"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:textSize="25dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:backgroundTint="@android:color/transparent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Protecting your privacy"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/how_contact_info_helps"-->
+            <!--android:layout_below="@+id/protecting_your_privacy"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:textSize="25dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:backgroundTint="@android:color/transparent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="How contact info helps"/>-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/others"
+            android:backgroundTint="@android:color/transparent"
+            android:text="Others"
+            android:paddingTop="20dp"
+            android:layout_below="@id/tips_for_messaging"
+            android:textSize="35dp"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"/>
+        <TextView
+            android:id="@+id/prohibited_items"
+            android:layout_below="@+id/others"
+            android:layout_width="wrap_content"
+            android:textSize="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:text="Prohibited items guidelines"/>
+        <TextView
+            android:id="@+id/about_ratings"
+            android:layout_below="@+id/prohibited_items"
+            android:layout_width="wrap_content"
+            android:textSize="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:text="About ratings on Rent.To"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/contacts"
+            android:backgroundTint="@android:color/transparent"
+            android:text="Contacts"
+            android:paddingTop="20dp"
+            android:layout_below="@id/about_ratings"
+            android:textSize="35dp"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"/>
+        <TextView
+            android:id="@+id/rentto_email"
+            android:layout_below="@+id/contacts"
+            android:layout_width="wrap_content"
+            android:textSize="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:text="customerSupport@rentto.com"/>
+    </RelativeLayout>
+
+
+
+
+</ScrollView>

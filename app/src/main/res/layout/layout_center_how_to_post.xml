@@ -1,0 +1,279 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_height="match_parent" android:layout_width="match_parent">
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="20dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/how_to_post"
+            android:backgroundTint="@android:color/transparent"
+            android:text="How to post"
+            android:textStyle="bold"
+            android:textSize="35dp"
+            android:textColor="@color/register"
+            android:background="@drawable/grey_border_bottom"/>
+
+        <TextView
+            android:id="@+id/how_to_post_description"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/how_to_post"
+            android:text="To post an item you're lending, including photos, title, description, price, or location, open the item in the Rent.To"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/steps"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@android:color/transparent"
+            android:text="Steps"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:layout_below="@id/how_to_post_description"
+            android:textColor="@color/register"
+            android:background="@drawable/grey_border_bottom"/>
+
+        <TextView
+            android:id="@+id/bullet1"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/steps"
+            android:text="1. "/>
+
+        <TextView
+            android:id="@+id/step1"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_toRightOf="@id/bullet1"
+            android:layout_below="@+id/steps"
+            android:text="Open the Rent.To app, then tap Camera Icon"/>
+
+        <ImageView
+            android:id="@+id/step_image1"
+            android:layout_width="wrap_content"
+            android:layout_height="59dp"
+            android:layout_below="@id/step1"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/step1" />
+
+        <TextView
+            android:id="@+id/step2"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image1"
+            android:text="2. Select photo or Take photo  "/>
+
+        <ImageView
+            android:id="@+id/step_image2"
+            android:layout_width="wrap_content"
+            android:layout_height="565dp"
+            android:layout_below="@id/step2"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/step2" />
+
+        <TextView
+            android:id="@+id/step3"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image2"
+            android:text="3. Check the photo, then press next"/>
+
+        <ImageView
+            android:id="@+id/step_image3"
+            android:layout_width="wrap_content"
+            android:layout_height="456dp"
+            android:layout_below="@id/step3"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/step3" />
+
+        <TextView
+            android:id="@+id/step4"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image3"
+            android:text="4. Type the name of your item"/>
+
+        <ImageView
+            android:id="@+id/step_image4"
+            android:layout_width="wrap_content"
+            android:layout_height="206dp"
+            android:layout_below="@id/step4"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/step4" />
+
+        <TextView
+            android:id="@+id/bullet5"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image4"
+            android:text="5. "/>
+
+        <TextView
+            android:id="@+id/step5"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@id/bullet5"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image4"
+            android:text="Set the condition of your item and put description"/>
+
+        <ImageView
+            android:id="@+id/step_image5"
+            android:layout_width="wrap_content"
+            android:layout_height="396dp"
+            android:layout_below="@id/step5"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/step5" />
+
+        <TextView
+            android:id="@+id/step6"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image5"
+            android:text="6. Choose the category of your item"/>
+
+        <ImageView
+            android:id="@+id/step_image6"
+            android:layout_width="wrap_content"
+            android:layout_height="406dp"
+            android:layout_below="@id/step6"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/step6" />
+
+        <TextView
+            android:id="@+id/step7"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image6"
+            android:text="7. Set the price and the rental period"/>
+
+        <ImageView
+            android:id="@+id/step_image7"
+            android:layout_width="wrap_content"
+            android:layout_height="406dp"
+            android:layout_below="@id/step7"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/step7" />
+
+        <TextView
+            android:id="@+id/bullet8"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image7"
+            android:text="8. "/>
+
+        <TextView
+            android:id="@+id/step8"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_toRightOf="@id/bullet8"
+            android:layout_below="@+id/step_image7"
+            android:text="Put your location(zipcode) or press the button above"/>
+
+        <ImageView
+            android:id="@+id/step_image8"
+            android:layout_width="wrap_content"
+            android:layout_height="406dp"
+            android:layout_below="@id/step8"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/step8" />
+
+        <TextView
+            android:id="@+id/step9"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/black"
+            android:background="@drawable/grey_border_bottom"
+            android:layout_below="@+id/step_image8"
+            android:text="9. Successfully posted your item for rental"/>
+    </RelativeLayout>
+
+
+
+
+</ScrollView>
