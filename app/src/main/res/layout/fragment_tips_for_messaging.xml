@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/relLayout1">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,12 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/relLayout3"
-            android:layout_below="@+id/reLayout2"
-            android:layout_marginBottom="50dp">
+            android:layout_below="@+id/reLayout2">
 
             <include layout="@layout/layout_center_tips_for_messaging"/>
         </RelativeLayout>
-        <include layout="@layout/layout_bottom_navigation_view"/>
-    </RelativeLayout>
 
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

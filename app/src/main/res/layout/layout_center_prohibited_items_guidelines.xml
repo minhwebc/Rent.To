@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/posting_rules"
             android:backgroundTint="@android:color/transparent"
-            android:text="Protecting your privacy on Rent.To"
+            android:text="Prohibited Items guidelines"
             android:textStyle="bold"
             android:textSize="35dp"
             android:textColor="@color/register"

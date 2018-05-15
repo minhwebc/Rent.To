@@ -2,15 +2,17 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/relLayout1">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/reLayout2">
-            <include layout="@layout/snippet_top_lending_and_renting"/>
+            <include layout="@layout/snippet_top_others"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -19,8 +21,7 @@
             android:id="@+id/relLayout3"
             android:layout_below="@+id/reLayout2">
 
-            <include layout="@layout/layout_center_posting_rules"/>
+            <include layout="@layout/layout_center_about_ratings"/>
         </RelativeLayout>
-
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

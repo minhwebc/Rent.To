@@ -2,12 +2,10 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/relLayout1">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,12 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/relLayout3"
-            android:layout_below="@+id/reLayout2"
-            android:layout_marginBottom="50dp">
+            android:layout_below="@+id/reLayout2">
 
             <include layout="@layout/layout_center_how_to_post"/>
         </RelativeLayout>
-        <include layout="@layout/layout_bottom_navigation_view"/>
-    </RelativeLayout>
 
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
