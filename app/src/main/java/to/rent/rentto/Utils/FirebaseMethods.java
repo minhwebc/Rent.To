@@ -1,6 +1,8 @@
 package to.rent.rentto.Utils;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -88,7 +90,7 @@ public class FirebaseMethods {
             myRef.child(mContext.getString(R.string.dbname_users))
                     .child(userID)
                     .child(mContext.getString(R.string.field_phone_number))
-                    .setValue(phoneNumber);
+                    .setValue(Long.toString(phoneNumber));
         }
     }
 
@@ -148,30 +150,32 @@ public class FirebaseMethods {
      * @param username
      */
     public void registerNewEmail(final String email, String password, final String username){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+        if(deviceIDHelper.getPhoneNumber().equals("0") || deviceIDHelper.getPhoneNumber().length() < 2) {
+            Toast.makeText(mContext,  "Could not sign up. Rent.to could not find your phone number.", Toast.LENGTH_SHORT).show();
+        } else {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(mContext, "Error registering users", Toast.LENGTH_SHORT).show();
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(mContext, "Error registering users", Toast.LENGTH_SHORT).show();
+                            } else if (task.isSuccessful()) {
+                                //send verificaton email
+                                sendVerificationEmail();
+
+                                userID = mAuth.getCurrentUser().getUid();
+                                Toast.makeText(mContext, "Register successfully",
+                                        Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "onComplete: Authstate changed: " + userID);
+                            }
                         }
-                        else if(task.isSuccessful()){
-                            //send verificaton email
-                            sendVerificationEmail();
-
-                            userID = mAuth.getCurrentUser().getUid();
-                            Toast.makeText(mContext, "Register email and password",
-                                    Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "onComplete: Authstate changed: " + userID);
-                        }
-
-                    }
-                });
+                    });
+        }
     }
 
     /**
@@ -276,6 +280,11 @@ public class FirebaseMethods {
                             ds.child(authorUID)
                                 .getValue(User.class)
                                 .getRating()
+                    );
+                    user.setTotalRating(
+                            ds.child(authorUID)
+                                .getValue(User.class)
+                                .getTotalRating()
                     );
                     Log.d(TAG, "getUserAccountSettings: retrieved users information: " + user.toString());
                 }

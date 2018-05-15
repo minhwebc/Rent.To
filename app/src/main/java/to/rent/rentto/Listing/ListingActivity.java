@@ -157,7 +157,8 @@ public class ListingActivity extends AppCompatActivity {
                         authorPic.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Log.d(TAG, "The author pic icon was clicked");
+                                Log.d(TAG, "The author pic icon was clicked, finishing");
+                                finish();
                                 Intent intent1 = new Intent(mContext, ProfilePreviewActivity.class);
                                 intent1.putExtra("authorUID", mItem.userUID);
                                 intent1.putExtra("ACTIVITY_NUM", 0); // so it will highlight bottom nav as itemlisting

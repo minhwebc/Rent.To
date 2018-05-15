@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -84,6 +86,9 @@ public class ProfilePreviewFragment extends Fragment {
     private BottomNavigationViewEx bottomNavigationView;
     private Context mContext;
     private String offerUID;
+    private SwipeRefreshLayout swipeLayout;
+    private TextView ratingText;
+
 
     @Nullable
     @Override
@@ -94,7 +99,7 @@ public class ProfilePreviewFragment extends Fragment {
             offerUID = bundle.getString("authorUID");
             Log.d(TAG, "authorUID: " + offerUID + ", activity_Num: " + ACTIVITY_NUM);
         }
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mDisplayName = (TextView) view.findViewById(R.id.display_name);
         mUsername = (TextView) view.findViewById(R.id.username);
         mWebsite = (TextView) view.findViewById(R.id.website);
@@ -106,6 +111,7 @@ public class ProfilePreviewFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         profileMenu.setVisibility(View.GONE);
+        ratingText = (TextView) view.findViewById(R.id.rating_text);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         mFirebaseMethods = new FirebaseMethods(getActivity());
         mContext = getActivity();
@@ -118,7 +124,25 @@ public class ProfilePreviewFragment extends Fragment {
         setupFirebaseAuth();
 
         //RecyclerView
-        int width = getScreenSizeX();
+        final int width = getScreenSizeX();
+
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        initRecyclerView(width, view);
+                        initImageBitMaps();
+                        swipeLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
+
         initImageLoader();
         initRecyclerView(width, view);
         initImageBitMaps();
@@ -188,7 +212,7 @@ public class ProfilePreviewFragment extends Fragment {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.profilerecyclerView);
         staggeredRecyclerViewAdapter =
-                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, width, zips, rented, false);
+                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, zips, rented, false);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         if(recyclerView == null) {
             Log.d(TAG, "RecyclerView is null");
@@ -216,6 +240,7 @@ public class ProfilePreviewFragment extends Fragment {
         UserAccountSettings settings = userSettings.getSettings();
         User currentUser = userSettings.getUser();
         double rating = currentUser.getRating();
+        int ratingTimes = currentUser.getTotalRating();
 
         //UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
         if(settings.getProfile_photo() == null || settings.getProfile_photo().length() < 1) {
@@ -229,6 +254,8 @@ public class ProfilePreviewFragment extends Fragment {
         mDisplayName.setText(settings.getUsername());
         mUsername.setText(settings.getUsername());
         mRatingBar.setRating((float) rating);
+        String stringRating = "" + rating + " (" + ratingTimes + ")";
+        ratingText.setText(stringRating);
         String website = settings.getWebsite();
         if(website == null || website.length() < 1) {
             website = "No Website Listed";

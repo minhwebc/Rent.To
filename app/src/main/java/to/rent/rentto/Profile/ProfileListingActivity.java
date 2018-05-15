@@ -1,10 +1,13 @@
 package to.rent.rentto.Profile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
 public class ProfileListingActivity extends AppCompatActivity {
     private static final String TAG = "ProfileListingActivity";
+    private static final int ACTIVITY_NUM = 3;
     private Context mContext;
     private String ITEM_ID;
     private String CITY;
@@ -75,7 +79,7 @@ public class ProfileListingActivity extends AppCompatActivity {
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: Navigating back to 'HomeActivity'");
+                Log.d(TAG, "Finishing activity");
                 finish();
             }
         });
@@ -122,7 +126,12 @@ public class ProfileListingActivity extends AppCompatActivity {
                         authorPic.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Log.d(TAG, "The author pic icon was clicked");
+                                Log.d(TAG, "The author pic icon was clicked, finishing");
+                                finish();
+                                Intent intent1 = new Intent(mContext, ProfileActivity.class);
+                                intent1.putExtra("authorUID", mItem.userUID);
+                                intent1.putExtra("ACTIVITY_NUM", 3); // so it will highlight bottom nav as itemlisting
+                                startActivity(intent1);
                             }
                         });
                     }
@@ -168,5 +177,8 @@ public class ProfileListingActivity extends AppCompatActivity {
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
     }
 }

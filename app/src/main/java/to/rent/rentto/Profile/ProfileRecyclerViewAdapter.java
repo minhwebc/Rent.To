@@ -50,23 +50,21 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context mContext;
-    private int width;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
     private FirebaseAuth mAuth;
     private boolean longClickable;
 
 
-    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, ArrayList<String> zips, ArrayList<Boolean> rented) {
-        this(context, ids, imageUrls, width, zips, rented, true);
+    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, ArrayList<String> zips, ArrayList<Boolean> rented) {
+        this(context, ids, imageUrls, zips, rented, true);
     }
 
-    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, int width, ArrayList<String> zips, ArrayList<Boolean> rented, boolean longClickable){
+    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, ArrayList<String> zips, ArrayList<Boolean> rented, boolean longClickable){
         Log.d(TAG, "constructor: called.");
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
-        this.width = width;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
         Log.d(TAG, mIDs.size()+"");
@@ -80,7 +78,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
     @Override
     public ProfileRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup par, int viewType){
         View view = mInflater.inflate(R.layout.recyclerview_item, par, false);
-        return new ViewHolder(view, this.width);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -112,20 +110,10 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
         ImageView imageView;
         TextView soldInfo;
 
-        ViewHolder(View itemView, int width) {
+        ViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
             soldInfo = (TextView) itemView.findViewById(R.id.ratedInformationImage);
-            int newWidth = width / 3;
-            if(imageView.getLayoutParams().width > newWidth) {
-                int ratio = newWidth / imageView.getLayoutParams().width;
-                imageView.getLayoutParams().width = newWidth;
-                imageView.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
-
-                soldInfo.getLayoutParams().width = newWidth;
-                soldInfo.getLayoutParams().height = imageView.getLayoutParams().height * ratio;
-
-            }
             itemView.setOnClickListener(this);
             if(longClickable) {
                 itemView.setOnLongClickListener(this);

@@ -1,7 +1,9 @@
 package to.rent.rentto.Login;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -32,6 +34,10 @@ import to.rent.rentto.Utils.DeviceID;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final Boolean CHECK_IF_VERIFIED = true;
+    private final int granted = PackageManager.PERMISSION_GRANTED;
+    private final String camera = Manifest.permission.CAMERA;
+    private final String location = Manifest.permission.ACCESS_FINE_LOCATION;
+    private final String phone = Manifest.permission.READ_PHONE_STATE;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -43,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private String phoneNumber;
     private String deviceID;
+    private Button btnLogin;
+    private TextView linkSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +91,12 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
         }
-
+        btnLogin = (Button) findViewById(R.id.btn_login);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mPleaseWait = (TextView) findViewById(R.id.pleaseWait);
         mEmail = (EditText) findViewById(R.id.input_email);
         mPassword = (EditText) findViewById(R.id.input_password);
+        linkSignUp = (TextView) findViewById(R.id.link_signup);
         mContext = LoginActivity.this;
         Log.d(TAG, "onCreate: started.");
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
@@ -101,14 +110,28 @@ public class LoginActivity extends AppCompatActivity {
         mPleaseWait.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.GONE);
         setupFirebaseAuth();
-        init();
-
-
-        DeviceID deviceIDHelp = new DeviceID(mContext);
-        phoneNumber = deviceIDHelp.getPhoneNumber();
-        Log.d(TAG, "phonenumber is " + phoneNumber);
-        deviceID = deviceIDHelp.getDeviceID();
-        Log.d(TAG, "deviceid is " + deviceID);
+        if(checkSelfPermission(camera) != granted || checkSelfPermission(location) != granted || checkSelfPermission(phone) != granted) {
+            Toast.makeText(mContext, "Rent.to needs permission to start", Toast.LENGTH_SHORT).show();
+            btnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Cannot log in without permissions", Toast.LENGTH_SHORT).show();
+                }
+            });
+            linkSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Cannot sign up without permissions", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            init();
+            DeviceID deviceIDHelp = new DeviceID(mContext);
+            phoneNumber = deviceIDHelp.getPhoneNumber();
+            Log.d(TAG, "phonenumber is " + phoneNumber);
+            deviceID = deviceIDHelp.getDeviceID();
+            Log.d(TAG, "deviceid is " + deviceID);
+        }
     }
 
     @Override
@@ -195,7 +218,6 @@ public class LoginActivity extends AppCompatActivity {
     private void init(){
 
         //initialize the button for logging in
-        Button btnLogin = (Button) findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -312,7 +334,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        TextView linkSignUp = (TextView) findViewById(R.id.link_signup);
         linkSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

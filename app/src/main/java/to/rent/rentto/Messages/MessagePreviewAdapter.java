@@ -57,7 +57,12 @@ public class MessagePreviewAdapter extends ArrayAdapter<PostInMessage> {
         name.setText(currentMessage.title);
 
         TextView release = (TextView) listItem.findViewById(R.id.textView_release);
-        release.setText(currentMessage.author + ": "  + currentMessage.message);
+        String currMessage = currentMessage.message;
+        if (currMessage.length() > 20) {
+            int bound = Math.min(currMessage.length(), 19);
+            currMessage = currMessage.substring(0, bound) + "...";
+        }
+        release.setText(currentMessage.author + ": "  + currMessage);
 
         return listItem;
     }
