@@ -7,13 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.FirebaseMethods;
@@ -28,7 +31,8 @@ public class ChangeOtherSettings extends AppCompatActivity {
     private DatabaseReference myRef;
     private FirebaseMethods mFirebaseMethods;
     private String userID;
-
+    private String oldEmail;
+    private String oldPhone;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,10 +84,12 @@ public class ChangeOtherSettings extends AppCompatActivity {
     private void setEditText(UserSettings userSettings) {
         String email = userSettings.getUser().getEmail();
         if(email != null) {
+            oldEmail = email;
             editTextEmail.setText(email);
         }
         String phone = userSettings.getUser().getPhone_number();
         if(phone != null) {
+            oldPhone = phone;
             editTextPhone.setText(phone);
         }
     }
@@ -92,10 +98,110 @@ public class ChangeOtherSettings extends AppCompatActivity {
      * Saves profile settings
      * Will show toast and will not save if fields are empty
      * Will not save if phone number already exists in database
-     * Will not save if username already exists
+     * Will not save if email already exists
+     * Will not make changes if both edit texts are unchanged
      */
     private void saveProfileSettings() {
+        if(editTextEmail.getText().length() == 0 || editTextPhone.getText().length() == 0) {
+            Toast.makeText(this, "Please enter a valid phone number and email", Toast.LENGTH_SHORT).show();
+        } else {
+            String email = editTextEmail.getText().toString();
+            String phone = editTextPhone.getText().toString();
+            boolean changed = false;
+            if(oldEmail == null || !email.equals(oldEmail)) {
+                saveEmail(email);
+                changed = true;
+            }
+            if(oldPhone == null || !phone.equals(oldPhone)) {
+                savePhone(phone); // checks and saves phone number if unique
+                changed = true;
+            }
+            if(changed) {
+                Toast.makeText(this, "Saved Successfull", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
 
+    /**
+     * Checks and saves email to firebase if it is unique
+     * @param email
+     */
+    private void saveEmail(final String email) {
+        Query query = myRef.child("users");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean unique = true;
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    User user = snapshot.getValue(User.class);
+                    if(user.getEmail().equals(email)){
+                        unique = false;
+                        Log.d(TAG, "we found a matching email");
+                    }
+                } // there were no matching phone numbers
+                if(unique) {
+                    saveEmailHelper(email);
+                } else {
+                    Log.d(TAG, "Cannot change email " + email);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Saves the email to firebase
+     * Email should already be checked for uniqueness and validity
+     * @param email
+     */
+    private void saveEmailHelper(String email) {
+        Log.d(TAG, "The email can be changed " + email);
+        mFirebaseMethods.updateEmail(email);
+    }
+
+    /**
+     * Checks if the phone number is unique
+     * Saves the firenumber in firebase if unique
+     * @param phone The phone number to be checked
+     */
+    private void savePhone(final String phone) {
+        Query query = myRef.child("users");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean unique = true;
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    User user = snapshot.getValue(User.class);
+                    if(user.getPhone_number().equals(phone)){
+                        unique = false;
+                        Log.d(TAG, "we found a matching phone number");
+                    }
+                } // there were no matching phone numbers
+                if(unique) {
+                    savePhoneHelper(phone);
+                } else {
+                    Log.d(TAG, "Cannot change phone number " + phone);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Saves the phonenumber
+     * Phone number should already be checked for validity and uniqueness
+     * @param phone
+     */
+    private void savePhoneHelper(String phone) {
+        Log.d(TAG, "The phone number can be changed" + phone);
+        mFirebaseMethods.updatePhoneNumber(phone);
     }
 
         /*
