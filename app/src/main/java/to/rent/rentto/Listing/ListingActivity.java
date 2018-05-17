@@ -23,6 +23,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import to.rent.rentto.Messages.PostInMessage;
@@ -224,7 +227,10 @@ public class ListingActivity extends AppCompatActivity {
                                                             DatabaseReference messageRef = mReference.child("messages");
                                                             final DatabaseReference newMessageID = messageRef.push(); //this will be included into both the offered and the renter as well
                                                             newMessageID.setValue(currentUser.getUser_id());
-                                                            Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your " + mItem.title, "date here", true, currentUser.getUser_id());
+                                                            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                                            Date date = new Date();
+                                                            String strDate = dateFormat.format(date);
+                                                            Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your " + mItem.title, strDate, true, currentUser.getUser_id());
                                                             //push message to the message table
                                                             newMessageID.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
                                                                 @Override

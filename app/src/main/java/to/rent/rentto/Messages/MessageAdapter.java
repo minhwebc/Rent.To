@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.UserSettings;
@@ -169,7 +170,15 @@ public class MessageAdapter extends BaseAdapter {
             //holder.name.setText(message.getData().getName());
             holder.name.setText(message.getAuthor());
             holder.messageBody.setText(message.getText());
-            holder.messageDate.setText(message.date);
+            String time = message.date;
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:MM MM/dd/yy");
+            Date date = new Date(); // Initialize a date object for now
+            try {
+                date = sdf.parse(message.date); // Parse message creation date into our initialized date
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            holder.messageDate.setText(sdf.format(date)); // Format and convert back to string
             Log.d("MsgAdpter",  "authorid is " + message.getAuthorID());
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
