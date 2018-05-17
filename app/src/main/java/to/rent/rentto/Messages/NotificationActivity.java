@@ -114,7 +114,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void loadMessages(){
         Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see");
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 data.clear();
@@ -136,12 +136,11 @@ public class NotificationActivity extends AppCompatActivity {
                                     if (ds1.getKey().equals("post")) {
                                         message[0] = ds1.getValue(PostInMessage.class);
                                         Log.d(TAG, "message id " + messageId);
-
-
                                     } else {
                                         lastMessageContent[0] = ds1.getValue(Message.class);
                                     }
                                 }
+                                Log.d(TAG, "This is message zipcode " + message[0].zipcode);
                                 mReference.child("posts").child(message[0].zipcode).child(message[0].postID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
