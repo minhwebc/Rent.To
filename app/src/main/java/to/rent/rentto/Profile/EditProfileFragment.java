@@ -175,7 +175,7 @@ public class EditProfileFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ChangeOtherSettings.class);
-                startActivityForResult(intent, 5);
+                startActivity(intent);
             }
         });
 
