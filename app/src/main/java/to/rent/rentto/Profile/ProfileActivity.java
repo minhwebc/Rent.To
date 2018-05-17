@@ -19,6 +19,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import to.rent.rentto.Models.Message;
@@ -139,7 +142,10 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
                                                                                                 if(databaseError == null){
                                                                                                     final DatabaseReference newRemindMessage = myRef.child("remind_messages").push();
                                                                                                     final String newRemindMessageKey = newRemindMessage.getKey();
-                                                                                                    Message message = new Message("RentTo", remindMessage, "date", true, "authorID");
+                                                                                                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                                                                                    Date date = new Date();
+                                                                                                    String strDate = dateFormat.format(date);
+                                                                                                    Message message = new Message("RentTo", remindMessage, strDate, true, "authorID");
                                                                                                     newRemindMessage.push().setValue(message, new DatabaseReference.CompletionListener() {
                                                                                                         @Override
                                                                                                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

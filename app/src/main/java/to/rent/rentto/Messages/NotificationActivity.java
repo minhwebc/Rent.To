@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +41,9 @@ public class NotificationActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private ArrayList<String> messageIDList;
+    private SwipeRefreshLayout swipeLayout;
+    private final ArrayList<PostInMessage> data = new ArrayList<>();;
+
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -73,9 +78,41 @@ public class NotificationActivity extends AppCompatActivity {
         //Sets up list view
         messagesListView = (ListView) findViewById(R.id.msgview);
         // Dummy array data
-        final ArrayList<PostInMessage> data = new ArrayList<>();
         arrayAdapter = new MessagePreviewAdapter(this, data);
         messagesListView.setAdapter(arrayAdapter);
+        //Sets on click listener for listview
+        messagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedText = messageIDList.get(position);
+//                Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NotificationActivity.this, ChatActivity.class);
+                intent.putExtra("MessageChannelID", selectedText);
+                startActivity(intent);
+            }
+        });
+        loadMessages();
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        loadMessages();
+                        swipeLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
+
+        // Set up bottom nav bar
+        setupBottomNavigationView();
+    }
+
+    private void loadMessages(){
         Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see");
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -157,19 +194,6 @@ public class NotificationActivity extends AppCompatActivity {
 
             }
         });
-        //Sets on click listener for listview
-        messagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedText = messageIDList.get(position);
-//                Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(NotificationActivity.this, ChatActivity.class);
-                intent.putExtra("MessageChannelID", selectedText);
-                startActivity(intent);
-            }
-        });
-        // Set up bottom nav bar
-        setupBottomNavigationView();
     }
 
     /**
