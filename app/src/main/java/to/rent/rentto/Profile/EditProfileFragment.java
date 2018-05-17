@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,7 +36,6 @@ import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.R;
-import to.rent.rentto.Utils.DeviceID;
 import to.rent.rentto.Utils.FirebaseMethods;
 
 import static android.app.Activity.RESULT_OK;
@@ -125,6 +125,8 @@ public class EditProfileFragment extends Fragment implements
     private TextView mChangeProfilePhoto;
     private CircleImageView mProfilePhoto;
 
+    //Button to change other settings (phone and email)
+    private Button changeOtherSettingsButton;
 
     //variables
     private UserSettings mUserSettings;
@@ -142,6 +144,7 @@ public class EditProfileFragment extends Fragment implements
         mEmail = (EditText) view.findViewById(R.id.email);
         mPhoneNumber = (EditText) view.findViewById(R.id.phoneNumber);
         mChangeProfilePhoto = (TextView) view.findViewById(R.id.changeProfilePhoto);
+        changeOtherSettingsButton = (Button) view.findViewById(R.id.buttonOtherSettings);
         mFirebaseMethods = new FirebaseMethods(getActivity());
 
         //setProfileImage();
@@ -165,6 +168,14 @@ public class EditProfileFragment extends Fragment implements
             public void onClick(View v) {
                 Log.d(TAG, "onClick: attempting to save changes.");
                 saveProfileSettings();
+            }
+        });
+
+        changeOtherSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ChangeOtherSettings.class);
+                startActivityForResult(intent, 5);
             }
         });
 

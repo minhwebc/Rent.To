@@ -144,17 +144,15 @@
             </RelativeLayout>
 
 
-            <TextView
-                android:id="@+id/textPrivateInfo"
+            <Button
+                android:id="@+id/buttonOtherSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/relLayout4"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/grey_border_bottom"
-                android:text="PRIVATE INFORMATION"
-                android:textColor="@color/black"
-                android:textSize="25sp" />
+                android:layout_marginTop="20dp"
+                android:text="Other Settings"
+                android:textSize="20sp" />
 
 
             <!-- email section -->
@@ -162,7 +160,7 @@
                 android:id="@+id/relLayout5"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@+id/textPrivateInfo"
+                android:layout_below="@+id/buttonOtherSettings"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/grey_border_bottom">
 
@@ -184,6 +182,7 @@
 
             </RelativeLayout>
 
+
             <!-- phone number section -->
             <RelativeLayout
                 android:id="@+id/relLayout6"
@@ -192,6 +191,11 @@
                 android:layout_below="@+id/relLayout5"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/grey_border_bottom">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="button"/>
 
                 <ImageView
                     android:layout_width="35dp"
