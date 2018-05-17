@@ -153,68 +153,6 @@
                 android:layout_marginTop="20dp"
                 android:text="Other Settings"
                 android:textSize="20sp" />
-
-
-            <!-- email section -->
-            <RelativeLayout
-                android:id="@+id/relLayout5"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/buttonOtherSettings"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/grey_border_bottom">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_email" />
-
-                <EditText
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="40dp"
-                    android:background="@null"
-                    android:hint="Email"
-                    android:inputType="textNoSuggestions" />
-
-            </RelativeLayout>
-
-
-            <!-- phone number section -->
-            <RelativeLayout
-                android:id="@+id/relLayout6"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/relLayout5"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/grey_border_bottom">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="button"/>
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_phone" />
-
-                <EditText
-                    android:id="@+id/phoneNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="40dp"
-                    android:background="@null"
-                    android:hint="Phone Number"
-                    android:inputType="number" />
-
-            </RelativeLayout>
-
         </RelativeLayout>
 
 
