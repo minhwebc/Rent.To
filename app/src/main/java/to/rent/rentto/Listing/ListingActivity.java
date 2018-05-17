@@ -248,7 +248,7 @@ public class ListingActivity extends AppCompatActivity {
                                                                                                                 @Override
                                                                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                                                                     if(databaseError == null) {
-                                                                                                                        PostInMessage post = new PostInMessage(mItem.imageURL, mItem.title, ITEM_ID);
+                                                                                                                        PostInMessage post = new PostInMessage(mItem.imageURL, mItem.title, ITEM_ID, getCurrentLocation());
                                                                                                                         newMessageID.child("post").setValue(post, new DatabaseReference.CompletionListener() {
                                                                                                                             @Override
                                                                                                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

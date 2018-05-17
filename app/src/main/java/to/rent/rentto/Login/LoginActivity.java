@@ -266,6 +266,8 @@ public class LoginActivity extends AppCompatActivity {
                                                                 Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage());
                                                             }
                                                             Toast.makeText(mContext, userPhoneNumber, Toast.LENGTH_SHORT).show();
+                                                            Log.d(TAG, "phone's number: " + getPhoneNumber());
+                                                            Log.d(TAG, "user phone number " + userPhoneNumber);
                                                             if (!userPhoneNumber.equals(getPhoneNumber())) {
                                                                 Toast.makeText(mContext, "Phone number of this phone is not associated with this account", Toast.LENGTH_SHORT).show();
                                                                 mAuth.signOut();
