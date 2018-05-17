@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,6 +55,19 @@ public class RemindActivity extends AppCompatActivity {
         adapterT = new RemindViewAdapter(this, remindTakeListArray, messageT);
         remindReturnList.setAdapter(adapterR);
         remindTakeBackList.setAdapter(adapterT);
+        remindTakeBackList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> arg0, View v,
+                                           int index, long arg3) {
+                // TODO Auto-generated method stub
+                Log.d(TAG, "in onLongClick");
+                String str = remindTakeBackList.getItemAtPosition(index).toString();
+
+                Log.d(TAG, "long click : " +str);
+                return true;
+            }
+        });
+
         setupBottomNavigationView();
         updateMessages();
     }
@@ -66,50 +81,55 @@ public class RemindActivity extends AppCompatActivity {
                     mReference.child("remind_messages").child(ds.getValue(String.class)).child("item").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
-                            final RemindMessageItem item = dataSnapshot1.getValue(RemindMessageItem.class);
-                            if(item == null) {
-                                return;
+                            if(dataSnapshot1.getValue(RemindMessageItem.class) != null) {
+                                final RemindMessageItem item = dataSnapshot1.getValue(RemindMessageItem.class);
+                                if (item == null) {
+                                    return;
+                                }
+                                final User[] borrower = new User[1];
+                                final User[] lender = new User[1];
+                                final Item[] mItem = new Item[1];
+                                mReference.child("users").child(item.borrower).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        borrower[0] = dataSnapshot.getValue(User.class);
+                                        mReference.child("users").child(item.lender).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                lender[0] = dataSnapshot.getValue(User.class);
+                                                mReference.child("posts").child(item.zip).child(item.itemID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        if(mItem[0] != null) {
+                                                            mItem[0] = dataSnapshot.getValue(Item.class);
+                                                            RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title, lender[0].getUsername(), borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
+                                                            Log.d(TAG, "This is the borrower name: " + newRemindItem.borrower);
+                                                            Log.d(TAG, "This is the borrower name: " + newRemindItem.lender);
+                                                            remindReturnListArray.add(newRemindItem);
+                                                            adapterR.notifyDataSetChanged();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
-                            final User[] borrower = new User[1];
-                            final User[] lender = new User[1];
-                            final Item[] mItem =  new Item[1];
-                            mReference.child("users").child(item.borrower).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    borrower[0] = dataSnapshot.getValue(User.class);
-                                    mReference.child("users").child(item.lender).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            lender[0] = dataSnapshot.getValue(User.class);
-                                            mReference.child("posts").child(item.zip).child(item.itemID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    mItem[0] = dataSnapshot.getValue(Item.class);
-                                                    RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title,lender[0].getUsername() ,borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
-                                                    Log.d(TAG, "This is the borrower name: " + newRemindItem.borrower);
-                                                    Log.d(TAG, "This is the borrower name: " + newRemindItem.lender);
-                                                    remindReturnListArray.add(newRemindItem);
-                                                    adapterR.notifyDataSetChanged();
-                                                }
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
 
                         }
 
@@ -136,55 +156,61 @@ public class RemindActivity extends AppCompatActivity {
                     mReference.child("remind_messages").child(ds.getValue(String.class)).child("item").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
-                            final RemindMessageItem item = dataSnapshot1.getValue(RemindMessageItem.class);
-                            Log.d(TAG, "The item is " + item.itemID);
-                            Log.d(TAG, "The item zip is " + item.zip);
-                            Log.d(TAG, "The item lender is " + item.lender);
-                            final User[] borrower = new User[1];
-                            final User[] lender = new User[1];
-                            final Item[] mItem =  new Item[1];
-                            try {
-                                mReference.child("users").child(item.borrower).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        borrower[0] = dataSnapshot.getValue(User.class);
-                                        mReference.child("users").child(item.lender).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                lender[0] = dataSnapshot.getValue(User.class);
-                                                mReference.child("posts").child(item.zip).child(item.itemID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        mItem[0] = dataSnapshot.getValue(Item.class);
-                                                        RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title, lender[0].getUsername(), borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
-                                                        Log.d(TAG, newRemindItem.borrower);
-                                                        Log.d(TAG, newRemindItem.lender);
-                                                        remindTakeListArray.add(newRemindItem);
-                                                        Log.d(TAG, "notified");
-                                                        adapterT.notifyDataSetChanged();
-                                                    }
+                            if(dataSnapshot1.getValue(RemindMessageItem.class) != null) {
+                                final RemindMessageItem item = dataSnapshot1.getValue(RemindMessageItem.class);
+                                Log.d(TAG, "The key is " + dataSnapshot1.getKey());
 
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
+                                Log.d(TAG, "The item is " + item.itemID);
+                                Log.d(TAG, "The item zip is " + item.zip);
+                                Log.d(TAG, "The item lender is " + item.lender);
+                                final User[] borrower = new User[1];
+                                final User[] lender = new User[1];
+                                final Item[] mItem = new Item[1];
+                                try {
+                                    mReference.child("users").child(item.borrower).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            borrower[0] = dataSnapshot.getValue(User.class);
+                                            mReference.child("users").child(item.lender).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    lender[0] = dataSnapshot.getValue(User.class);
+                                                    mReference.child("posts").child(item.zip).child(item.itemID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            mItem[0] = dataSnapshot.getValue(Item.class);
+                                                            if(mItem[0] != null) {
+                                                                RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title, lender[0].getUsername(), borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
+                                                                Log.d(TAG, newRemindItem.borrower);
+                                                                Log.d(TAG, newRemindItem.lender);
+                                                                remindTakeListArray.add(newRemindItem);
+                                                                Log.d(TAG, "notified");
+                                                                adapterT.notifyDataSetChanged();
+                                                            }
+                                                        }
 
-                                                    }
-                                                });
-                                            }
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
+                                                        }
+                                                    });
+                                                }
 
-                                            }
-                                        });
-                                    }
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                                                }
+                                            });
+                                        }
 
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
