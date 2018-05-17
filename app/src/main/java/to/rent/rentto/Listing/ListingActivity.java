@@ -145,6 +145,8 @@ public class ListingActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserAccountSettings userAccountSettings = dataSnapshot.getValue(UserAccountSettings.class);
                         authorPicURL = userAccountSettings.getProfile_photo();
+                        TextView userField = findViewById(R.id.textView4);
+                        userField.setText(userAccountSettings.getDisplay_name());
                         if(authorPicURL != null && authorPicURL.length() > 1 && authorPic != null) {
                             Log.d(TAG, "authorPicURL is " + authorPicURL);
                             Glide.with(mContext)
@@ -178,8 +180,6 @@ public class ListingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        TextView userField = findViewById(R.id.textView4);
-                        userField.setText(user.getUsername());
                         FloatingActionButton mButton = findViewById(R.id.requestButton);
                         if(mItem.sold){
                             mButton.setVisibility(View.GONE);
