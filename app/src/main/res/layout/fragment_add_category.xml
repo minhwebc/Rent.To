@@ -53,6 +53,7 @@
             android:layout_above="@+id/button_send"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="23dp"
+            android:inputType="text|textMultiLine"
             android:layout_weight="10"
             android:hint="Description "
             android:textAlignment="center" />

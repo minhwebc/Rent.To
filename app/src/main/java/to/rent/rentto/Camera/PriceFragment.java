@@ -7,14 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.NumberPicker;
-
+import android.widget.Spinner;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-
 import to.rent.rentto.R;
-import to.rent.rentto.Utils.DecimalFilter;
 
 public class PriceFragment extends android.support.v4.app.Fragment {
     private static final String TAG = "PriceFragment";
@@ -29,32 +27,31 @@ public class PriceFragment extends android.support.v4.app.Fragment {
         // Set up price EditText
         initiatePriceEditText(view);
 
-        // Set up Time NumberPicker
-        initiateTimeNumberPicker(view);
+        // Set up Time spinner
+        initiateTimeSpinner(view);
 
         return view;
     }
 
     /**
-     * Sets up Time NumberPicker.
+     * Sets up spinner for time
      * Default value is String "Day"
      * @param v
      */
-    private void initiateTimeNumberPicker(View v) {
-        // Hooks up to category picker
-        NumberPicker np = v.findViewById(R.id.timePicker);
+    private void initiateTimeSpinner(View v) {
+        Spinner spinner = (Spinner) v.findViewById(R.id.timeSpinner);
 
-        //Populate NumberPicker values from String array values
-        //Set the minimum value of NumberPicker
-        np.setMinValue(0); //from array first value
-        //Specify the maximum value/number of NumberPicker
-        np.setMaxValue(values.length-1); //to array last value
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, values);
 
-        //Specify the NumberPicker data source as array elements
-        np.setDisplayedValues(values);
-        np.setValue(1); // starts at first index (day)
-        //Gets whether the selector wheel wraps when reaching the min/max value.
-        np.setWrapSelectorWheel(true);
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+        // set spinner default value to 0 index
+        spinner.setSelection(1);
     }
 
     /**

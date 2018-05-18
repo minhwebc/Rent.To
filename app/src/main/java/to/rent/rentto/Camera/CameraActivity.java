@@ -253,10 +253,10 @@ public class CameraActivity extends AppCompatActivity {
      */
     public void submitPrice(View view) {
         EditText editTextPrice = (EditText) findViewById(R.id.editTextPrice);
-        NumberPicker timePicker = (NumberPicker) findViewById(R.id.timePicker);
+        Spinner timeSpinner = (Spinner) findViewById(R.id.timeSpinner);
         if(checkEditTextNonEmpty(editTextPrice)) {
             try {
-                timeType = timePicker.getDisplayedValues()[timePicker.getValue()];
+                timeType = timeSpinner.getSelectedItem().toString();
                 double rate = Math.round(Double.parseDouble(editTextPrice.getText().toString().substring(1)) * 100.00)/ 100.00;
                 price = String.format("%.2f", rate);
 
