@@ -24,14 +24,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.R;
@@ -256,8 +250,13 @@ public class RegisterActivity extends AppCompatActivity {
                                                                             myRef.child(mContext.getString(R.string.dbname_user_account_settings))
                                                                                     .child(userID)
                                                                                     .setValue(settings);
-                                                                            Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
-                                                                            mAuth.signOut();
+                                                                            reference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see").push().setValue("welcomeMessage", new DatabaseReference.CompletionListener() {
+                                                                                @Override
+                                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                    Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
+                                                                                    mAuth.signOut();
+                                                                                }
+                                                                            });
                                                                         }
                                                                     });
                                                                 }
@@ -282,11 +281,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                     }
                 });
-
-                DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();
-                mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see").push().setValue("welcomeMessage");
-
-                mAuth.signOut();
             }
 
             @Override
