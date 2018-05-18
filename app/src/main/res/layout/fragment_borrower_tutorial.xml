@@ -7,14 +7,17 @@
 
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:id="@+id/picture"
+        android:layout_below="@id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="127dp"
         android:src="@drawable/piggy_bank" />
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -34,11 +37,10 @@
     CC 3.0 BY</a></div>-->
 
     <TextView
+        android:layout_below="@id/picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="267dp"
         android:textAlignment="center"
         android:textSize="34sp"
         android:paddingLeft="15dp"

@@ -6,45 +6,49 @@
     >
 
     <ImageView
+        android:id="@+id/picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="130dp"
-        android:src="@drawable/borrower_icon" />
+        android:src="@drawable/borrower_icon"
+        android:layout_gravity="center_horizontal"
+        />
 
     <TextView
+        android:id="@+id/title23"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="27dp"
+        android:layout_below="@+id/picture"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="Help your community by renting out your items"
         android:textAlignment="center"
-        android:textSize="34sp"
-        />
+        android:textSize="34dp" />
 
     <TextView
+        android:id="@+id/title233"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="267dp"
-        android:textAlignment="center"
-        android:textSize="34sp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/title23"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:text="Earn Money, You've got nothing to lose" />
+        android:text="Earn Money, You've got nothing to lose"
+        android:textAlignment="center"
+        android:textSize="34dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="117dp"
+        android:layout_alignParentStart="true"
         android:text="+$"
+        android:layout_below="@+id/title233"
+
+        android:textAlignment="center"
         android:textColor="@color/green_dark"
         android:textSize="100sp" />
 

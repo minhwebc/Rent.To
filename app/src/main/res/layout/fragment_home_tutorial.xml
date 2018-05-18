@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/texturebackground"
-    >
+    android:orientation="vertical">
 
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -20,11 +21,12 @@
         />
 
     <ImageView
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/title"
         android:layout_width="wrap_content"
-        android:layout_height="450dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="89dp"
         android:src="@drawable/home_activity" />
 
 
