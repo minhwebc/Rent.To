@@ -54,16 +54,26 @@ public class MessagePreviewAdapter extends ArrayAdapter<PostInMessage> {
                 .into(image);
 
         TextView name = (TextView) listItem.findViewById(R.id.textView_name);
-        name.setText(currentMessage.title);
+        String title = currentMessage.title;
+        name.setText(limitStringLength(title, 36));
 
         TextView release = (TextView) listItem.findViewById(R.id.textView_release);
-        String currMessage = currentMessage.message;
-        if (currMessage.length() > 20) {
-            int bound = Math.min(currMessage.length(), 19);
-            currMessage = currMessage.substring(0, bound) + "...";
-        }
-        release.setText(currentMessage.author + ": "  + currMessage);
+        String inLineMessagePreview = currentMessage.author + ": " + currentMessage.message;
+        release.setText(limitStringLength(inLineMessagePreview, 36));
 
         return listItem;
+    }
+
+    /**
+     * Limits the length of the given string to the limit, if it is above the limit
+     * @param string
+     * @param limit
+     */
+    private String limitStringLength(String string, int limit) {
+        if(string == null || limit < 5 || string.length() <= limit) {
+            return string;
+        } else {
+            return string.substring(0, limit) + "...";
+        }
     }
 }
