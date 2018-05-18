@@ -25,11 +25,13 @@ android:layout_height="match_parent">
 
     <Button
         android:id="@+id/button_send"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="119dp"
+        android:layout_marginBottom="140dp"
+        android:layout_width="267dp"
+        android:textColor="@color/white"
+        android:background="@color/colorAccent"
         android:onClick="submitTitle"
         android:text="Next" />
 
