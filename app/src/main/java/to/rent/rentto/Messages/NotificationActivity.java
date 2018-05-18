@@ -131,44 +131,62 @@ public class NotificationActivity extends AppCompatActivity {
                             Log.d(TAG, "this is the message id " + messageId);
                             if(dataSnapshot1.exists()) {
                                 final boolean[] postDeleted = {false};
+                                boolean validPost = false;
                                 for (DataSnapshot ds1 : dataSnapshot1.getChildren()) {
                                     Log.d(TAG, "this is the within post " + ds1.getKey());
                                     if (ds1.getKey().equals("post")) {
                                         message[0] = ds1.getValue(PostInMessage.class);
                                         Log.d(TAG, "message id " + messageId);
+                                        validPost = true;
+
+
                                     } else {
                                         lastMessageContent[0] = ds1.getValue(Message.class);
                                     }
                                 }
-                                Log.d(TAG, "This is message zipcode " + message[0].zipcode);
-                                mReference.child("posts").child(message[0].zipcode).child(message[0].postID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (!dataSnapshot.exists()) {
-                                            Log.d(TAG, "post deleted");
+                                if(validPost == false) { //the message does not contain a "post" field
+                                    return;
+                                }
+                                if(messageId.equals("welcomeMessage")) {
+                                    messageIDList.add(messageId);
+                                    try {
+                                        message[0].author = lastMessageContent[0].author;
+                                        message[0].message = lastMessageContent[0].text;
+                                        data.add(message[0]);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    arrayAdapter.notifyDataSetChanged();
+                                } else {
+                                    mReference.child("posts").child(message[0].zipcode).child(message[0].postID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (!dataSnapshot.exists()) {
+                                                Log.d(TAG, "post deleted");
 
-                                            postDeleted[0] = true;
-                                        } else {
-                                            Log.d(TAG, "post not deleted");
+                                                postDeleted[0] = true;
+                                            } else {
+                                                Log.d(TAG, "post not deleted");
 
-                                            postDeleted[0] = false;
-                                            messageIDList.add(messageId);
-                                            try {
-                                                message[0].author = lastMessageContent[0].author;
-                                                message[0].message = lastMessageContent[0].text;
-                                                data.add(message[0]);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
+                                                postDeleted[0] = false;
+                                                messageIDList.add(messageId);
+                                                try {
+                                                    message[0].author = lastMessageContent[0].author;
+                                                    message[0].message = lastMessageContent[0].text;
+                                                    data.add(message[0]);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                arrayAdapter.notifyDataSetChanged();
                                             }
-                                            arrayAdapter.notifyDataSetChanged();
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
                             } else {
                                 mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see").child(ds.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                                     @Override
