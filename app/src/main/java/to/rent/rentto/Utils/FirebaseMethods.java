@@ -95,9 +95,20 @@ public class FirebaseMethods {
     }
 
     /**
-     * update username in the 'users' node and 'user_account_settings' node
-     * @param username
+     * Updates the phone number in firebase for the current user
+     * @param phoneNumber
      */
+    public void updatePhoneNumber(String phoneNumber) {
+        myRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.field_phone_number))
+                .setValue(phoneNumber);
+    }
+
+        /**
+         * update username in the 'users' node and 'user_account_settings' node
+         * @param username
+         */
     public void updateUsername(String username) {
         Log.d(TAG, "updateUsername: updating username to: " + username);
         myRef.child(mContext.getString(R.string.dbname_users))

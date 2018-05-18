@@ -275,7 +275,7 @@ public class ProfileFragment extends Fragment {
                     .load(settings.getProfile_photo())
                     .into(mProfilePhoto);
         }
-        mDisplayName.setText(settings.getUsername());
+        mDisplayName.setText(settings.getDisplay_name());
         mUsername.setText(settings.getUsername());
         mRatingBar.setRating((float) rating);
         String stringRating = "" + rating + " (" + ratingTimes + ")";

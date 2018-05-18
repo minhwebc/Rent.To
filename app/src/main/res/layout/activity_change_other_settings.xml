@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="to.rent.rentto.Camera.CameraActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/changeSettingsLayout1">
+            <include layout="@layout/snippet_top_editprofiletoolbar" />
+
+
+        </RelativeLayout>
+
+        <!-- email section -->
+        <RelativeLayout
+            android:id="@+id/relLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/changeSettingsLayout1"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/grey_border_bottom">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_email" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="40dp"
+                android:background="@null"
+                android:hint="Email"
+                android:inputType="textNoSuggestions" />
+
+        </RelativeLayout>
+
+
+        <!-- phone number section -->
+        <RelativeLayout
+            android:id="@+id/relLayout6"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/relLayout5"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/grey_border_bottom">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_phone" />
+
+            <EditText
+                android:id="@+id/phoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="40dp"
+                android:background="@null"
+                android:hint="Phone Number"
+                android:inputType="number" />
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

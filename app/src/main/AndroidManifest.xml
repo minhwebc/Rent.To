@@ -37,6 +37,8 @@
             android:name=".Profile.ProfileActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity android:name=".Profile.ChangeOtherSettings"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Share.ShareActivity"
             android:screenOrientation="portrait" />
