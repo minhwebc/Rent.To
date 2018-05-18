@@ -183,7 +183,7 @@ public class ListingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        FloatingActionButton mButton = findViewById(R.id.requestButton);
+                        final FloatingActionButton mButton = findViewById(R.id.requestButton);
                         if(mItem.sold){
                             mButton.setVisibility(View.GONE);
                         }
@@ -200,6 +200,12 @@ public class ListingActivity extends AppCompatActivity {
                                     Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                mButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
+                                    }
+                                }); // so they cannot spam click after first click
                                 Log.d(TAG, "here is the zip of the item " + mItem.zip);
                                 Log.d(TAG, "here is the item id " + ITEM_ID);
 

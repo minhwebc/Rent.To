@@ -10,59 +10,70 @@ android:layout_height="match_parent">
     android:layout_height="fill_parent"
     >
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/editTextPrice"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="9dp"
-        android:text="$"
-        android:textColor="@color/black"
-        android:textSize="50dp" />
-
-    <EditText
-        android:id="@+id/editTextPrice"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_alignTop="@+id/timePicker"
-        android:layout_toEndOf="@+id/textView9"
-        android:layout_weight="5"
-        android:hint="Price"
-        android:inputType="numberDecimal"
-        android:textAlignment="center" />
-
-
-    <TextView
-        android:id="@+id/textViewPer"
-        android:layout_width="100dp"
-        android:layout_height="25dp"
-        android:layout_alignBaseline="@+id/textView9"
-        android:layout_alignBottom="@+id/textView9"
-        android:layout_alignStart="@+id/button_send"
-        android:layout_marginStart="24dp"
-        android:text="Per"
-        android:textAlignment="center" />
-
-    <NumberPicker
-        android:id="@+id/timePicker"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/button_send"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="137dp"
-        android:layout_marginEnd="17dp" />
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/editTextPrice"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="9dp"
+            android:text="$"
+            android:textColor="@color/black"
+            android:textSize="50dp" />
+
+        <EditText
+            android:id="@+id/editTextPrice"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:layout_alignTop="@+id/timeSpinner"
+            android:layout_toEndOf="@+id/textView9"
+            android:layout_weight="5"
+            android:hint="Price"
+            android:inputType="numberDecimal"
+            android:textAlignment="center" />
+
+
+        <TextView
+            android:id="@+id/textViewPer"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_alignBaseline="@+id/textView9"
+            android:layout_alignBottom="@+id/textView9"
+            android:layout_alignStart="@+id/button_send"
+            android:layout_marginStart="24dp"
+            android:text="Per"
+            android:textAlignment="center" />
+
+        <Spinner
+            android:id="@+id/timeSpinner"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:layout_above="@+id/button_send"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="137dp"
+            android:layout_marginEnd="17dp" />
+    </LinearLayout>
+
 
 
     <Button
         android:id="@+id/button_send"
-        android:layout_width="wrap_content"
+        android:layout_width="267dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="119dp"
+        android:layout_marginBottom="140dp"
         android:onClick="submitPrice"
+        android:textColor="@color/white"
+        android:background="@color/colorAccent"
         android:text="Next" />
 
 

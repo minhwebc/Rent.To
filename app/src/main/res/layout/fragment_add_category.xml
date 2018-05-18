@@ -53,6 +53,7 @@
             android:layout_above="@+id/button_send"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="23dp"
+            android:inputType="text|textMultiLine"
             android:layout_weight="10"
             android:hint="Description "
             android:textAlignment="center" />
@@ -60,12 +61,15 @@
 
         <Button
             android:id="@+id/button_send"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="119dp"
+            android:layout_marginBottom="140dp"
+            android:layout_width="267dp"
+
             android:onClick="submitCategory"
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"
             android:text="Next" />
 
 
