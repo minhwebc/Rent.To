@@ -23,7 +23,7 @@
     </item>
 
     <item android:id="@+id/ic_messages"
-        android:icon="@drawable/ic_arrow"
+        android:icon="@drawable/mail"
         android:title="">
     </item>
 
