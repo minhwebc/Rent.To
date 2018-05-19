@@ -58,6 +58,7 @@ public class ListingActivity extends AppCompatActivity {
     private ImageView authorPic;
     private String authorPicURL;
     FloatingActionButton requestButton;
+    private String authorName;
     private ShareMethods shareMethods;
 
     @Override
@@ -275,6 +276,7 @@ public class ListingActivity extends AppCompatActivity {
                         authorPicURL = userAccountSettings.getProfile_photo();
                         TextView userField = findViewById(R.id.textView4);
                         userField.setText(userAccountSettings.getDisplay_name());
+                        authorName = userAccountSettings.getDisplay_name();
                         if(authorPicURL != null && authorPicURL.length() > 1 && authorPic != null) {
                             Log.d(TAG, "authorPicURL is " + authorPicURL);
                             Glide.with(mContext)
@@ -501,7 +503,11 @@ public class ListingActivity extends AppCompatActivity {
                             return;
                         }
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                        alertDialog.setTitle("Send an Offer");
+                        String messageTitle = "Send an Offer to " + authorName;
+                        if(messageTitle.length() > 30) {
+                            messageTitle = messageTitle.substring(0, 28) + "..";
+                        }
+                        alertDialog.setTitle(messageTitle);
                         alertDialog.setMessage("Type in your message");
                         final EditText input = new EditText(mContext);
                         input.setText("I am interested in your " + mItem.title);
