@@ -4,24 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="center" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ratedInformationImage"
-            android:textSize="@dimen/font_22"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:scaleType="center"
-            android:gravity="center_horizontal"/>
-
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:scaleType="center" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratedInformationImage"
+        android:textSize="@dimen/font_22"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:scaleType="center"
+        android:gravity="center_horizontal"/>
 
 </RelativeLayout>

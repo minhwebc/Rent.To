@@ -73,7 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Log.d(TAG, "onBindViewHolder: called." + mIDs.size());
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.ic_launcher_background);
-
+        holder.imageView.layout(0,0,0,0);
         Glide.with(mContext)
                 .load(mImageUrls.get(position))
                 .apply(requestOptions)
