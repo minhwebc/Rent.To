@@ -110,6 +110,12 @@ public class ListingActivity extends AppCompatActivity {
     private void sendOffer(final String offerMessage) {
         Log.d(TAG, "here is the zip of the item " + mItem.zip);
         Log.d(TAG, "here is the item id " + ITEM_ID);
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -170,6 +176,12 @@ public class ListingActivity extends AppCompatActivity {
                                                                                                             int duration = Toast.LENGTH_SHORT;
                                                                                                             Toast toast = Toast.makeText(mContext, "Offer sent", duration);
                                                                                                             toast.show();
+                                                                                                            requestButton.setOnClickListener(new View.OnClickListener() {
+                                                                                                                @Override
+                                                                                                                public void onClick(View v) {
+                                                                                                                    Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
+                                                                                                                }
+                                                                                                            });
                                                                                                         } else {
                                                                                                             int duration = Toast.LENGTH_SHORT;
                                                                                                             Toast toast = Toast.makeText(mContext, "An error occurred when sending the offer.", duration);
@@ -235,7 +247,7 @@ public class ListingActivity extends AppCompatActivity {
                 TextView price = findViewById(R.id.textView5);
                 ImageView post_image = findViewById(R.id.imageView);
                 TextView soldInfo = findViewById(R.id.soldInfo);
-                RequestOptions requestOptions = new RequestOptions()
+                final RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
 
                 try {
@@ -296,60 +308,38 @@ public class ListingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        final FloatingActionButton mButton = findViewById(R.id.requestButton);
                         if(mItem.sold){
-                            mButton.setVisibility(View.GONE);
+                            requestButton.setVisibility(View.GONE);
                         }
 
-                        // If they are not prohibited from sending an offer, show dialog with default message
-                        // They can send pretyped message, or type their own
-                        // They are prohibited from sending an offer if:
-                        //                      If Item is null
-                        //                      if it is there own item
-                        //                      If it is already rented
-                        //                      If they already made an offer
-                        mButton.setOnClickListener(new View.OnClickListener() {
+                        mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onClick(View v) {
-                                if(mItem == null) {
-                                    Toast.makeText(mContext, "Cannot make an offer for this item. It may have been deleted", Toast.LENGTH_SHORT).show();
-                                    return;
-                                } else if(currentUser.getUser_id().equals(mItem.userUID)){
-                                    Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
-                                    return;
-                                } else if(mItem.sold){
-                                    Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
-                                    return;
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    String value = ds.getValue(String.class);
+                                    if (value.equals(currentUser.getUser_id())) {
+                                        requestButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                        return;
+                                    }
                                 }
-                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                                alertDialog.setTitle("Send an Offer");
-                                alertDialog.setMessage("Type in your message");
-                                final EditText input = new EditText(mContext);
-                                input.setText("I am interested in your " + mItem.title);
-                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.MATCH_PARENT);
-                                input.setLayoutParams(lp);
-                                alertDialog.setView(input);
-                                alertDialog.setIcon(R.drawable.mail);
-                                alertDialog.setPositiveButton("Send",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                sendOffer(input.getText().toString());
-                                            }
-                                        });
-
-                                alertDialog.setNegativeButton("Cancel",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                            }
-                                        });
-
-                                alertDialog.show();
+                                setOfferButtonListener();
                             }
 
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
                         });
+
+
+
+
+
 //                        mButton.setOnClickListener(new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View view) {
@@ -487,6 +477,58 @@ public class ListingActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+
+            private void setOfferButtonListener() {
+                // If they are not prohibited from sending an offer, show dialog with default message
+                // They can send pretyped message, or type their own
+                // They are prohibited from sending an offer if:
+                //                      If Item is null
+                //                      if it is there own item
+                //                      If it is already rented
+                //                      If they already made an offer
+                requestButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(mItem == null) {
+                            Toast.makeText(mContext, "Cannot make an offer for this item. It may have been deleted", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if(currentUser.getUser_id().equals(mItem.userUID)){
+                            Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if(mItem.sold){
+                            Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                        alertDialog.setTitle("Send an Offer");
+                        alertDialog.setMessage("Type in your message");
+                        final EditText input = new EditText(mContext);
+                        input.setText("I am interested in your " + mItem.title);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        alertDialog.setView(input);
+                        alertDialog.setIcon(R.drawable.mail);
+                        alertDialog.setPositiveButton("Send",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        sendOffer(input.getText().toString());
+                                    }
+                                });
+
+                        alertDialog.setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        alertDialog.show();
+                    }
+
+                });
             }
 
             @Override
