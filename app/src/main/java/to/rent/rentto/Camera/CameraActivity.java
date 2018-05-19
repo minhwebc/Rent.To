@@ -1,4 +1,5 @@
 package to.rent.rentto.Camera;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -14,7 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.content.Intent;
@@ -84,7 +87,17 @@ public class CameraActivity extends AppCompatActivity {
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.relLayout2, addPhotoFragment, "photo").commit();
         setupBottomNavigationView();
-
+        findViewById(R.id.cameraRelativeLayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(getCurrentFocus() == null || getCurrentFocus().getWindowToken() == null) {
+                    return true;
+                }
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
         // Gets Permissions
         if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -219,6 +232,14 @@ public class CameraActivity extends AppCompatActivity {
      */
     public void submitTitle(View view) {
         EditText editTextTitle = (EditText) findViewById(R.id.editTextTitle);
+        editTextTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
         title = editTextTitle.getText().toString();
         if(checkEditTextNonEmpty(editTextTitle)) {
             // Replace title fragment with category fragment
@@ -238,6 +259,14 @@ public class CameraActivity extends AppCompatActivity {
         Spinner categorySpinner = (Spinner) findViewById(R.id.spinnerCategory);
         category = categorySpinner.getSelectedItem().toString();
         EditText editTextDescription = (EditText) findViewById(R.id.editTextDescription);
+        editTextDescription.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
         description = editTextDescription.getText().toString();
         TextView conditionTextView = (TextView) findViewById(R.id.conditionTextView);
         condition = conditionTextView.getText().toString();
@@ -253,6 +282,7 @@ public class CameraActivity extends AppCompatActivity {
      */
     public void submitPrice(View view) {
         EditText editTextPrice = (EditText) findViewById(R.id.editTextPrice);
+        editTextPrice.setOnFocusChangeListener(this.onFocusChangelistener);
         Spinner timeSpinner = (Spinner) findViewById(R.id.timeSpinner);
         if(checkEditTextNonEmpty(editTextPrice)) {
             try {
@@ -318,6 +348,7 @@ public class CameraActivity extends AppCompatActivity {
                                     setZip(zip);
                                     setLocality(locality);
                                     EditText editTextLocation = (EditText) findViewById(R.id.editTextLocation);
+                                    editTextLocation.setOnFocusChangeListener(onFocusChangelistener);
                                     editTextLocation.setText(zip);
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -444,4 +475,20 @@ public class CameraActivity extends AppCompatActivity {
         // Removes fragment, back to default cameraActivity
         finish();
     }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        Log.d(TAG, "Trying to hide keyboard");
+    }
+
+    View.OnFocusChangeListener onFocusChangelistener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (!hasFocus) {
+                Log.d(TAG, "focus changed");
+                hideKeyboard(v);
+            }
+        }
+    };
 }
