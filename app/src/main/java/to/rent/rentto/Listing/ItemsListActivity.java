@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -27,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +51,9 @@ import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 import to.rent.rentto.Utils.DeviceID;
+
+import static android.widget.GridLayout.HORIZONTAL;
+import static android.widget.GridLayout.VERTICAL;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -324,6 +329,12 @@ public class ItemsListActivity extends AppCompatActivity {
         staggeredRecyclerViewAdapter =
                 new RecyclerViewAdapter(this, iDs, mImageUrls, findCurrentCity(), zipcodes, mItems, clickable);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
+        DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), HORIZONTAL);
+        decoration.setDrawable(getDrawable(R.drawable.item_divider));
+        DividerItemDecoration decoration2 = new DividerItemDecoration(getApplicationContext(), VERTICAL);
+        decoration2.setDrawable(getDrawable(R.drawable.item_divider));
+        recyclerView.addItemDecoration(decoration);
+        recyclerView.addItemDecoration(decoration2);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);
     }
