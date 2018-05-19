@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:clipToPadding="false"
     android:focusableInTouchMode="true"
+    android:id="@+id/chatActivityLinearLayout"
     tools:context="to.rent.rentto.Messages.ChatActivity">
 
     <ListView

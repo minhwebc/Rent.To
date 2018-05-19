@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -69,6 +70,18 @@ public class ChatActivity extends AppCompatActivity {
         //set up the channel info
         messageID = getIntent().getStringExtra("MessageChannelID");
         messageUID = getIntent().getStringExtra("MessageChannelUID");
+
+        findViewById(R.id.messages_view).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(getCurrentFocus() == null || getCurrentFocus().getWindowToken() == null) {
+                    return true;
+                }
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
     }
 
     private void getCurrentUserInfo(){
