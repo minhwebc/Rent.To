@@ -1,7 +1,5 @@
 package to.rent.rentto.Profile;
-
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,10 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.User;
-import to.rent.rentto.Models.UserAccountSettings;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
@@ -43,8 +38,6 @@ public class ProfileListingActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private User currentUser;
-    private String authorPicURL;
-    private ImageView authorPic;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,68 +94,17 @@ public class ProfileListingActivity extends AppCompatActivity {
                 TextView condition = findViewById(R.id.textView3);
                 TextView price = findViewById(R.id.textView5);
                 ImageView post_image = findViewById(R.id.imageView);
-                authorPic = findViewById(R.id.author_photo_iv);
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
                 Glide.with(mContext)
                         .load(mItem.imageURL)
                         .apply(requestOptions)
                         .into(post_image);
-                Query query1 = mReference.child("user_account_settings").child(mAuth.getCurrentUser().getUid());
-                query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        UserAccountSettings userAccountSettings = dataSnapshot.getValue(UserAccountSettings.class);
-                        authorPicURL = userAccountSettings.getProfile_photo();
-                        if(authorPicURL != null && authorPicURL.length() > 1 && authorPic != null) {
-                            Log.d(TAG, "authorPicURL is " + authorPicURL);
-                            Glide.with(mContext)
-                                    .load(authorPicURL)
-                                    .into(authorPic);
-                        } else {
-                            Log.d(TAG, "using default profile pic");
-                            authorPic.setImageResource(R.drawable.profile_default_pic);
-                        }
-                        authorPic.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Log.d(TAG, "The author pic icon was clicked, finishing");
-                                finish();
-                                Intent intent1 = new Intent(mContext, ProfileActivity.class);
-                                intent1.putExtra("authorUID", mItem.userUID);
-                                intent1.putExtra("ACTIVITY_NUM", 3); // so it will highlight bottom nav as itemlisting
-                                startActivity(intent1);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
                 item_name.setText(mItem.title);
                 description.setText(mItem.description);
                 price.setText(mItem.rate+"");
                 condition.setText(mItem.condition);
                 //post_image.setScaleType(ImageView.ScaleType.FIT_XY);
-
-                Query query = mReference.child(mContext.getString(R.string.dbname_users)).child(mItem.userUID);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        TextView userField = findViewById(R.id.textView4);
-                        userField.setText(user.getUsername());
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
             }
 
             @Override
