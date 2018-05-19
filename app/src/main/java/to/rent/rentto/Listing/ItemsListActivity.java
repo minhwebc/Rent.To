@@ -329,12 +329,6 @@ public class ItemsListActivity extends AppCompatActivity {
         staggeredRecyclerViewAdapter =
                 new RecyclerViewAdapter(this, iDs, mImageUrls, findCurrentCity(), zipcodes, mItems, clickable);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
-        DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), HORIZONTAL);
-        decoration.setDrawable(getDrawable(R.drawable.item_divider));
-        DividerItemDecoration decoration2 = new DividerItemDecoration(getApplicationContext(), VERTICAL);
-        decoration2.setDrawable(getDrawable(R.drawable.item_divider));
-        recyclerView.addItemDecoration(decoration);
-        recyclerView.addItemDecoration(decoration2);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);
     }
