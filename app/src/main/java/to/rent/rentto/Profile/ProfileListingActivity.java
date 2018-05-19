@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -154,6 +155,60 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Mark as deleted button clicked");
+                Log.d("ViewHolder", "delete item here");
+                Log.d("ViewHolder", "delete item");
+                Log.d("ViewHolder", CITY);
+                Log.d("ViewHolder", ITEM_ID);
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Dialog);
+                } else {
+                    builder = new AlertDialog.Builder(mContext);
+                }
+                builder.setTitle("Delete post")
+                        .setMessage("Are you sure you want to delete this entry?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mReference.child("posts").child(CITY).child(ITEM_ID).child("offer_messages").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                                            Log.d(TAG, ds.getKey());
+                                            mReference.child("messages").child(ds.getValue(String.class)).setValue(null, new DatabaseReference.CompletionListener() {
+                                                @Override
+                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                    Toast.makeText(mContext, "Message deleted", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                        mReference.child("posts").child(CITY).child(ITEM_ID).setValue(null, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                mReference.child("user_items").child(mAuth.getCurrentUser().getUid()).child(ITEM_ID).setValue(null, new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                        Toast.makeText(mContext, "Item deleted", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
         ImageView backarrow = (ImageView) findViewById(R.id.backArrow);
