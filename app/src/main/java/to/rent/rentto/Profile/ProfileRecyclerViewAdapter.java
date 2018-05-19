@@ -132,6 +132,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
             }
             intent.putExtra("ITEM_ID", mIDs.get(getAdapterPosition()));
             intent.putExtra("CITY", zips.get(getAdapterPosition()));
+            intent.putExtra("RENTED", rented.get(getAdapterPosition()));
             mContext.startActivity(intent);
 
         }
