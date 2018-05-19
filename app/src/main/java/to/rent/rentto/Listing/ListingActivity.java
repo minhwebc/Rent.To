@@ -108,6 +108,14 @@ public class ListingActivity extends AppCompatActivity {
         return CITY;
     }
 
+    /**
+     * Sends an offer message to the other user
+     * Adds message to messages, gets messageUID
+     * Adds messageUID to users->messages_this_user_can_see for both users
+     * Toast on offer sent
+     * Toast on fail to send
+     * @param offerMessage The message to be sent
+     */
     private void sendOffer(final String offerMessage) {
         Log.d(TAG, "here is the zip of the item " + mItem.zip);
         Log.d(TAG, "here is the item id " + ITEM_ID);
@@ -229,6 +237,10 @@ public class ListingActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gets the item details and fills in value for item description and author
+     * Sets on click listener for offer button and for author photo click
+     */
     private void grabTheItem(){
         Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -337,142 +349,8 @@ public class ListingActivity extends AppCompatActivity {
 
                             }
                         });
-
-
-
-
-
-//                        mButton.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                if(mItem == null) {
-//                                    Toast.makeText(mContext, "Cannot make an offer for this item. It may have been deleted", Toast.LENGTH_SHORT).show();
-//                                    return;
-//                                } else if(currentUser.getUser_id().equals(mItem.userUID)){
-//                                    Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
-//                                    return;
-//                                } else if(mItem.sold){
-//                                    Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
-//                                    return;
-//                                }
-//                                mButton.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View v) {
-//                                        Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }); // so they cannot spam click after first click
-//                                Log.d(TAG, "here is the zip of the item " + mItem.zip);
-//                                Log.d(TAG, "here is the item id " + ITEM_ID);
-//
-//                                mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").addListenerForSingleValueEvent(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                                        for(DataSnapshot ds : dataSnapshot.getChildren()){
-//                                            String value = ds.getValue(String.class);
-//                                            if(value.equals(currentUser.getUser_id())){
-//                                                Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
-//                                                return;
-//                                            }
-//                                        }
-//                                        DatabaseReference renterUIDRef = mReference.child("notificationMessages").child(mItem.userUID);
-//                                        DatabaseReference pushedKey = renterUIDRef.push();
-//
-//                                        pushedKey.setValue(currentUser.getUsername() + " have made you an offer", new DatabaseReference.CompletionListener() {
-//
-//                                            @Override
-//                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                mReference.child("notifications").child(mItem.userUID).child(currentUser.getUser_id()).setValue(UUID.randomUUID().toString(), new DatabaseReference.CompletionListener() {
-//                                                    @Override
-//                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                        if(databaseError == null) {
-//                                                            DatabaseReference messageRef = mReference.child("messages");
-//                                                            final DatabaseReference newMessageID = messageRef.push(); //this will be included into both the offered and the renter as well
-//                                                            newMessageID.setValue(currentUser.getUser_id());
-//                                                            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//                                                            Date date = new Date();
-//                                                            String strDate = dateFormat.format(date);
-//                                                            Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your " + mItem.title, strDate, true, currentUser.getUser_id());
-//                                                            //push message to the message table
-//                                                            newMessageID.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
-//                                                                @Override
-//                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                                    if(databaseError == null) {
-//                                                                        //set message to the current user
-//                                                                        mReference.child("users").child(currentUser.getUser_id()).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
-//                                                                            @Override
-//                                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                                                if(databaseError == null) {
-//                                                                                    //Set the message to the renter
-//                                                                                    mReference.child("users").child(mItem.userUID).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
-//                                                                                        @Override
-//                                                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                                                            if(databaseError == null) {
-//                                                                                                mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").push().setValue(currentUser.getUser_id(), new DatabaseReference.CompletionListener() {
-//                                                                                                    @Override
-//                                                                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                                                                        if(databaseError == null) {
-//                                                                                                            mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("offer_messages").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
-//                                                                                                                @Override
-//                                                                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                                                                                    if(databaseError == null) {
-//                                                                                                                        PostInMessage post = new PostInMessage(mItem.imageURL, mItem.title, ITEM_ID, getCurrentLocation());
-//                                                                                                                        newMessageID.child("post").setValue(post, new DatabaseReference.CompletionListener() {
-//                                                                                                                            @Override
-//                                                                                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                                                                                                if(databaseError == null){
-//                                                                                                                                    int duration = Toast.LENGTH_SHORT;
-//                                                                                                                                    Toast toast = Toast.makeText(mContext, "Offer sent", duration);
-//                                                                                                                                    toast.show();
-//                                                                                                                                } else {
-//                                                                                                                                    int duration = Toast.LENGTH_SHORT;
-//                                                                                                                                    Toast toast = Toast.makeText(mContext, "An error occurred when sending the offer.", duration);
-//                                                                                                                                    toast.show();
-//                                                                                                                                }
-//                                                                                                                            }
-//                                                                                                                        });
-//                                                                                                                    }
-//                                                                                                                }
-//                                                                                                            });
-//                                                                                                        }
-//                                                                                                    }
-//                                                                                                });
-//                                                                                            } else {
-//
-//                                                                                            }
-//                                                                                        }
-//                                                                                    });
-//                                                                                } else {
-//                                                                                    int duration = Toast.LENGTH_SHORT;
-//                                                                                    Toast toast = Toast.makeText(mContext, "Could not send your message", duration);
-//                                                                                    toast.show();
-//                                                                                }
-//                                                                            }
-//                                                                        });
-//                                                                    } else {
-//                                                                        int duration = Toast.LENGTH_SHORT;
-//                                                                        Toast toast = Toast.makeText(mContext, "Could not send your message", duration);
-//                                                                        toast.show();
-//                                                                    }
-//                                                                }
-//                                                            });
-//                                                        }
-//                                                    }
-//                                                });
-//                                            }
-//                                        });
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(DatabaseError databaseError) {
-//
-//                                    }
-//                                });
-//
-//
-//                            }
-//                        });
                     }
-//
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
