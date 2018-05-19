@@ -62,6 +62,7 @@
                         >
 
                         <Button
+                            android:id="@+id/rentedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -71,6 +72,7 @@
                             android:background="@color/colorAccent"
                             android:text="Mark as Rented"/>
                         <Button
+                            android:id="@+id/deletedButton"
                             android:layout_width="0dp"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"

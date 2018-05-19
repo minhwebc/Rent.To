@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -38,6 +39,8 @@ public class ProfileListingActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private User currentUser;
+    private Button markAsRentedButton;
+    private Button markasDeletedButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,9 +68,31 @@ public class ProfileListingActivity extends AppCompatActivity {
 
             }
         });
-
+        initButtons();
         setupBottomNavigationView();
         grabTheItem();
+
+    }
+
+    /**
+     * Sets buttons as fields and adds on click listeners
+     * Buttons include mark as rented buton, mark as deleted button, backarrow button
+     */
+    private void initButtons() {
+        markAsRentedButton = (Button) findViewById(R.id.rentedButton);
+        markasDeletedButton = (Button) findViewById(R.id.deletedButton);
+        markAsRentedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Mark as rented button clicked");
+            }
+        });
+        markasDeletedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Mark as deleted button clicked");
+            }
+        });
         ImageView backarrow = (ImageView) findViewById(R.id.backArrow);
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
