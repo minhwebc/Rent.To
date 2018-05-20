@@ -51,7 +51,7 @@
         <EditText
             android:id="@+id/editTextDescription"
             android:layout_width="320dp"
-            android:layout_height="125dp"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/button_send"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="23dp"

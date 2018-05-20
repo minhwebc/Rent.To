@@ -10,40 +10,56 @@ android:layout_height="match_parent">
     android:layout_height="fill_parent"
     >
 
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1000"
+            />
+
+        <Button
+            android:id="@+id/getLocationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:onClick="getLocation"
+            android:text="Get Current Location" />
     <EditText
         android:id="@+id/editTextLocation"
         android:layout_width="320dp"
-        android:layout_height="85dp"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/button_send"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_marginBottom="23dp"
-        android:layout_weight="10"
         android:hint="Location"
         android:textAlignment="center" />
 
-    <Button
-        android:id="@+id/button_send"
-        android:layout_width="267dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="140dp"
-        android:onClick="submitLocation"
-        android:textColor="@color/white"
-        android:background="@color/colorAccent"
-        android:text="Post" />
-
-    <Button
-        android:id="@+id/getLocationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editTextLocation"
-        android:layout_alignStart="@+id/editTextLocation"
-        android:layout_centerVertical="true"
-        android:onClick="getLocation"
-        android:text="Get Current Location" />
 
 
+
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="267dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginBottom="140dp"
+            android:onClick="submitLocation"
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"
+            android:text="Post" />
+
+    </LinearLayout>
 </RelativeLayout>
 
 
