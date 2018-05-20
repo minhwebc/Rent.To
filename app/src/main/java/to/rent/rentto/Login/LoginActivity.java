@@ -9,7 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -132,6 +134,24 @@ public class LoginActivity extends AppCompatActivity {
             deviceID = deviceIDHelp.getDeviceID();
             Log.d(TAG, "deviceid is " + deviceID);
         }
+        hideKeyboardOnOutsideTouch();
+    }
+
+    /**
+     * Hides keyboard when touching outside of edit text or keyboard
+     */
+    private void hideKeyboardOnOutsideTouch() {
+        findViewById(R.id.loginActivityLinearLayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(getCurrentFocus() == null || getCurrentFocus().getWindowToken() == null) {
+                    return true;
+                }
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
     }
 
     @Override
