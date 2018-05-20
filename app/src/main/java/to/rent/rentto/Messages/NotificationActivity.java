@@ -87,7 +87,8 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "You clicked on item at position" + position);
-                String selectedText = messageIDList.get(position);
+                //String selectedText = messageIDList.get(position);
+                String selectedText = messageIDList.get(messageIDList.size() - position - 1);
 //                Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NotificationActivity.this, ChatActivity.class);
                 intent.putExtra("MessageChannelID", selectedText);
@@ -135,6 +136,7 @@ public class NotificationActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
+                messageIDList.clear();
                 data.clear();
                 for(final DataSnapshot ds : dataSnapshot.getChildren()) {
                     String userKey = ds.getKey();

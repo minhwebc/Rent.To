@@ -62,14 +62,15 @@ public class RemindActivity extends AppCompatActivity {
         adapterT = new RemindViewAdapter(this, remindTakeListArray, messageT);
         remindReturnList.setAdapter(adapterR);
         remindTakeBackList.setAdapter(adapterT);
-        remindTakeBackList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        remindTakeBackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            public boolean onItemLongClick(AdapterView<?> arg0, View v,
-                                           int index, long arg3) {
+            public void onItemClick(AdapterView<?> arg0, View v,
+                                    int index, long arg3) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "in onLongClick");
                 final String str = remindTakeBackList.getItemAtPosition(index).toString();
                 final String messageID = takeBackID.get(index);
+                Log.d(TAG, "this is message ID :" + messageID);
                 final CharSequence options[] = new CharSequence[] {"I got back this item. Delete this reminder"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
@@ -94,7 +95,8 @@ public class RemindActivity extends AppCompatActivity {
                         }
                     }
                 });
-                return true;
+                builder.show();
+                return;
             }
         });
 
@@ -118,19 +120,29 @@ public class RemindActivity extends AppCompatActivity {
     }
 
     private void updateMessages(){
+        messageR.clear();
+        messageT.clear();
+        takeBackID.clear();
+        remindReturnListArray.clear();
+        remindTakeListArray.clear();
         mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("return_remind_message_user_can_see").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    messageR.add(ds.getValue(String.class));
+                    final String messageID = ds.getValue(String.class);
                     mReference.child("remind_messages").child(ds.getValue(String.class)).child("item").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
-                            if(dataSnapshot1.getValue(RemindMessageItem.class) != null && dataSnapshot.exists()) {
+                            if(dataSnapshot1.exists()) {
+
+                                Log.d(TAG, "here is the message key: " + messageID);
                                 final RemindMessageItem item = dataSnapshot1.getValue(RemindMessageItem.class);
-                                if (item == null) {
-                                    return;
-                                }
+                                Log.d(TAG, "The key is " + dataSnapshot1.getKey());
+                                Log.d(TAG, "The item is " + item.itemID);
+                                Log.d(TAG, "The item zip is " + item.zip);
+                                Log.d(TAG, "The item lender is " + item.lender);
+
+                                Log.d(TAG, "here is the item " + item.itemID);
                                 final User[] borrower = new User[1];
                                 final User[] lender = new User[1];
                                 final Item[] mItem = new Item[1];
@@ -145,13 +157,17 @@ public class RemindActivity extends AppCompatActivity {
                                                 mReference.child("posts").child(item.zip).child(item.itemID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        if(mItem[0] != null) {
-                                                            mItem[0] = dataSnapshot.getValue(Item.class);
-                                                            RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title, lender[0].getUsername(), borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
-                                                            Log.d(TAG, "This is the borrower name: " + newRemindItem.borrower);
-                                                            Log.d(TAG, "This is the borrower name: " + newRemindItem.lender);
-                                                            remindReturnListArray.add(newRemindItem);
-                                                            adapterR.notifyDataSetChanged();
+                                                        mItem[0] = dataSnapshot.getValue(Item.class);
+                                                        if(dataSnapshot.exists()) {
+                                                            if (mItem[0] != null) {
+                                                                messageR.add(messageID);
+                                                                mItem[0] = dataSnapshot.getValue(Item.class);
+                                                                RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title, lender[0].getUsername(), borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
+                                                                Log.d(TAG, "This is the borrower name: " + newRemindItem.borrower);
+                                                                Log.d(TAG, "This is the lender name: " + newRemindItem.lender);
+                                                                remindReturnListArray.add(newRemindItem);
+                                                                adapterR.notifyDataSetChanged();
+                                                            }
                                                         }
                                                     }
 
@@ -196,13 +212,12 @@ public class RemindActivity extends AppCompatActivity {
         mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("rented_out_remind_message_user_can_see").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    messageT.add(ds.getValue(String.class));
-                    takeBackID.add(ds.getValue(String.class));
+                for(final DataSnapshot ds : dataSnapshot.getChildren()) {
+                    final String messageID = ds.getValue(String.class);
                     mReference.child("remind_messages").child(ds.getValue(String.class)).child("item").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
-                            if(dataSnapshot1.getValue(RemindMessageItem.class) != null && dataSnapshot.exists()) {
+                            if(dataSnapshot1.exists()) {
                                 final RemindMessageItem item = dataSnapshot1.getValue(RemindMessageItem.class);
                                 Log.d(TAG, "The key is " + dataSnapshot1.getKey());
 
@@ -225,13 +240,17 @@ public class RemindActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                             mItem[0] = dataSnapshot.getValue(Item.class);
-                                                            if(mItem[0] != null) {
-                                                                RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title, lender[0].getUsername(), borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
-                                                                Log.d(TAG, newRemindItem.borrower);
-                                                                Log.d(TAG, newRemindItem.lender);
-                                                                remindTakeListArray.add(newRemindItem);
-                                                                Log.d(TAG, "notified");
-                                                                adapterT.notifyDataSetChanged();
+                                                            if(dataSnapshot.exists()) {
+                                                                if (mItem[0] != null) {
+                                                                    messageT.add(messageID);
+                                                                    takeBackID.add(messageID);
+                                                                    RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title, lender[0].getUsername(), borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
+                                                                    Log.d(TAG, newRemindItem.borrower);
+                                                                    Log.d(TAG, newRemindItem.lender);
+                                                                    remindTakeListArray.add(newRemindItem);
+                                                                    Log.d(TAG, "notified");
+                                                                    adapterT.notifyDataSetChanged();
+                                                                }
                                                             }
                                                         }
 
