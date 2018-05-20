@@ -1,5 +1,6 @@
 package to.rent.rentto.Messages;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -43,7 +45,9 @@ public class MessagePreviewAdapter extends ArrayAdapter<PostInMessage> {
 
         Log.d("ArrayAdapter", messageList.toString());
 
-        PostInMessage currentMessage = messageList.get(position);
+//        PostInMessage currentMessage = messageList.get(position);
+        PostInMessage currentMessage = messageList.get(messageList.size() - position - 1);
+
 
         ImageView image = (ImageView)listItem.findViewById(R.id.imageView_poster);
         RequestOptions requestOptions = new RequestOptions()
@@ -63,6 +67,14 @@ public class MessagePreviewAdapter extends ArrayAdapter<PostInMessage> {
 
         return listItem;
     }
+//
+//    @Override
+//    public void notifyDataSetChanged() {
+//        super.notifyDataSetChanged();
+//        ListView messagesListView = (ListView) ((Activity)mContext).findViewById(R.id.msgview);
+//        messagesListView.setSelection(messageList.size());
+//        Log.d("MessagePreviewAdapter", "Setting messagesListView to 0");
+//    }
 
     /**
      * Limits the length of the given string to the limit, if it is above the limit

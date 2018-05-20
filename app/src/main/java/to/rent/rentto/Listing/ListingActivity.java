@@ -1,14 +1,18 @@
 package to.rent.rentto.Listing;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +58,7 @@ public class ListingActivity extends AppCompatActivity {
     private ImageView authorPic;
     private String authorPicURL;
     FloatingActionButton requestButton;
+    private String authorName;
     private ShareMethods shareMethods;
 
     @Override
@@ -103,6 +108,139 @@ public class ListingActivity extends AppCompatActivity {
         return CITY;
     }
 
+    /**
+     * Sends an offer message to the other user
+     * Adds message to messages, gets messageUID
+     * Adds messageUID to users->messages_this_user_can_see for both users
+     * Toast on offer sent
+     * Toast on fail to send
+     * @param offerMessage The message to be sent
+     */
+    private void sendOffer(final String offerMessage) {
+        Log.d(TAG, "here is the zip of the item " + mItem.zip);
+        Log.d(TAG, "here is the item id " + ITEM_ID);
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    String value = ds.getValue(String.class);
+                    if(value.equals(currentUser.getUser_id())){
+                        Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                DatabaseReference renterUIDRef = mReference.child("notificationMessages").child(mItem.userUID);
+                DatabaseReference pushedKey = renterUIDRef.push();
+
+                pushedKey.setValue(currentUser.getUsername() + " have made you an offer", new DatabaseReference.CompletionListener() {
+
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        mReference.child("notifications").child(mItem.userUID).child(currentUser.getUser_id()).setValue(UUID.randomUUID().toString(), new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if(databaseError == null) {
+                                    DatabaseReference messageRef = mReference.child("messages");
+                                    final DatabaseReference newMessageID = messageRef.push(); //this will be included into both the offered and the renter as well
+                                    newMessageID.setValue(currentUser.getUser_id());
+                                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                    Date date = new Date();
+                                    String strDate = dateFormat.format(date);
+                                    Message newMessageInsert = new Message(currentUser.getUsername(), offerMessage, strDate, true, currentUser.getUser_id());
+                                    //push message to the message table
+                                    newMessageID.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                            if(databaseError == null) {
+                                                //set message to the current user
+                                                mReference.child("users").child(currentUser.getUser_id()).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                        if(databaseError == null) {
+                                                            //Set the message to the renter
+                                                            mReference.child("users").child(mItem.userUID).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
+                                                                @Override
+                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                    if(databaseError == null) {
+                                                                        mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").push().setValue(currentUser.getUser_id(), new DatabaseReference.CompletionListener() {
+                                                                            @Override
+                                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                if(databaseError == null) {
+                                                                                    mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("offer_messages").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
+                                                                                        @Override
+                                                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                            if(databaseError == null) {
+                                                                                                PostInMessage post = new PostInMessage(mItem.imageURL, mItem.title, ITEM_ID, getCurrentLocation());
+                                                                                                newMessageID.child("post").setValue(post, new DatabaseReference.CompletionListener() {
+                                                                                                    @Override
+                                                                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                                        if(databaseError == null){
+                                                                                                            int duration = Toast.LENGTH_SHORT;
+                                                                                                            Toast toast = Toast.makeText(mContext, "Offer sent", duration);
+                                                                                                            toast.show();
+                                                                                                            requestButton.setOnClickListener(new View.OnClickListener() {
+                                                                                                                @Override
+                                                                                                                public void onClick(View v) {
+                                                                                                                    Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
+                                                                                                                }
+                                                                                                            });
+                                                                                                        } else {
+                                                                                                            int duration = Toast.LENGTH_SHORT;
+                                                                                                            Toast toast = Toast.makeText(mContext, "An error occurred when sending the offer.", duration);
+                                                                                                            toast.show();
+                                                                                                        }
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                    } else {
+
+                                                                    }
+                                                                }
+                                                            });
+                                                        } else {
+                                                            int duration = Toast.LENGTH_SHORT;
+                                                            Toast toast = Toast.makeText(mContext, "Could not send your message", duration);
+                                                            toast.show();
+                                                        }
+                                                    }
+                                                });
+                                            } else {
+                                                int duration = Toast.LENGTH_SHORT;
+                                                Toast toast = Toast.makeText(mContext, "Could not send your message", duration);
+                                                toast.show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Gets the item details and fills in value for item description and author
+     * Sets on click listener for offer button and for author photo click
+     */
     private void grabTheItem(){
         Query query = mReference.child(mContext.getString(R.string.dbname_items)).child(CITY).child(ITEM_ID);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -122,7 +260,7 @@ public class ListingActivity extends AppCompatActivity {
                 TextView price = findViewById(R.id.textView5);
                 ImageView post_image = findViewById(R.id.imageView);
                 TextView soldInfo = findViewById(R.id.soldInfo);
-                RequestOptions requestOptions = new RequestOptions()
+                final RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.ic_launcher_background);
 
                 try {
@@ -150,6 +288,7 @@ public class ListingActivity extends AppCompatActivity {
                         authorPicURL = userAccountSettings.getProfile_photo();
                         TextView userField = findViewById(R.id.textView4);
                         userField.setText(userAccountSettings.getDisplay_name());
+                        authorName = userAccountSettings.getDisplay_name();
                         if(authorPicURL != null && authorPicURL.length() > 1 && authorPic != null) {
                             Log.d(TAG, "authorPicURL is " + authorPicURL);
                             Glide.with(mContext)
@@ -183,136 +322,30 @@ public class ListingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        final FloatingActionButton mButton = findViewById(R.id.requestButton);
                         if(mItem.sold){
-                            mButton.setVisibility(View.GONE);
+                            requestButton.setVisibility(View.GONE);
                         }
-                        mButton.setOnClickListener(new View.OnClickListener() {
+
+                        mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onClick(View view) {
-                                if(mItem == null) {
-                                    Toast.makeText(mContext, "Cannot make an offer for this item. It may have been deleted", Toast.LENGTH_SHORT).show();
-                                    return;
-                                } else if(currentUser.getUser_id().equals(mItem.userUID)){
-                                    Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
-                                    return;
-                                } else if(mItem.sold){
-                                    Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                mButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
-                                    }
-                                }); // so they cannot spam click after first click
-                                Log.d(TAG, "here is the zip of the item " + mItem.zip);
-                                Log.d(TAG, "here is the item id " + ITEM_ID);
-
-                                mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        for(DataSnapshot ds : dataSnapshot.getChildren()){
-                                            String value = ds.getValue(String.class);
-                                            if(value.equals(currentUser.getUser_id())){
-                                                Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-                                        }
-                                        DatabaseReference renterUIDRef = mReference.child("notificationMessages").child(mItem.userUID);
-                                        DatabaseReference pushedKey = renterUIDRef.push();
-
-                                        pushedKey.setValue(currentUser.getUsername() + " have made you an offer", new DatabaseReference.CompletionListener() {
-
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    String value = ds.getValue(String.class);
+                                    if (value.equals(currentUser.getUser_id())) {
+                                        requestButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
-                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                mReference.child("notifications").child(mItem.userUID).child(currentUser.getUser_id()).setValue(UUID.randomUUID().toString(), new DatabaseReference.CompletionListener() {
-                                                    @Override
-                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                        if(databaseError == null) {
-                                                            DatabaseReference messageRef = mReference.child("messages");
-                                                            final DatabaseReference newMessageID = messageRef.push(); //this will be included into both the offered and the renter as well
-                                                            newMessageID.setValue(currentUser.getUser_id());
-                                                            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                                                            Date date = new Date();
-                                                            String strDate = dateFormat.format(date);
-                                                            Message newMessageInsert = new Message(currentUser.getUsername(), " I am interested in your " + mItem.title, strDate, true, currentUser.getUser_id());
-                                                            //push message to the message table
-                                                            newMessageID.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
-                                                                @Override
-                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                    if(databaseError == null) {
-                                                                        //set message to the current user
-                                                                        mReference.child("users").child(currentUser.getUser_id()).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
-                                                                            @Override
-                                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                                if(databaseError == null) {
-                                                                                    //Set the message to the renter
-                                                                                    mReference.child("users").child(mItem.userUID).child("messages_this_user_can_see").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
-                                                                                        @Override
-                                                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                                            if(databaseError == null) {
-                                                                                                mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("user_offers").push().setValue(currentUser.getUser_id(), new DatabaseReference.CompletionListener() {
-                                                                                                    @Override
-                                                                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                                                        if(databaseError == null) {
-                                                                                                            mReference.child("posts").child(getCurrentLocation()).child(ITEM_ID).child("offer_messages").push().setValue(newMessageID.getKey(), new DatabaseReference.CompletionListener() {
-                                                                                                                @Override
-                                                                                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                                                                    if(databaseError == null) {
-                                                                                                                        PostInMessage post = new PostInMessage(mItem.imageURL, mItem.title, ITEM_ID, getCurrentLocation());
-                                                                                                                        newMessageID.child("post").setValue(post, new DatabaseReference.CompletionListener() {
-                                                                                                                            @Override
-                                                                                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                                                                                if(databaseError == null){
-                                                                                                                                    int duration = Toast.LENGTH_SHORT;
-                                                                                                                                    Toast toast = Toast.makeText(mContext, "Offer sent", duration);
-                                                                                                                                    toast.show();
-                                                                                                                                } else {
-                                                                                                                                    int duration = Toast.LENGTH_SHORT;
-                                                                                                                                    Toast toast = Toast.makeText(mContext, "An error occurred when sending the offer.", duration);
-                                                                                                                                    toast.show();
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            });
-                                                                                                        }
-                                                                                                    }
-                                                                                                });
-                                                                                            } else {
-
-                                                                                            }
-                                                                                        }
-                                                                                    });
-                                                                                } else {
-                                                                                    int duration = Toast.LENGTH_SHORT;
-                                                                                    Toast toast = Toast.makeText(mContext, "Could not send your message", duration);
-                                                                                    toast.show();
-                                                                                }
-                                                                            }
-                                                                        });
-                                                                    } else {
-                                                                        int duration = Toast.LENGTH_SHORT;
-                                                                        Toast toast = Toast.makeText(mContext, "Could not send your message", duration);
-                                                                        toast.show();
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                });
+                                            public void onClick(View v) {
+                                                Toast.makeText(mContext, "You have made offer to this item already, can't make offer again", Toast.LENGTH_SHORT).show();
                                             }
                                         });
+                                        return;
                                     }
+                                }
+                                setOfferButtonListener();
+                            }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
                             }
                         });
@@ -324,6 +357,62 @@ public class ListingActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+
+            private void setOfferButtonListener() {
+                // If they are not prohibited from sending an offer, show dialog with default message
+                // They can send pretyped message, or type their own
+                // They are prohibited from sending an offer if:
+                //                      If Item is null
+                //                      if it is there own item
+                //                      If it is already rented
+                //                      If they already made an offer
+                requestButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(mItem == null) {
+                            Toast.makeText(mContext, "Cannot make an offer for this item. It may have been deleted", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if(currentUser.getUser_id().equals(mItem.userUID)){
+                            Toast.makeText(mContext, "Can't make offer to your own item", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if(mItem.sold){
+                            Toast.makeText(mContext, "Can't make offer to rented item", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                        String messageTitle = "Send an Offer to " + authorName;
+                        if(messageTitle.length() > 30) {
+                            messageTitle = messageTitle.substring(0, 28) + "..";
+                        }
+                        alertDialog.setTitle(messageTitle);
+                        alertDialog.setMessage("Type in your message");
+                        final EditText input = new EditText(mContext);
+                        input.setText("I am interested in your " + mItem.title);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        alertDialog.setView(input);
+                        alertDialog.setIcon(R.drawable.mail);
+                        alertDialog.setPositiveButton("Send",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        sendOffer(input.getText().toString());
+                                    }
+                                });
+
+                        alertDialog.setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        alertDialog.show();
+                    }
+
+                });
             }
 
             @Override

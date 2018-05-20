@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -80,10 +81,12 @@ public class NotificationActivity extends AppCompatActivity {
         // Dummy array data
         arrayAdapter = new MessagePreviewAdapter(this, data);
         messagesListView.setAdapter(arrayAdapter);
+
         //Sets on click listener for listview
         messagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "You clicked on item at position" + position);
                 String selectedText = messageIDList.get(position);
 //                Toast.makeText(mContext, "You clicked on this message: " + selectedText, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NotificationActivity.this, ChatActivity.class);
@@ -105,6 +108,21 @@ public class NotificationActivity extends AppCompatActivity {
                         swipeLayout.setRefreshing(false);
                     }
                 }, 1000);
+            }
+        });
+
+        // If list view is not at top, do not refresh on swipe down
+        messagesListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    swipeLayout.setEnabled(true);
+                } else swipeLayout.setEnabled(false);
             }
         });
 
@@ -202,6 +220,7 @@ public class NotificationActivity extends AppCompatActivity {
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
+
                     });
                 }
             }
