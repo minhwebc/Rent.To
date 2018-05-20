@@ -1,7 +1,12 @@
 package to.rent.rentto.Remind;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -9,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,9 +45,10 @@ public class RemindActivity extends AppCompatActivity {
     private ArrayList<RemindMessageItem> remindTakeListArray = new ArrayList<>();
     private ArrayList<String> messageR = new ArrayList<>();
     private ArrayList<String> messageT = new ArrayList<>();
+    private ArrayList<String> takeBackID = new ArrayList<>();
     private RemindViewAdapter adapterR;
     private RemindViewAdapter adapterT;
-
+    private SwipeRefreshLayout swipeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,27 +68,65 @@ public class RemindActivity extends AppCompatActivity {
                                            int index, long arg3) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "in onLongClick");
-                String str = remindTakeBackList.getItemAtPosition(index).toString();
+                final String str = remindTakeBackList.getItemAtPosition(index).toString();
+                final String messageID = takeBackID.get(index);
+                final CharSequence options[] = new CharSequence[] {"I got back this item. Delete this reminder"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-                Log.d(TAG, "long click : " +str);
+                builder.setTitle("Action");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (which == 0) {
+                            Log.d(TAG, "This is the message id : " +messageID);
+                            final ProgressDialog pd = new ProgressDialog(mContext);
+                            pd.setMessage("Loading...");
+                            pd.show();
+                            mReference.child("remind_messages").child(messageID).setValue(null, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    Toast.makeText(mContext, "Deleted", Toast.LENGTH_SHORT).show();
+                                    updateMessages();
+                                    pd.dismiss();
+                                }
+                            });
+                        }
+                    }
+                });
                 return true;
             }
         });
 
         setupBottomNavigationView();
         updateMessages();
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        updateMessages();
+                        swipeLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
     }
 
     private void updateMessages(){
         mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("return_remind_message_user_can_see").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     messageR.add(ds.getValue(String.class));
                     mReference.child("remind_messages").child(ds.getValue(String.class)).child("item").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
-                            if(dataSnapshot1.getValue(RemindMessageItem.class) != null) {
+                            if(dataSnapshot1.getValue(RemindMessageItem.class) != null && dataSnapshot.exists()) {
                                 final RemindMessageItem item = dataSnapshot1.getValue(RemindMessageItem.class);
                                 if (item == null) {
                                     return;
@@ -150,13 +195,14 @@ public class RemindActivity extends AppCompatActivity {
 
         mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("rented_out_remind_message_user_can_see").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     messageT.add(ds.getValue(String.class));
+                    takeBackID.add(ds.getValue(String.class));
                     mReference.child("remind_messages").child(ds.getValue(String.class)).child("item").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot1) {
-                            if(dataSnapshot1.getValue(RemindMessageItem.class) != null) {
+                            if(dataSnapshot1.getValue(RemindMessageItem.class) != null && dataSnapshot.exists()) {
                                 final RemindMessageItem item = dataSnapshot1.getValue(RemindMessageItem.class);
                                 Log.d(TAG, "The key is " + dataSnapshot1.getKey());
 

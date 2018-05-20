@@ -159,11 +159,13 @@ public class RatingActivity extends AppCompatActivity implements RatingDialogLis
 
     @Override
     public void onNegativeButtonClicked() {
-
+        Intent intent = new Intent(RatingActivity.this, HomeActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void onNeutralButtonClicked() {
-
+        Intent intent = new Intent(RatingActivity.this, HomeActivity.class);
+        startActivity(intent);
     }
 }

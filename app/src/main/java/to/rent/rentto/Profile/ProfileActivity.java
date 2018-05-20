@@ -1,5 +1,6 @@
 package to.rent.rentto.Profile;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -90,6 +91,9 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
         Log.d(TAG, "This is the user that is going to get rated :" + offerUserID);
         Log.d(TAG, s);
         final String remindMessage = s;
+        final ProgressDialog pd = new ProgressDialog(mContext);
+        pd.setMessage("Loading...");
+        pd.show();
         myRef.child("users").child(offerUserID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -160,6 +164,7 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
                                                                                                                                 @Override
                                                                                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                                                                                     if(databaseError == null) {
+                                                                                                                                        pd.dismiss();
                                                                                                                                         Toast.makeText(mContext, "Rating submitted", Toast.LENGTH_SHORT).show();
                                                                                                                                     }
                                                                                                                                 }
@@ -202,7 +207,7 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
 
     @Override
     public void onNegativeButtonClicked() {
-
+        init();
     }
 
     @Override
