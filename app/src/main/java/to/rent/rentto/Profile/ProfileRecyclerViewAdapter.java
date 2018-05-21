@@ -1,6 +1,7 @@
 package to.rent.rentto.Profile;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -194,6 +195,10 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     final String userStringSold = usersIDArray.get(which);
+                                    final ProgressDialog pd = new ProgressDialog(mContext);
+                                    pd.setMessage("Loading...");
+                                    pd.show();
+
                                     if(userStringSold.equals("BLANK")){
                                         myRef.child("posts").child(zips.get(getAdapterPosition())).child(mIDs.get(getAdapterPosition())).child("sold").setValue(true, new DatabaseReference.CompletionListener() {
                                             @Override
@@ -201,6 +206,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                                                 myRef.child("user_items").child(mAuth.getCurrentUser().getUid()).child(mIDs.get(getAdapterPosition())).child("sold").setValue(true, new DatabaseReference.CompletionListener() {
                                                     @Override
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                        pd.dismiss();
                                                         Toast.makeText(mContext, "Item has been marked rented", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
@@ -213,6 +219,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                                                 if (databaseError == null) {
                                                     ((ProfileActivity) mContext).setUserID(userStringSold);
                                                     ((ProfileActivity) mContext).setItem(mIDs.get(getAdapterPosition()), zips.get(getAdapterPosition()), "");
+                                                    pd.dismiss();
                                                     showDialog();
                                                 }
                                             }
@@ -305,7 +312,6 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
             new AppRatingDialog.Builder()
                     .setPositiveButtonText("Submit")
                     .setNegativeButtonText("Cancel")
-                    .setNeutralButtonText("Later")
                     .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
                     .setDefaultRating(2)
                     .setTitle("How would you rate this person")

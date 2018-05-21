@@ -50,6 +50,43 @@ public class ChatActivity extends AppCompatActivity {
     private String ToolBarText;
     public ChatActivity() {
     }
+    private ValueEventListener listener = new ValueEventListener() {
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            messageAdapter.messages.clear();
+            for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                if(!ds.getKey().equals("post")) {
+                    Message message = ds.getValue(Message.class);
+                    Log.d(TAG, message.getText());
+                    if (message.getAuthorID().equals(currentUser.getUser_id())) {
+                        message.belongsToCurrentUser = true;
+                    } else {
+                        message.belongsToCurrentUser = false;
+                    }
+                    messageAdapter.add(message);
+                }
+            }
+
+            // If current user has not sent any messages (other than interest message), then shows tooltip
+            if(messageAdapter.getMyMessagesCount() == 0) {
+                new SimpleTooltip.Builder(mContext)
+                        .anchorView(sendMessageButton)
+                        .text("Remember to discuss where to meet and how the items will be returned\n\n Tap to dismiss")
+                        .showArrow(false)
+                        .gravity(Gravity.TOP)
+                        .animated(true)
+                        .dismissOnOutsideTouch(false)
+                        .build()
+                        .show();
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,43 +146,7 @@ public class ChatActivity extends AppCompatActivity {
                 currentUser = dataSnapshot.getValue(User.class);
                 Log.d(TAG, currentUser.getUsername());
                 Query query = mReference.child("messages").child(messageID);
-                query.addValueEventListener(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        messageAdapter.messages.clear();
-                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            if(!ds.getKey().equals("post")) {
-                                Message message = ds.getValue(Message.class);
-                                Log.d(TAG, message.getText());
-                                if (message.getAuthorID().equals(currentUser.getUser_id())) {
-                                    message.belongsToCurrentUser = true;
-                                } else {
-                                    message.belongsToCurrentUser = false;
-                                }
-                                messageAdapter.add(message);
-                            }
-                        }
-
-                        // If current user has not sent any messages (other than interest message), then shows tooltip
-                        if(messageAdapter.getMyMessagesCount() == 0) {
-                            new SimpleTooltip.Builder(mContext)
-                                    .anchorView(sendMessageButton)
-                                    .text("Remember to discuss where to meet and how the items will be returned\n\n Tap to dismiss")
-                                    .showArrow(false)
-                                    .gravity(Gravity.TOP)
-                                    .animated(true)
-                                    .dismissOnOutsideTouch(false)
-                                    .build()
-                                    .show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                query.addValueEventListener(listener);
             }
 
             @Override
@@ -236,11 +237,23 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void addToTitle(String str) {
-        if(this.ToolBarText.length() == 0){
+        if (this.ToolBarText.length() == 0) {
             this.ToolBarText = str;
         } else {
             this.ToolBarText += " - " + str;
         }
         this.textView.setText(this.ToolBarText);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        Query query = mReference.child("messages").child(messageID);
+        query.removeEventListener(listener);
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        Query query = mReference.child("messages").child(messageID);
+        query.removeEventListener(listener);
     }
 }

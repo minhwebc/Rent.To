@@ -1,12 +1,18 @@
 package to.rent.rentto.Camera;
+
+import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -20,24 +26,23 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.provider.MediaStore;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -45,9 +50,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
-import android.Manifest;
 
 public class CameraActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUM = 2; // the second case in bottomnav (0 index)
@@ -73,6 +78,7 @@ public class CameraActivity extends AppCompatActivity {
     String zip; // The zip code for the post
     Bitmap uploadable;
     boolean gotPicture;
+    private ProgressDialog pd;
 
     /**
      * Hooks up buttons from camera fragment, Asks for permissions for camera and location
@@ -80,8 +86,11 @@ public class CameraActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        pd = new ProgressDialog(mContext);
+        pd.setMessage("Loading...");
         AddPhotoFragment addPhotoFragment = new AddPhotoFragment();
         fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -419,6 +428,7 @@ public class CameraActivity extends AppCompatActivity {
      * Pictures will be in items/[UUID]
      */
     private void post() {
+        pd.show();
         String result = String.format("title=%s;category=%s;description=%s;price=%s,location=%s", title, category, description, price, zip);
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
@@ -470,10 +480,14 @@ public class CameraActivity extends AppCompatActivity {
         userItemsPostValues.put("description", description);
         userItemsPostValues.put("condition", condition);
         userItemsPostValues.put("category", category);
-        userItemsRef.child(userUid).child(key).setValue(userItemsPostValues);
-        Toast.makeText(mContext, "Post Submitted!", Toast.LENGTH_SHORT).show();
-        // Removes fragment, back to default cameraActivity
-        finish();
+        userItemsRef.child(userUid).child(key).setValue(userItemsPostValues, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                pd.dismiss();
+                Toast.makeText(mContext, "Post Submitted!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 
     public void hideKeyboard(View view) {

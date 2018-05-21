@@ -160,6 +160,7 @@ public class RegisterActivity extends AppCompatActivity {
      * @param username
      */
     private void checkIfUsernameExists(final String username) {
+        mProgressBar.setVisibility(View.VISIBLE);
         Log.d(TAG, "checkIfUsernameExists: Checking if  " + username + " already exists.");
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
@@ -253,6 +254,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                                             reference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see").push().setValue("welcomeMessage", new DatabaseReference.CompletionListener() {
                                                                                 @Override
                                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                    //pd.dismiss();
+                                                                                    mProgressBar.setVisibility(View.GONE);
                                                                                     Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
                                                                                     mAuth.signOut();
                                                                                 }

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -47,12 +53,20 @@
             android:layout_height="wrap_content"
             android:text="Remind return"
             android:textSize="@dimen/font_22"
+            android:textColor="@color/black"
             android:id="@+id/returnText"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You don't have any items to return"
+            android:textSize="@dimen/font_15"
+            android:id="@+id/returnTexttext"
+            android:layout_below="@id/returnText"/>
         <ListView
             android:id="@+id/remindReturnList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/returnText">
+            android:layout_below="@id/returnTexttext">
 
         </ListView>
     </RelativeLayout>
@@ -65,12 +79,21 @@
             android:layout_height="wrap_content"
             android:text="Remind take"
             android:textSize="@dimen/font_22"
+            android:textColor="@color/black"
+
             android:id="@+id/takeText"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You don't have any items to take back"
+            android:textSize="@dimen/font_15"
+            android:id="@+id/takeTexttext"
+            android:layout_below="@id/takeText"/>
         <ListView
             android:id="@+id/remindTakeBList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/takeText">
+            android:layout_below="@id/takeTexttext">
         </ListView>
     </RelativeLayout>
 
@@ -85,3 +108,5 @@
 
     </RelativeLayout>
 </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</android.support.design.widget.CoordinatorLayout>
