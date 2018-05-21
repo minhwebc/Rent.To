@@ -1,5 +1,7 @@
 package to.rent.rentto.Messages;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -80,6 +82,10 @@ public class ChatActivity extends AppCompatActivity {
         messageID = getIntent().getStringExtra("MessageChannelID");
         messageUID = getIntent().getStringExtra("MessageChannelUID");
 
+        if(messageID.equals("welcomeMessage")) {
+            editText.setEnabled(false);
+            editText.setHint("Disabled");
+        }
         getListingName();
         findViewById(R.id.messages_view).setOnTouchListener(new View.OnTouchListener() {
             @Override
