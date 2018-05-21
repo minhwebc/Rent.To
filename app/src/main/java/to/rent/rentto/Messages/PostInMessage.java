@@ -7,6 +7,7 @@ public class PostInMessage {
     public String message;
     public String postID;
     public String zipcode;
+    public String userUID;
 
     public PostInMessage(){
 
@@ -18,10 +19,11 @@ public class PostInMessage {
         this.zipcode = "";
     }
 
-    public PostInMessage(String imageURL, String title, String postID, String zipcode) {
+    public PostInMessage(String imageURL, String title, String postID, String zipcode, String userUID) {
         this.imageURL = imageURL;
         this.title = title;
         this.postID = postID;
         this.zipcode = zipcode;
+        this.userUID = userUID;
     }
 }

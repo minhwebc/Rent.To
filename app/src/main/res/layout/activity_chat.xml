@@ -9,6 +9,23 @@
     android:id="@+id/chatActivityLinearLayout"
     tools:context="to.rent.rentto.Messages.ChatActivity">
 
+    <RelativeLayout
+        android:id="@+id/relLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/white_grey_border_bottom">
+        >
+
+        <TextView
+            android:id="@+id/listingName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/backArrow"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+    </RelativeLayout>
     <ListView
         android:layout_width="match_parent"
         android:id="@+id/messages_view"

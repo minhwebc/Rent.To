@@ -11,6 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +28,7 @@ import java.util.Date;
 import java.util.Random;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import to.rent.rentto.Models.Message;
+import to.rent.rentto.Models.MessagePost;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.R;
 
@@ -41,6 +44,10 @@ public class ChatActivity extends AppCompatActivity {
     private User currentUser;
     private String messageID;
     private String messageUID;
+    private TextView textView;
+    private String ToolBarText;
+    public ChatActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,8 @@ public class ChatActivity extends AppCompatActivity {
         getCurrentUserInfo();
         messageAdapter = new MessageAdapter(mContext);
 
+        ToolBarText = "";
+        textView = (TextView) findViewById(R.id.listingName);
         editText = (EditText) findViewById(R.id.editText);
         sendMessageButton = (ImageButton) findViewById(R.id.SendMessageButton);
         mContext = ChatActivity.this;
@@ -71,6 +80,7 @@ public class ChatActivity extends AppCompatActivity {
         messageID = getIntent().getStringExtra("MessageChannelID");
         messageUID = getIntent().getStringExtra("MessageChannelUID");
 
+        getListingName();
         findViewById(R.id.messages_view).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -89,6 +99,7 @@ public class ChatActivity extends AppCompatActivity {
         query1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println("This is the user : " + dataSnapshot.getValue());
                 currentUser = dataSnapshot.getValue(User.class);
                 Log.d(TAG, currentUser.getUsername());
                 Query query = mReference.child("messages").child(messageID);
@@ -184,4 +195,46 @@ public class ChatActivity extends AppCompatActivity {
         return sb.toString().substring(0, 7);
     }
 
+    private void getListingName() {
+        Query query = mReference.child("messages").child(messageID).child("post");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                MessagePost post = dataSnapshot.getValue(MessagePost.class);
+                addToTitle(post.getTitle());
+                if (post.getUserUID() != null) {
+                    Query userQuery = mReference.child("users").child(post.getUserUID());
+                    userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            currentUser = dataSnapshot.getValue(User.class);
+                            addToTitle(currentUser.getUsername());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void addToTitle(String str) {
+        if(this.ToolBarText.length() == 0){
+            this.ToolBarText = str;
+        } else {
+            this.ToolBarText += " - " + str;
+        }
+        this.textView.setText(this.ToolBarText);
+    }
 }
