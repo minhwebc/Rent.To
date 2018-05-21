@@ -166,6 +166,7 @@ public class RemindActivity extends AppCompatActivity {
                                                                 Log.d(TAG, "This is the borrower name: " + newRemindItem.borrower);
                                                                 Log.d(TAG, "This is the lender name: " + newRemindItem.lender);
                                                                 remindReturnListArray.add(newRemindItem);
+                                                                findViewById(R.id.returnTexttext).setVisibility(View.GONE);
                                                                 adapterR.notifyDataSetChanged();
                                                             }
                                                         }
@@ -249,6 +250,7 @@ public class RemindActivity extends AppCompatActivity {
                                                                     Log.d(TAG, newRemindItem.lender);
                                                                     remindTakeListArray.add(newRemindItem);
                                                                     Log.d(TAG, "notified");
+                                                                    findViewById(R.id.takeTexttext).setVisibility(View.GONE);
                                                                     adapterT.notifyDataSetChanged();
                                                                 }
                                                             }

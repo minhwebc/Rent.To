@@ -53,12 +53,20 @@
             android:layout_height="wrap_content"
             android:text="Remind return"
             android:textSize="@dimen/font_22"
+            android:textColor="@color/black"
             android:id="@+id/returnText"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You don't have any items to return"
+            android:textSize="@dimen/font_15"
+            android:id="@+id/returnTexttext"
+            android:layout_below="@id/returnText"/>
         <ListView
             android:id="@+id/remindReturnList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/returnText">
+            android:layout_below="@id/returnTexttext">
 
         </ListView>
     </RelativeLayout>
@@ -71,12 +79,21 @@
             android:layout_height="wrap_content"
             android:text="Remind take"
             android:textSize="@dimen/font_22"
+            android:textColor="@color/black"
+
             android:id="@+id/takeText"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You don't have any items to take back"
+            android:textSize="@dimen/font_15"
+            android:id="@+id/takeTexttext"
+            android:layout_below="@id/takeText"/>
         <ListView
             android:id="@+id/remindTakeBList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/takeText">
+            android:layout_below="@id/takeTexttext">
         </ListView>
     </RelativeLayout>
 
