@@ -38,23 +38,32 @@
                 android:text="Post. Rent. Paid. Simple"
                 android:textSize="26dp" />
 
-            <TextView
-                android:layout_width="349dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="100dp"
-                android:id="@+id/tips"
-                android:text="LOOK around! The average household spent over $3100 for the 50 unused items around their home" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/tips"
-                android:layout_marginTop="135dp"
-                android:text="Let us help make use of them"
-                android:textStyle="bold" />
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="100dp"
+                    android:id="@+id/tips"
+                    android:text="LOOK around! The average household spent over $3100 for the 50 unused items around their home" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/tips"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Let us help make use of them"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/buttonLeft"
@@ -71,13 +80,6 @@
                 android:theme="@style/Widget.AppCompat.Button.Colored"
                 android:text="Select Photo" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="224dp"
-                android:text="OR" />
 
             <Button
                 android:id="@+id/buttonRight"
