@@ -1,7 +1,5 @@
 package to.rent.rentto.Messages;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,12 +20,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.MessagePost;
