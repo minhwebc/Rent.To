@@ -45,6 +45,7 @@ public class MessageAdapter extends BaseAdapter {
     private ImageView authorAvatarPic;
     private int myMessagesCount;
     private Query mQuery;
+    private String otherProfilePicUrl;
 
 
     public MessageAdapter(Context context, String messageID) {
@@ -83,23 +84,42 @@ public class MessageAdapter extends BaseAdapter {
         notifyDataSetChanged(); // to render the list we need to notify
     }
 
+    public void setProfilePhotoUrl(String url) {
+        Log.d(TAG, "Inside of setProfilePhotoUrl " + url);
+        this.otherProfilePicURL = url;
+    }
+
+    public void setOtherProfileAvatarPic() {
+        if(otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
+            Glide.with(context)
+                .load(otherProfilePicURL)
+                .into(authorAvatarPic);
+        } else {
+            authorAvatarPic.setImageResource(R.drawable.profile_default_pic);
+        }
+    }
+
     public void getProfilePic() {
         mQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                if(otherProfilePicURL != null) {
+                    setOtherProfileAvatarPic();
+                    return;
+                }
                 //retrieve user information from the database
                 try {
                     mFirebaseMethods = new FirebaseMethods(context);
                     UserSettings userSettings= mFirebaseMethods.getUserAccountSettings(dataSnapshot, otherProfileUID);
                     otherProfilePicURL = userSettings.getSettings().getProfile_photo();
-                    if(otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
-                        Glide.with(context)
-                                .load(otherProfilePicURL)
-                                .into(authorAvatar);
-                    } else {
-                        authorAvatar.setImageResource(R.drawable.profile_default_pic);
-                    }
+                    setProfilePhotoUrl(otherProfilePicURL);
+//                    if(otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
+//                        Glide.with(context)
+//                                .load(otherProfilePicURL)
+//                                .into(authorAvatarPic);
+//                    } else {
+//                        authorAvatarPic.setImageResource(R.drawable.profile_default_pic);
+//                    }
                     Log.d(TAG, "Setting otherprofilepic to" + otherProfilePicURL);
                 } catch(Exception e) {
                     Log.d(TAG, "could not get other profile pic");
