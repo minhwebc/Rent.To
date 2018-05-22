@@ -67,11 +67,12 @@ public class MessageAdapter extends BaseAdapter {
         Collections.sort(this.messages, new Comparator<Message>() {
             @Override
             public int compare(Message o1, Message o2) {
-                DateFormat f = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
+                //DateFormat f = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
                 try {
                     Log.d("MessageAdapter", "successfully parse");
-                    return f.parse(o1.date).compareTo(f.parse(o1.date));
-                } catch (ParseException e) {
+                    //return f.parse(o1.date).compareTo(f.parse(o1.date));
+                    return 0;
+                } catch (Exception e) {
                     Log.d("MessageAdapter", e.toString());
                     return 0;
                 }
@@ -81,7 +82,7 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     public void getProfilePic() {
-        mRef.addValueEventListener(new ValueEventListener() {
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -173,11 +174,11 @@ public class MessageAdapter extends BaseAdapter {
             String time = message.date;
             SimpleDateFormat sdf = new SimpleDateFormat("HH:MM MM/dd/yy");
             Date date = new Date(); // Initialize a date object for now
-            try {
-                date = sdf.parse(message.date); // Parse message creation date into our initialized date
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                date = sdf.parse(message.date); // Parse message creation date into our initialized date
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
             holder.messageDate.setText(sdf.format(date)); // Format and convert back to string
             Log.d("MsgAdpter",  "authorid is " + message.getAuthorID());
             holder.avatar.setOnClickListener(new View.OnClickListener() {
