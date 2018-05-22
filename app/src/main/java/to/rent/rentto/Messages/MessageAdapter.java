@@ -64,21 +64,19 @@ public class MessageAdapter extends BaseAdapter {
             }
         }
         this.messages.add(message);
-        Collections.sort(this.messages, new Comparator<Message>() {
-            @Override
-            public int compare(Message o1, Message o2) {
-                DateFormat f = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
-                try {
-                    System.out.println("o1 date: " + o1.date);
-                    System.out.println("o2 date: " + o2.date);
-                    Log.d("MessageAdapter", "successfully parse");
-                    return f.parse(o1.date).compareTo(f.parse(o1.date));
-                } catch (ParseException e) {
-                    Log.d("MessageAdapter", e.toString());
-                    return 0;
-                }
-            }
-        });
+//        Collections.sort(this.messages, new Comparator<Message>() {
+//            @Override
+//            public int compare(Message o1, Message o2) {
+//                DateFormat f = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
+//                try {
+//                    Log.d("MessageAdapter", "successfully parse");
+//                    return f.parse(o1.date).compareTo(f.parse(o1.date));
+//                } catch (ParseException e) {
+//                    Log.d("MessageAdapter", e.toString());
+//                    return 0;
+//                }
+//            }
+//        });
         notifyDataSetChanged(); // to render the list we need to notify
     }
 
