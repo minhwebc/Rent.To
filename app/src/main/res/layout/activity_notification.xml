@@ -7,12 +7,42 @@
     android:layout_height="match_parent"
     tools:context="to.rent.rentto.Camera.CameraActivity">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout1">
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/white_grey_border_bottom"
+            >
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listingToolBar">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
+                    <TextView
+                        android:layout_toRightOf="@+id/backArrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Messages"
+                        android:textSize="20sp"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="5dp"
+                        android:id="@+id/listingName"/>
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+    </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
+        android:layout_height="match_parent"
+        android:paddingTop="50dp"
+        >
 
         <!-- Middle section (body) -->
         <android.support.v4.widget.SwipeRefreshLayout
@@ -26,16 +56,9 @@
             android:layout_below="@+id/relLayout1">
             <include layout="@layout/layout_center_viewpager"/>
 
-            <TextView
-                android:id="@+id/NotificationTextView"
-                android:text="Messages"
-                android:textSize="45dp"
-                android:layout_width="250dp"
-                android:layout_height="100dp" />
 
             <ListView
                 android:id="@+id/msgview"
-                android:layout_below="@+id/NotificationTextView"
                 android:layout_marginTop="10dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
