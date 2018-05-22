@@ -27,7 +27,7 @@
             android:textColor="@color/black"
             android:backgroundTint="@android:color/transparent"
             android:layout_height="wrap_content"
-            android:text="How to post" />
+            android:text="-How to post" />
         <TextView
             android:id="@+id/posting_rules"
             android:layout_below="@+id/how_to_post"
@@ -39,7 +39,7 @@
             android:backgroundTint="@android:color/transparent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="Posting Rules" />
+            android:text="-Posting Rules" />
 
         <TextView
             android:layout_width="match_parent"
@@ -62,7 +62,7 @@
             android:textColor="@color/black"
             android:backgroundTint="@android:color/transparent"
             android:layout_height="wrap_content"
-            android:text="Find Messages" />
+            android:text="-Find Messages" />
         <TextView
             android:id="@+id/tips_for_messaging"
             android:layout_below="@+id/find_messages"
@@ -73,7 +73,7 @@
             android:textColor="@color/black"
             android:backgroundTint="@android:color/transparent"
             android:layout_height="wrap_content"
-            android:text="Tips for messaging"/>
+            android:text="-Tips for messaging"/>
 
         <!--<TextView-->
             <!--android:layout_width="match_parent"-->
@@ -130,7 +130,7 @@
             android:textColor="@color/black"
             android:backgroundTint="@android:color/transparent"
             android:layout_height="wrap_content"
-            android:text="Prohibited items guidelines"/>
+            android:text="-Prohibited items guidelines"/>
         <TextView
             android:id="@+id/about_ratings"
             android:layout_below="@+id/prohibited_items"
@@ -141,7 +141,7 @@
             android:textColor="@color/black"
             android:backgroundTint="@android:color/transparent"
             android:layout_height="wrap_content"
-            android:text="About ratings on Rent.To"/>
+            android:text="-About ratings on Rent.To"/>
 
         <TextView
             android:layout_width="match_parent"
