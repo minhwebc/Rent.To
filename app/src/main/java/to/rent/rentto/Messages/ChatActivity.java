@@ -44,6 +44,7 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private ListView messagesListView;
     private User currentUser;
+    private User myUser;
     private String messageID;
     private String messageUID;
     private TextView textView;
@@ -59,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
                 if(!ds.getKey().equals("post")) {
                     Message message = ds.getValue(Message.class);
                     Log.d(TAG, message.getText());
-                    if (message.getAuthorID().equals(currentUser.getUser_id())) {
+                    if (message.getAuthorID().equals(myUser.getUser_id())) {
                         message.belongsToCurrentUser = true;
                     } else {
                         message.belongsToCurrentUser = false;
@@ -143,8 +144,8 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 System.out.println("This is the user : " + dataSnapshot.getValue());
-                currentUser = dataSnapshot.getValue(User.class);
-                Log.d(TAG, currentUser.getUsername());
+                myUser = dataSnapshot.getValue(User.class);
+                Log.d(TAG, myUser.getUsername());
                 Query query = mReference.child("messages").child(messageID);
                 query.addValueEventListener(listener);
             }
@@ -168,7 +169,7 @@ public class ChatActivity extends AppCompatActivity {
         }
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
         Date currentTime = Calendar.getInstance().getTime();
-        Message newMessageInsert = new Message(currentUser.getUsername(), message, dateFormat.format(currentTime), true, currentUser.getUser_id());
+        Message newMessageInsert = new Message(myUser.getUsername(), message, dateFormat.format(currentTime), true, myUser.getUser_id());
         Log.d(TAG, "messageID is " + messageID + " messageUID: " + messageUID);
 
         DatabaseReference messageRef = mReference.child("messages").child(messageID);
