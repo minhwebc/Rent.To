@@ -69,6 +69,8 @@ public class MessageAdapter extends BaseAdapter {
             public int compare(Message o1, Message o2) {
                 DateFormat f = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
                 try {
+                    System.out.println("o1 date: " + o1.date);
+                    System.out.println("o2 date: " + o2.date);
                     Log.d("MessageAdapter", "successfully parse");
                     return f.parse(o1.date).compareTo(f.parse(o1.date));
                 } catch (ParseException e) {
@@ -171,7 +173,7 @@ public class MessageAdapter extends BaseAdapter {
             holder.name.setText(message.getAuthor());
             holder.messageBody.setText(message.getText());
             String time = message.date;
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:MM MM/dd/yy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm"); // Changed from HH:MM MM/dd/yy to MM/dd/yy HH:mm
             Date date = new Date(); // Initialize a date object for now
             try {
                 date = sdf.parse(message.date); // Parse message creation date into our initialized date
