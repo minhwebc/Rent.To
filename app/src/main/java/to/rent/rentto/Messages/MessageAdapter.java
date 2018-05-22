@@ -163,7 +163,7 @@ public class MessageAdapter extends BaseAdapter {
             if(otherProfileUID != null) {
                 Log.d(TAG, "trying to get other profile pic, authorID is " + otherProfileUID);
                 authorAvatarPic = holder.avatar;
-                getProfilePic();
+                authorAvatarPic.setImageResource(R.drawable.profile_default_pic);
             }
             convertView.setTag(holder);
 
@@ -171,14 +171,8 @@ public class MessageAdapter extends BaseAdapter {
             holder.name.setText(message.getAuthor());
             holder.messageBody.setText(message.getText());
             String time = message.date;
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm"); // Changed from HH:MM MM/dd/yy to MM/dd/yy HH:mm
-            Date date = new Date(); // Initialize a date object for now
-            try {
-                date = sdf.parse(message.date); // Parse message creation date into our initialized date
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            holder.messageDate.setText(sdf.format(date)); // Format and convert back to string
+            System.out.println("The date is this : " + time);
+            holder.messageDate.setText(time); // Format and convert back to string
             Log.d("MsgAdpter",  "authorid is " + message.getAuthorID());
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
