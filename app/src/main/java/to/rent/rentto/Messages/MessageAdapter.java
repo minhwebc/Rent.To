@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.UserSettings;
@@ -45,6 +47,7 @@ public class MessageAdapter extends BaseAdapter {
     private ImageView authorAvatarPic;
     private int myMessagesCount;
     private Query mQuery;
+    private HashMap<String, String> imageCache;
 
 
     public MessageAdapter(Context context, String messageID) {
@@ -54,13 +57,16 @@ public class MessageAdapter extends BaseAdapter {
         mRef = FirebaseDatabase.getInstance().getReference();
         System.out.println("This is the message ID in messageadapter " + messageID);
         mQuery = mRef.child("messages").child(messageID);
+        imageCache = new HashMap<>();
     }
 
     public void add(Message message) {
         if(!message.getAuthorID().equals(currentUID)) {
             Log.d(TAG, "inside add, authorid =" + message.getAuthorID());
             otherProfileUID = message.getAuthorID();
-            getProfilePic();
+            if(!imageCache.containsKey(otherProfileUID)) {
+                getProfilePic();
+            }
         } else { // this user has messaged
             if(!message.text.startsWith("I am interested in your")) {
                 myMessagesCount++;
@@ -94,10 +100,13 @@ public class MessageAdapter extends BaseAdapter {
                     UserSettings userSettings= mFirebaseMethods.getUserAccountSettings(dataSnapshot, otherProfileUID);
                     otherProfilePicURL = userSettings.getSettings().getProfile_photo();
                     if(otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
+                        System.out.println("Check for UID inside ondatachange : " + otherProfileUID);
+                        cacheImage(otherProfileUID, otherProfilePicURL);
                         Glide.with(context)
                                 .load(otherProfilePicURL)
                                 .into(authorAvatar);
                     } else {
+                        cacheImage(otherProfileUID, "default");
                         authorAvatar.setImageResource(R.drawable.profile_default_pic);
                     }
                     Log.d(TAG, "Setting otherprofilepic to" + otherProfilePicURL);
@@ -142,6 +151,10 @@ public class MessageAdapter extends BaseAdapter {
         return myMessagesCount;
     }
 
+    private void cacheImage(String id, String url){
+        imageCache.put(id, url);
+    }
+
     // This is the backbone of the class, it handles the creation of single ListView row (chat bubble)
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
@@ -166,7 +179,20 @@ public class MessageAdapter extends BaseAdapter {
             if(otherProfileUID != null) {
                 Log.d(TAG, "trying to get other profile pic, authorID is " + otherProfileUID);
                 authorAvatarPic = holder.avatar;
-                authorAvatarPic.setImageResource(R.drawable.profile_default_pic);
+                if(!imageCache.containsKey(otherProfileUID)) {
+                    getProfilePic();
+                }
+                String tag = imageCache.get(otherProfileUID);
+                if(tag != null) {
+                    System.out.println("Checking for UID : " + tag);
+                    if (tag.equals("default")) {
+                        authorAvatarPic.setImageResource(R.drawable.profile_default_pic);
+                    } else {
+                        Glide.with(context)
+                                .load(tag)
+                                .into(authorAvatarPic);
+                    }
+                }
             }
             convertView.setTag(holder);
 
