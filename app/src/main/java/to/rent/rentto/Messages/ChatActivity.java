@@ -136,6 +136,19 @@ public class ChatActivity extends AppCompatActivity {
                 return false;
             }
         });
+        scrollToBottom();
+    }
+
+    private void scrollToBottom() {
+        messagesListView.post(new Runnable() {
+            @Override
+            public void run() {
+                messagesListView.setSelection(messageAdapter.getCount() -1);
+            }
+        });
+
+        messagesListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        messagesListView.setStackFromBottom(true);
     }
 
     private void getCurrentUserInfo(){
