@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -43,14 +44,16 @@ public class MessageAdapter extends BaseAdapter {
     private FirebaseMethods mFirebaseMethods;
     private ImageView authorAvatarPic;
     private int myMessagesCount;
+    private Query mQuery;
 
 
-    public MessageAdapter(Context context) {
+    public MessageAdapter(Context context, String messageID) {
         myMessagesCount = 0;
         this.context = context;
         currentUID = FirebaseAuth.getInstance().getUid();
         mRef = FirebaseDatabase.getInstance().getReference();
-
+        System.out.println("This is the message ID in messageadapter " + messageID);
+        mQuery = mRef.child("messages").child(messageID);
     }
 
     public void add(Message message) {
@@ -81,7 +84,7 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     public void getProfilePic() {
-        mRef.addValueEventListener(new ValueEventListener() {
+        mQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 

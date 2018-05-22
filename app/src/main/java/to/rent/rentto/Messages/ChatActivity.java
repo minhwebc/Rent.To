@@ -98,7 +98,12 @@ public class ChatActivity extends AppCompatActivity {
         mContext = ChatActivity.this;
 
         getCurrentUserInfo();
-        messageAdapter = new MessageAdapter(mContext);
+
+        //set up the channel info
+        messageID = getIntent().getStringExtra("MessageChannelID");
+        messageUID = getIntent().getStringExtra("MessageChannelUID");
+
+        messageAdapter = new MessageAdapter(mContext, this.messageID);
 
         ToolBarText = "";
         textView = (TextView) findViewById(R.id.listingName);
@@ -116,9 +121,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        //set up the channel info
-        messageID = getIntent().getStringExtra("MessageChannelID");
-        messageUID = getIntent().getStringExtra("MessageChannelUID");
+
 
         if(messageID.equals("welcomeMessage")) {
             editText.setEnabled(false);
