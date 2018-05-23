@@ -278,6 +278,7 @@ public class ProfileFragment extends Fragment {
         mDisplayName.setText(settings.getDisplay_name());
         mUsername.setText(settings.getUsername());
         mRatingBar.setRating((float) rating);
+        mDescription.setText(settings.getDescription());
         String stringRating = "" + rating + " (" + ratingTimes + ")";
         ratingText.setText(stringRating);
         String website = settings.getWebsite();
