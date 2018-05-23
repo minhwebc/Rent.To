@@ -216,8 +216,8 @@ public class ChatActivity extends AppCompatActivity {
                 myUser = dataSnapshot.getValue(User.class);
                 Log.d(TAG, myUser.getUsername());
                 Query query = mReference.child("messages").child(messageID);
-                query.addChildEventListener(childEventListener);
-                query.addListenerForSingleValueEvent(listener);
+                //query.addListenerForSingleValueEvent(listener);
+                messageAdapter.messages.clear();
             }
 
             @Override

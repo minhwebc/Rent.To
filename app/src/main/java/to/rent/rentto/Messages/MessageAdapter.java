@@ -44,7 +44,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     private ImageView authorAvatarPic;
     private int myMessagesCount;
     private Query mQuery;
-    private HashMap<String, String> imageCache;
+    public HashMap<String, String> imageCache;
 
 
     public MessageAdapter(Context context, String messageID) {
@@ -91,25 +91,31 @@ public class MessageAdapter extends RecyclerView.Adapter {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                //retrieve user information from the database
-                try {
-                    mFirebaseMethods = new FirebaseMethods(context);
-                    UserSettings userSettings= mFirebaseMethods.getUserAccountSettings(dataSnapshot, otherProfileUID);
-                    otherProfilePicURL = userSettings.getSettings().getProfile_photo();
-                    if(otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
-                        System.out.println("Check for UID inside ondatachange : " + otherProfileUID);
-                        cacheImage(otherProfileUID, otherProfilePicURL);
-                        Glide.with(context)
-                                .load(otherProfilePicURL)
-                                .into(authorAvatar);
-                    } else {
-                        cacheImage(otherProfileUID, "default");
+                if(!imageCache.containsKey(otherProfileUID)) {//retrieve user information from the database
+                    try {
+                        System.out.println("It got inside getProfilePic");
+                        System.out.println(imageCache.containsKey(otherProfileUID));
+                        mFirebaseMethods = new FirebaseMethods(context);
+                        UserSettings userSettings = mFirebaseMethods.getUserAccountSettings(dataSnapshot, otherProfileUID);
+                        otherProfilePicURL = userSettings.getSettings().getProfile_photo();
+                        if (otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
+                            System.out.println("Check for UID inside ondatachange : " + otherProfileUID);
+                            cacheImage(otherProfileUID, otherProfilePicURL);
+                            loadAvatar(otherProfilePicURL);
+                        } else {
+                            cacheImage(otherProfileUID, "default");
+                        }
+                        Log.d(TAG, "Setting otherprofilepic to" + otherProfilePicURL);
+                    } catch (Exception e) {
+                        Log.d(TAG, "could not get other profile pic");
+                        imageCache.clear();
+                        e.printStackTrace();
                     }
-                    Log.d(TAG, "Setting otherprofilepic to" + otherProfilePicURL);
-                } catch(Exception e) {
-                    Log.d(TAG, "could not get other profile pic");
-                    e.printStackTrace();
+                } else {
+                    System.out.println("getProfilePic exists and the otherProfileUID is: " + otherProfileUID);
+                    System.out.println("the value is" + imageCache.get(otherProfileUID));
                 }
+
                 //retrieve images for the user in question
 
             }
@@ -128,6 +134,14 @@ public class MessageAdapter extends RecyclerView.Adapter {
         }.init(authorAvatarPic));
     }
 
+
+    private void loadAvatar(String photoURL){
+        Glide.with(context)
+                .load(photoURL)
+                .into(authorAvatarPic);
+        notifyDataSetChanged();
+    }
+    
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -143,6 +157,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Log.d("Hello", "this is onbindviewholder");
         LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         final Message message = messages.get(position);
 
@@ -155,9 +170,12 @@ public class MessageAdapter extends RecyclerView.Adapter {
                 Log.d(TAG, "trying to get other profile pic, authorID is " + otherProfileUID);
                 authorAvatarPic = ((MessageViewHolder) holder).avatar;
                 if(!imageCache.containsKey(otherProfileUID)) {
+                    Log.d("Hello", "this is in the getView method, other guys");
                     getProfilePic();
                 }
+
                 String tag = imageCache.get(otherProfileUID);
+
                 if(tag != null) {
                     System.out.println("Checking for UID : " + tag);
                     if (tag.equals("default")) {
@@ -168,6 +186,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
                                 .load(tag)
                                 .into(authorAvatarPic);
                     }
+                } else {
+                    authorAvatarPic.setImageResource(R.drawable.profile_default_pic);
                 }
             }
 
@@ -221,7 +241,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     }
 
     private void cacheImage(String id, String url){
-        imageCache.put(id, url);
+        this.imageCache.put(id, url);
     }
 
 }
