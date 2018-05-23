@@ -102,9 +102,12 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".Messages.ChatActivity" />
-        <activity android:name=".Login.VideoActivity" />
-        <activity android:name=".Messages.RatingActivity" />
+        <activity android:name=".Messages.ChatActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Login.VideoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Messages.RatingActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Home.WelcomeActivity"
             android:theme="@style/SplashTheme">
@@ -114,7 +117,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Remind.RemindActivity"></activity>
+        <activity android:name=".Remind.RemindActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
