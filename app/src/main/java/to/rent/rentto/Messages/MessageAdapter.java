@@ -90,7 +90,7 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     public void getProfilePic() {
-        mRef.addValueEventListener(new ValueEventListener() {
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -107,7 +107,6 @@ public class MessageAdapter extends BaseAdapter {
                                 .into(authorAvatar);
                     } else {
                         cacheImage(otherProfileUID, "default");
-                        authorAvatar.setImageResource(R.drawable.profile_default_pic);
                     }
                     Log.d(TAG, "Setting otherprofilepic to" + otherProfilePicURL);
                 } catch(Exception e) {
