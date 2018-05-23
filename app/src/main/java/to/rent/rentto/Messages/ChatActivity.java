@@ -1,5 +1,6 @@
 package to.rent.rentto.Messages;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,16 +54,59 @@ public class ChatActivity extends AppCompatActivity {
     private TextView textView;
     private String ToolBarText;
     public ChatActivity() {
+
     }
+
+    private ChildEventListener childEventListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            Log.d(TAG, "child listener " + dataSnapshot.getKey());
+
+            if(!dataSnapshot.getKey().equals("post")) {
+                Message message = dataSnapshot.getValue(Message.class);
+                if (message.getAuthorID().equals(myUser.getUser_id())) {
+                    message.belongsToCurrentUser = true;
+                } else {
+                    message.belongsToCurrentUser = false;
+                }
+                messageAdapter.add(message);
+                messagesListView.scrollToPosition(messageAdapter.messages.size() - 1);
+            }
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
     private ValueEventListener listener = new ValueEventListener() {
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             messageAdapter.messages.clear();
+            ProgressDialog pd = new ProgressDialog(ChatActivity.this);
+            pd.setMessage("loading");
+            pd.show();
             for(DataSnapshot ds : dataSnapshot.getChildren()) {
                 if(!ds.getKey().equals("post")) {
                     Message message = ds.getValue(Message.class);
-                    Log.d(TAG, message.getText());
+                    //Log.d(TAG, message.getText());
                     if (message.getAuthorID().equals(myUser.getUser_id())) {
                         message.belongsToCurrentUser = true;
                     } else {
@@ -71,6 +116,7 @@ public class ChatActivity extends AppCompatActivity {
                     messagesListView.scrollToPosition(messageAdapter.messages.size() - 1);
                 }
             }
+            pd.dismiss();
 
             // If current user has not sent any messages (other than interest message), then shows tooltip
             if(messageAdapter.getMyMessagesCount() == 0) {
@@ -118,8 +164,6 @@ public class ChatActivity extends AppCompatActivity {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         //linearLayoutManager.setReverseLayout(true);
         messagesListView.setLayoutManager(linearLayoutManager);
-
-
 
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +216,8 @@ public class ChatActivity extends AppCompatActivity {
                 myUser = dataSnapshot.getValue(User.class);
                 Log.d(TAG, myUser.getUsername());
                 Query query = mReference.child("messages").child(messageID);
-                query.addValueEventListener(listener);
+                query.addListenerForSingleValueEvent(listener);
+                query.addChildEventListener(childEventListener);
             }
 
             @Override
