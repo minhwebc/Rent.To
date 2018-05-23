@@ -187,36 +187,37 @@ public class ChatActivity extends AppCompatActivity {
         if (message.length() > 0) {
             Log.d(TAG, "message to be sent: " + message);
             editText.getText().clear();
-        }
-        String time = "";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            time = ZonedDateTime.now().toString();
-        }
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
-        Date currentTime = Calendar.getInstance().getTime();
-        Message newMessageInsert = new Message(myUser.getUsername(), message, dateFormat.format(currentTime), true, myUser.getUser_id());
-        Log.d(TAG, "messageID is " + messageID + " messageUID: " + messageUID);
-
-        DatabaseReference messageRef = mReference.child("messages").child(messageID);
-        messageRef.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if(databaseError != null) {
-                    Log.d(TAG, "There is an error in pushing the message");
-                } else {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-
-                    messagesListView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Select the last row so it will scroll into view...
-                            //messagesListView.setSelection(messageAdapter.getCount() - 1);
-                        }
-                    });
-                }
+            String time = "";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                time = ZonedDateTime.now().toString();
             }
-        });
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd");
+            Date currentTime = Calendar.getInstance().getTime();
+            Message newMessageInsert = new Message(myUser.getUsername(), message, dateFormat.format(currentTime), true, myUser.getUser_id());
+            Log.d(TAG, "messageID is " + messageID + " messageUID: " + messageUID);
+
+            DatabaseReference messageRef = mReference.child("messages").child(messageID);
+            messageRef.push().setValue(newMessageInsert, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if(databaseError != null) {
+                        Log.d(TAG, "There is an error in pushing the message");
+                    } else {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
+                        messagesListView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Select the last row so it will scroll into view...
+                                //messagesListView.setSelection(messageAdapter.getCount() - 1);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
     }
 
     private String getRandomColor() {
