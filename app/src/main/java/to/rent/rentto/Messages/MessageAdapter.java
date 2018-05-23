@@ -90,7 +90,7 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     public void getProfilePic() {
-        mQuery.addValueEventListener(new ValueEventListener() {
+        mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -186,6 +186,7 @@ public class MessageAdapter extends BaseAdapter {
                 if(tag != null) {
                     System.out.println("Checking for UID : " + tag);
                     if (tag.equals("default")) {
+                        System.out.println("It's running default");
                         authorAvatarPic.setImageResource(R.drawable.profile_default_pic);
                     } else {
                         Glide.with(context)
