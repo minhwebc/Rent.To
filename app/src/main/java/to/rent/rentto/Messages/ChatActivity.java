@@ -1,8 +1,11 @@
 package to.rent.rentto.Messages;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -10,7 +13,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +44,7 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private MessageAdapter messageAdapter;
-    private ListView messagesListView;
+    private RecyclerView messagesListView;
     private User currentUser;
     private User myUser;
     private String messageID;
@@ -66,6 +68,7 @@ public class ChatActivity extends AppCompatActivity {
                         message.belongsToCurrentUser = false;
                     }
                     messageAdapter.add(message);
+                    messagesListView.scrollToPosition(messageAdapter.messages.size() - 1);
                 }
             }
 
@@ -110,8 +113,14 @@ public class ChatActivity extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.editText);
         sendMessageButton = (ImageButton) findViewById(R.id.SendMessageButton);
         mContext = ChatActivity.this;
-        messagesListView = (ListView) findViewById(R.id.messages_view);
+        messagesListView = (RecyclerView) findViewById(R.id.messages_view);
         messagesListView.setAdapter(messageAdapter);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        //linearLayoutManager.setReverseLayout(true);
+        messagesListView.setLayoutManager(linearLayoutManager);
+
+
+
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,20 +148,20 @@ public class ChatActivity extends AppCompatActivity {
                 return false;
             }
         });
-        scrollToBottom();
+        //scrollToBottom();
     }
 
-    private void scrollToBottom() {
-        messagesListView.post(new Runnable() {
-            @Override
-            public void run() {
-                messagesListView.setSelection(messageAdapter.getCount() -1);
-            }
-        });
-
-        messagesListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        messagesListView.setStackFromBottom(true);
-    }
+//    private void scrollToBottom() {
+//        messagesListView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                messagesListView.setSelection(messageAdapter.getCount() -1);
+//            }
+//        });
+//
+//        messagesListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+//        messagesListView.setStackFromBottom(true);
+//    }
 
     private void getCurrentUserInfo(){
         Query query1 = mReference.child("users").child(mAuth.getCurrentUser().getUid());
@@ -202,7 +211,7 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             // Select the last row so it will scroll into view...
-                            messagesListView.setSelection(messageAdapter.getCount() - 1);
+                            //messagesListView.setSelection(messageAdapter.getCount() - 1);
                         }
                     });
                 }

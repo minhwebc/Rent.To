@@ -1,14 +1,16 @@
 package to.rent.rentto.Messages;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -17,16 +19,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.UserSettings;
 import to.rent.rentto.Profile.ProfilePreviewActivity;
@@ -35,7 +32,7 @@ import to.rent.rentto.Utils.FirebaseMethods;
 
 import static android.content.ContentValues.TAG;
 
-public class MessageAdapter extends BaseAdapter {
+public class MessageAdapter extends RecyclerView.Adapter {
 
     public List<Message> messages = new ArrayList<Message>();
     Context context;
@@ -132,52 +129,31 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return messages.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return messages.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    public int getMyMessagesCount() {
-        return myMessagesCount;
-    }
-
-    private void cacheImage(String id, String url){
-        imageCache.put(id, url);
-    }
-
-    // This is the backbone of the class, it handles the creation of single ListView row (chat bubble)
-    @Override
-    public View getView(int i, View convertView, ViewGroup viewGroup) {
-        MessageViewHolder holder = new MessageViewHolder();
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        final Message message = messages.get(i);
+        View view ;
+        Log.d(TAG, "oncreate view holder");
+        if(viewType == 1){
+            view = messageInflater.inflate(R.layout.my_message, null);
+        } else {
+            view = messageInflater.inflate(R.layout.their_message, null);
+        }
+        return new MessageViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        final Message message = messages.get(position);
 
         if (message.isBelongsToCurrentUser()) { // this message was sent by us so let's create a basic chat bubble on the right
-            Log.d("Hello", "this is in the getView method");
-            convertView = messageInflater.inflate(R.layout.my_message, null);
-            holder.messageBody = (TextView) convertView.findViewById(R.id.message_body);
-            convertView.setTag(holder);
-            holder.messageBody.setText(message.getText());
+            ((MessageViewHolder) holder).messageBody.setText(message.getText());
         } else { // this message was sent by someone else so let's create an advanced chat bubble on the left
             Log.d("Hello", "this is in the getView method, other guys");
-            convertView = messageInflater.inflate(R.layout.their_message, null);
-            holder.avatar = (ImageView) convertView.findViewById(R.id.image_message_profile);
-            holder.name = (TextView) convertView.findViewById(R.id.text_message_name);
-            holder.messageBody = (TextView) convertView.findViewById(R.id.text_message_body);
-            holder.messageDate = (TextView) convertView.findViewById(R.id.text_message_time);
             otherProfileUID = message.authorID;
             if(otherProfileUID != null) {
                 Log.d(TAG, "trying to get other profile pic, authorID is " + otherProfileUID);
-                authorAvatarPic = holder.avatar;
+                authorAvatarPic = ((MessageViewHolder) holder).avatar;
                 if(!imageCache.containsKey(otherProfileUID)) {
                     getProfilePic();
                 }
@@ -194,16 +170,15 @@ public class MessageAdapter extends BaseAdapter {
                     }
                 }
             }
-            convertView.setTag(holder);
 
             //holder.name.setText(message.getData().getName());
-            holder.name.setText(message.getAuthor());
-            holder.messageBody.setText(message.getText());
+            ((MessageViewHolder) holder).name.setText(message.getAuthor());
+            ((MessageViewHolder) holder).messageBody.setText(message.getText());
             String time = message.date;
             System.out.println("The date is this : " + time);
-            holder.messageDate.setText(time); // Format and convert back to string
+            ((MessageViewHolder) holder).messageDate.setText(time); // Format and convert back to string
             Log.d("MsgAdpter",  "authorid is " + message.getAuthorID());
-            holder.avatar.setOnClickListener(new View.OnClickListener() {
+            ((MessageViewHolder) holder).avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("MsgAdpterProfileClick",  "authorid is " + message.getAuthorID());
@@ -219,13 +194,50 @@ public class MessageAdapter extends BaseAdapter {
             drawable.setColor(Color.parseColor("#FFFF00"));
             */
         }
-        return convertView;
     }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public int getItemCount() {
+        return messages.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        final Message message = messages.get(position);
+        if (message.isBelongsToCurrentUser()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public int getMyMessagesCount() {
+        return myMessagesCount;
+    }
+
+    private void cacheImage(String id, String url){
+        imageCache.put(id, url);
+    }
+
 }
 
-class MessageViewHolder {
+class MessageViewHolder extends RecyclerView.ViewHolder{
     public ImageView avatar;
     public TextView name;
     public TextView messageBody;
     public TextView messageDate;
+
+    public MessageViewHolder(View itemView) {
+        super(itemView);
+        avatar = (ImageView) itemView.findViewById(R.id.image_message_profile);
+        name = (TextView) itemView.findViewById(R.id.text_message_name);
+        messageBody = (TextView) itemView.findViewById(R.id.text_message_body);
+        messageDate = (TextView) itemView.findViewById(R.id.text_message_time);
+
+    }
 }
