@@ -113,9 +113,6 @@ public class MessageAdapter extends RecyclerView.Adapter {
                 } else {
                     System.out.println("getProfilePic exists and the otherProfileUID is: " + otherProfileUID);
                     System.out.println("the value is" + imageCache.get(otherProfileUID));
-                    Glide.with(context)
-                            .load(imageCache.get(otherProfileUID))
-                            .into(authorAvatarPic);
                 }
 
                 //retrieve images for the user in question
