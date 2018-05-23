@@ -149,6 +149,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Log.d("Hello", "this is onbindviewholder");
         LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         final Message message = messages.get(position);
 
@@ -161,9 +162,12 @@ public class MessageAdapter extends RecyclerView.Adapter {
                 Log.d(TAG, "trying to get other profile pic, authorID is " + otherProfileUID);
                 authorAvatarPic = ((MessageViewHolder) holder).avatar;
                 if(!imageCache.containsKey(otherProfileUID)) {
+                    Log.d("Hello", "this is in the getView method, other guys");
                     getProfilePic();
                 }
+
                 String tag = imageCache.get(otherProfileUID);
+
                 if(tag != null) {
                     System.out.println("Checking for UID : " + tag);
                     if (tag.equals("default")) {
@@ -174,6 +178,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
                                 .load(tag)
                                 .into(authorAvatarPic);
                     }
+                } else {
+                    authorAvatarPic.setImageResource(R.drawable.profile_default_pic);
                 }
             }
 

@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Random;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
@@ -217,7 +216,8 @@ public class ChatActivity extends AppCompatActivity {
                 myUser = dataSnapshot.getValue(User.class);
                 Log.d(TAG, myUser.getUsername());
                 Query query = mReference.child("messages").child(messageID);
-                query.addListenerForSingleValueEvent(listener);
+                //query.addListenerForSingleValueEvent(listener);
+                messageAdapter.messages.clear();
                 query.addChildEventListener(childEventListener);
             }
 
