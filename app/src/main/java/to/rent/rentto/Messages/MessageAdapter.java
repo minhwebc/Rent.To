@@ -101,6 +101,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
                         if (otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
                             System.out.println("Check for UID inside ondatachange : " + otherProfileUID);
                             cacheImage(otherProfileUID, otherProfilePicURL);
+                            loadAvatar(otherProfilePicURL);
                         } else {
                             cacheImage(otherProfileUID, "default");
                         }
@@ -131,9 +132,16 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
             private ImageView authorAvatar;
         }.init(authorAvatarPic));
-
     }
 
+
+    private void loadAvatar(String photoURL){
+        Glide.with(context)
+                .load(photoURL)
+                .into(authorAvatarPic);
+        notifyDataSetChanged();
+    }
+    
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
