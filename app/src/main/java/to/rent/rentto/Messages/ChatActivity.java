@@ -60,14 +60,18 @@ public class ChatActivity extends AppCompatActivity {
     private ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Message message = dataSnapshot.getValue(Message.class);
-            if (message.getAuthorID().equals(myUser.getUser_id())) {
-                message.belongsToCurrentUser = true;
-            } else {
-                message.belongsToCurrentUser = false;
+            Log.d(TAG, "child listener " + dataSnapshot.getKey());
+
+            if(!dataSnapshot.getKey().equals("post")) {
+                Message message = dataSnapshot.getValue(Message.class);
+                if (message.getAuthorID().equals(myUser.getUser_id())) {
+                    message.belongsToCurrentUser = true;
+                } else {
+                    message.belongsToCurrentUser = false;
+                }
+                messageAdapter.add(message);
+                messagesListView.scrollToPosition(messageAdapter.messages.size() - 1);
             }
-            messageAdapter.add(message);
-            messagesListView.scrollToPosition(messageAdapter.messages.size() - 1);
         }
 
         @Override
