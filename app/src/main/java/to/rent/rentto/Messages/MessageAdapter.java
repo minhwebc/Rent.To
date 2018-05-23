@@ -62,7 +62,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
             Log.d(TAG, "inside add, authorid =" + message.getAuthorID());
             otherProfileUID = message.getAuthorID();
             if(!imageCache.containsKey(otherProfileUID)) {
-                getProfilePic();
+                getProfilePic(authorAvatarPic);
             }
         } else { // this user has messaged
             if(!message.text.startsWith("I am interested in your")) {
@@ -86,7 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged(); // to render the list we need to notify
     }
 
-    public void getProfilePic() {
+    public void getProfilePic(final ImageView authorAvatarPic) {
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,6 +101,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
                         if (otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
                             System.out.println("Check for UID inside ondatachange : " + otherProfileUID);
                             cacheImage(otherProfileUID, otherProfilePicURL);
+                            loadAvatar(otherProfilePicURL);
                         } else {
                             cacheImage(otherProfileUID, "default");
                         }
@@ -131,9 +132,16 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
             private ImageView authorAvatar;
         }.init(authorAvatarPic));
-
     }
 
+
+    private void loadAvatar(String photoURL){
+        Glide.with(context)
+                .load(photoURL)
+                .into(authorAvatarPic);
+        notifyDataSetChanged();
+    }
+    
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -161,7 +169,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
                 Log.d(TAG, "trying to get other profile pic, authorID is " + otherProfileUID);
                 authorAvatarPic = ((MessageViewHolder) holder).avatar;
                 if(!imageCache.containsKey(otherProfileUID)) {
-                    getProfilePic();
+                    getProfilePic(authorAvatarPic);
                 }
                 String tag = imageCache.get(otherProfileUID);
                 if(tag != null) {
