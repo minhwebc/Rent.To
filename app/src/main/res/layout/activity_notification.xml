@@ -67,7 +67,8 @@
                 android:scrollbarStyle="outsideOverlay"
                 android:scrollbars="vertical"
                 android:scrollingCache="true"
-                android:smoothScrollbar="true" ></ListView>
+                android:smoothScrollbar="true"
+                android:layout_marginBottom="50dp"></ListView>
 
         </RelativeLayout>
         </android.support.v4.widget.SwipeRefreshLayout>

@@ -105,6 +105,8 @@ public class NotificationActivity extends AppCompatActivity {
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
+                        messageIDList.clear();
+                        data.clear();
                         loadMessages();
                         swipeLayout.setRefreshing(false);
                     }
@@ -123,7 +125,7 @@ public class NotificationActivity extends AppCompatActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem == 0) {
                     swipeLayout.setEnabled(true);
-                } else swipeLayout.setEnabled(false);
+                } else { swipeLayout.setEnabled(false); }
             }
         });
 
