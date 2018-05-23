@@ -44,7 +44,9 @@ public class MessagePreviewAdapter extends ArrayAdapter<PostInMessage> {
         Log.d("ArrayAdapter", messageList.toString());
 
         //PostInMessage currentMessage = messageList.get(position);
-        PostInMessage currentMessage = messageList.get(messageList.size() - position - 1);
+        int size = messageList.size();
+        int newPosition = size - position - 1;
+        PostInMessage currentMessage = messageList.get(newPosition);
 
 
         ImageView image = (ImageView)listItem.findViewById(R.id.imageView_poster);
