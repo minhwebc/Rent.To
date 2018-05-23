@@ -46,26 +46,31 @@ public class MessagePreviewAdapter extends ArrayAdapter<PostInMessage> {
         //PostInMessage currentMessage = messageList.get(position);
         int size = messageList.size();
         int newPosition = size - position - 1;
-        PostInMessage currentMessage = messageList.get(newPosition);
+        if((newPosition >= 0)) {
+            PostInMessage currentMessage = messageList.get(newPosition);
 
 
-        ImageView image = (ImageView)listItem.findViewById(R.id.imageView_poster);
-        RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.ic_launcher_background);
-        Glide.with(mContext)
-                .load(currentMessage.imageURL)
-                .apply(requestOptions)
-                .into(image);
+            ImageView image = (ImageView) listItem.findViewById(R.id.imageView_poster);
+            RequestOptions requestOptions = new RequestOptions()
+                    .placeholder(R.drawable.ic_launcher_background);
+            Glide.with(mContext)
+                    .load(currentMessage.imageURL)
+                    .apply(requestOptions)
+                    .into(image);
 
-        TextView name = (TextView) listItem.findViewById(R.id.textView_name);
-        String title = currentMessage.title;
-        name.setText(limitStringLength(title, 36));
+            TextView name = (TextView) listItem.findViewById(R.id.textView_name);
+            String title = currentMessage.title;
+            name.setText(limitStringLength(title, 36));
 
-        TextView release = (TextView) listItem.findViewById(R.id.textView_release);
-        String inLineMessagePreview = currentMessage.author + ": " + currentMessage.message;
-        release.setText(limitStringLength(inLineMessagePreview, 36));
+            TextView release = (TextView) listItem.findViewById(R.id.textView_release);
+            String inLineMessagePreview = currentMessage.author + ": " + currentMessage.message;
+            release.setText(limitStringLength(inLineMessagePreview, 36));
 
-        return listItem;
+            return listItem;
+        } else {
+            listItem.layout(0,0,0,0);
+            return listItem;
+        }
     }
 //
 //    @Override
