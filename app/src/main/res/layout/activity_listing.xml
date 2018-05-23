@@ -177,7 +177,7 @@
                             android:textSize="@dimen/font_22"
                             android:transitionName="Title"
                             tools:ignore="UnusedAttribute"
-                            tools:text="Rossies place show"
+                            tools:text="Item Title"
                             android:shadowColor="@color/black"
                             android:shadowRadius="3"
                             android:shadowDy="5"
