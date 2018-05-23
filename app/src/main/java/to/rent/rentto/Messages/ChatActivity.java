@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;

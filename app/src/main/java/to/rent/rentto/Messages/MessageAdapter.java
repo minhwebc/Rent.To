@@ -44,7 +44,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     private ImageView authorAvatarPic;
     private int myMessagesCount;
     private Query mQuery;
-    private HashMap<String, String> imageCache;
+    public HashMap<String, String> imageCache;
 
 
     public MessageAdapter(Context context, String messageID) {
@@ -91,25 +91,33 @@ public class MessageAdapter extends RecyclerView.Adapter {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                //retrieve user information from the database
-                try {
-                    mFirebaseMethods = new FirebaseMethods(context);
-                    UserSettings userSettings= mFirebaseMethods.getUserAccountSettings(dataSnapshot, otherProfileUID);
-                    otherProfilePicURL = userSettings.getSettings().getProfile_photo();
-                    if(otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
-                        System.out.println("Check for UID inside ondatachange : " + otherProfileUID);
-                        cacheImage(otherProfileUID, otherProfilePicURL);
-                        Glide.with(context)
-                                .load(otherProfilePicURL)
-                                .into(authorAvatar);
-                    } else {
-                        cacheImage(otherProfileUID, "default");
+                if(!imageCache.containsKey(otherProfileUID)) {//retrieve user information from the database
+                    try {
+                        System.out.println("It got inside getProfilePic");
+                        System.out.println(imageCache.containsKey(otherProfileUID));
+                        mFirebaseMethods = new FirebaseMethods(context);
+                        UserSettings userSettings = mFirebaseMethods.getUserAccountSettings(dataSnapshot, otherProfileUID);
+                        otherProfilePicURL = userSettings.getSettings().getProfile_photo();
+                        if (otherProfilePicURL != null && otherProfilePicURL.length() > 1) {
+                            System.out.println("Check for UID inside ondatachange : " + otherProfileUID);
+                            cacheImage(otherProfileUID, otherProfilePicURL);
+                        } else {
+                            cacheImage(otherProfileUID, "default");
+                        }
+                        Log.d(TAG, "Setting otherprofilepic to" + otherProfilePicURL);
+                    } catch (Exception e) {
+                        Log.d(TAG, "could not get other profile pic");
+                        imageCache.clear();
+                        e.printStackTrace();
                     }
-                    Log.d(TAG, "Setting otherprofilepic to" + otherProfilePicURL);
-                } catch(Exception e) {
-                    Log.d(TAG, "could not get other profile pic");
-                    e.printStackTrace();
+                } else {
+                    System.out.println("getProfilePic exists and the otherProfileUID is: " + otherProfileUID);
+                    System.out.println("the value is" + imageCache.get(otherProfileUID));
+                    Glide.with(context)
+                            .load(imageCache.get(otherProfileUID))
+                            .into(authorAvatarPic);
                 }
+
                 //retrieve images for the user in question
 
             }
@@ -126,6 +134,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
             private ImageView authorAvatar;
         }.init(authorAvatarPic));
+
     }
 
     @Override
@@ -221,7 +230,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     }
 
     private void cacheImage(String id, String url){
-        imageCache.put(id, url);
+        this.imageCache.put(id, url);
     }
 
 }
