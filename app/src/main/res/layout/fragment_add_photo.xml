@@ -65,21 +65,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="40dp"
+                android:id="@+id/post_rent_paid_simple"
                 android:text="Post. Rent. Paid. Simple"
                 android:textSize="26dp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/post_rent_paid_simple"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="100dp"
@@ -89,47 +86,79 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
                     android:layout_alignStart="@+id/tips"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:layout_below="@id/tips"
+                    android:id="@+id/boldtext"
                     android:text="Let us help make use of them"
                     android:textStyle="bold" />
 
-            </LinearLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/boldtext"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/buttonLeft"
+                    android:layout_marginTop="40dp"
+                    android:drawableLeft="@android:drawable/ic_menu_gallery"
+                    android:onClick="launchCameraRoll"
+                    android:background="@color/colorAccent"
+                    android:theme="@style/Widget.AppCompat.Button.Colored"
+                    android:text="  Select Photo"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="35dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"/>
 
             <Button
-                android:id="@+id/buttonLeft"
-                android:layout_width="269dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_below="@id/buttonLeft"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="238dp"
-                android:drawableLeft="@android:drawable/ic_menu_gallery"
-                android:onClick="launchCameraRoll"
-                android:padding="16dp"
-                android:textColor="@color/white"
-                android:background="@color/colorAccent"
-                android:theme="@style/Widget.AppCompat.Button.Colored"
-                android:text="Select Photo" />
-
-
-            <Button
                 android:id="@+id/buttonRight"
-                android:layout_width="267dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="140dp"
+                android:layout_marginTop="50dp"
                 android:drawableLeft="@android:drawable/ic_menu_camera"
                 android:onClick="launchCamera"
-                android:padding="16dp"
-                android:textColor="@color/white"
                 android:background="@color/colorAccent"
+                android:theme="@style/Widget.AppCompat.Button.Colored"
+                android:text="  Take Photo"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
 
-                android:text="Take Photo" />
+
+            <!--<Button-->
+                <!--android:id="@+id/buttonLeft"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginTop="200dp"-->
+                <!--android:drawableLeft="@android:drawable/ic_menu_gallery"-->
+                <!--android:onClick="launchCameraRoll"-->
+                <!--android:padding="16dp"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:background="@color/colorAccent"-->
+                <!--android:theme="@style/Widget.AppCompat.Button.Colored"-->
+                <!--android:text="Select Photo" />-->
 
 
+            <!--<Button-->
+                <!--android:id="@+id/buttonRight"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_below="@id/buttonLeft"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginBottom="140dp"-->
+                <!--android:layout_marginTop="130dp"-->
+                <!--android:background="@color/colorAccent"-->
+                <!--android:drawableLeft="@android:drawable/ic_menu_camera"-->
+                <!--android:onClick="launchCamera"-->
+                <!--android:padding="16dp"-->
+                <!--android:text="Take Photo"-->
+                <!--android:textColor="@color/white" />-->
         </RelativeLayout>
 
 

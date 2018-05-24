@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
-        android:textSize="34sp"
+        android:textSize="30sp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="Don't buy, just rent." />

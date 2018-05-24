@@ -19,13 +19,24 @@
         android:layout_below="@id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="Welcome to Rent.to\n\nSwipe to see some of the things you can do"
+        android:paddingLeft="19dp"
+        android:paddingRight="19dp"
+        android:id="@+id/description1"
+        android:text="Welcome to Rent.to"
+
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp" />
+
+    <TextView
+        android:layout_below="@id/description1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="19dp"
+        android:paddingRight="19dp"
+        android:paddingTop="10dp"
+        android:text="Swipe to see some of the things you can do"
         android:textAlignment="center"
-        android:textSize="36sp" />
+        android:textSize="30sp" />
 
     <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
         android:id="@+id/bottomNavViewBar"
