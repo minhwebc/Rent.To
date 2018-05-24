@@ -217,6 +217,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                         if (deviceExisted) {
                             Toast.makeText(mContext, "Device has been seen before, you can't register more account on this device", Toast.LENGTH_SHORT).show();
+                            mProgressBar.setVisibility(View.GONE);
                             return;
                         } else {
                             mAuth.createUserWithEmailAndPassword(email, password)
@@ -230,6 +231,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             // signed in user can be handled in the listener.
                                             if (!task.isSuccessful()) {
                                                 Toast.makeText(mContext, "Error registering users", Toast.LENGTH_SHORT).show();
+                                                mProgressBar.setVisibility(View.GONE);
                                             }
                                             else if(task.isSuccessful()){
                                                 //send verificaton email
@@ -247,6 +249,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                         }
                                                         if (phoneExisted) {
                                                             Toast.makeText(mContext, "Phone number have been registered before, you can register more account on this device", Toast.LENGTH_SHORT).show();
+                                                            mProgressBar.setVisibility(View.GONE);
                                                             return;
                                                         }else {
                                                             reference.child("seen_device_ids").child(deviceIDHelper.getDeviceID()).setValue(true, new DatabaseReference.CompletionListener() {
@@ -290,7 +293,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                                     @Override
                                                     public void onCancelled(DatabaseError databaseError) {
-
+                                                        mProgressBar.setVisibility(View.GONE);
                                                     }
                                                 });
                                             }
@@ -302,6 +305,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "Error 1 : " + databaseError.getDetails());
+                        mProgressBar.setVisibility(View.GONE);
 
                     }
                 });
@@ -309,7 +314,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d(TAG, "Error 2 : " + databaseError.getDetails());
+                mProgressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -361,6 +367,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+
     }
 
     @Override
@@ -369,5 +376,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+        mProgressBar.setVisibility(View.GONE);
+
     }
 }

@@ -327,6 +327,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Query query = mReference.child("messages").child(messageID);
-        query.removeEventListener(listener);
+        query.removeEventListener(childEventListener);
     }
 }
