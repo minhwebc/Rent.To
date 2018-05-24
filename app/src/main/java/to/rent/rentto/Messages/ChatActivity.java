@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -281,6 +282,10 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 MessagePost post = dataSnapshot.getValue(MessagePost.class);
+                if(post == null) {
+                    finish();
+                    Toast.makeText(getApplicationContext(), "Could not get Messages. This item may have been deleted", Toast.LENGTH_SHORT);
+                }
                 addToTitle(post.getTitle());
                 if (post.getUserUID() != null) {
                     Query userQuery = mReference.child("users").child(post.getUserUID());
