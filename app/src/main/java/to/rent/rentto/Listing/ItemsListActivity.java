@@ -262,7 +262,7 @@ public class ItemsListActivity extends AppCompatActivity {
                 return zipCode;
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(ItemsListActivity.this, "Location not found, using default zip", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ItemsListActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
                 return "98105";
             }
         }
