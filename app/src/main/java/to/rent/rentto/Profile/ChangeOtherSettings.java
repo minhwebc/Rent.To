@@ -68,7 +68,7 @@ public class ChangeOtherSettings extends AppCompatActivity {
         });
 
         // Set editText fields
-        editTextEmail = (EditText) findViewById(R.id.email);
+//        editTextEmail = (EditText) findViewById(R.id.email);
         editTextPhone = (EditText) findViewById(R.id.phoneNumber);
 
         // Set up Firebase
@@ -82,11 +82,11 @@ public class ChangeOtherSettings extends AppCompatActivity {
      * @param userSettings The account settings for the user. Includes email and phone number
      */
     private void setEditText(UserSettings userSettings) {
-        String email = userSettings.getUser().getEmail();
-        if(email != null) {
-            oldEmail = email;
-            editTextEmail.setText(email);
-        }
+//        String email = userSettings.getUser().getEmail();
+//        if(email != null) {
+//            oldEmail = email;
+//            editTextEmail.setText(email);
+//        }
         String phone = userSettings.getUser().getPhone_number();
         if(phone != null) {
             oldPhone = phone;
@@ -102,22 +102,22 @@ public class ChangeOtherSettings extends AppCompatActivity {
      * Will not make changes if both edit texts are unchanged
      */
     private void saveProfileSettings() {
-        if(editTextEmail.getText().length() == 0 || editTextPhone.getText().length() == 0) {
+//        if(editTextEmail.getText().length() == 0 || editTextPhone.getText().length() == 0) {
+        if(editTextPhone.getText().length() == 0) {
             Toast.makeText(this, "Please enter a valid phone number and email", Toast.LENGTH_SHORT).show();
         } else {
-            String email = editTextEmail.getText().toString();
+//            String email = editTextEmail.getText().toString();
             String phone = editTextPhone.getText().toString();
             boolean changed = false;
-            if(oldEmail == null || !email.equals(oldEmail)) {
-                saveEmail(email);
-                changed = true;
-            }
+//            if(oldEmail == null || !email.equals(oldEmail)) {
+//                saveEmail(email);
+//                changed = true;
+//            }
             if(oldPhone == null || !phone.equals(oldPhone)) {
                 savePhone(phone); // checks and saves phone number if unique
                 changed = true;
             }
             if(changed) {
-                Toast.makeText(this, "Saved Successfull", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -135,7 +135,9 @@ public class ChangeOtherSettings extends AppCompatActivity {
                 boolean unique = true;
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     User user = snapshot.getValue(User.class);
-                    if(user.getEmail().equals(email)){
+                    if(user.getEmail() == null) {
+
+                    } else if(user.getEmail().equals(email)) {
                         unique = false;
                         Log.d(TAG, "we found a matching email");
                     }
@@ -176,14 +178,18 @@ public class ChangeOtherSettings extends AppCompatActivity {
                 boolean unique = true;
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     User user = snapshot.getValue(User.class);
-                    if(user.getPhone_number().equals(phone)){
+                    if(user.getPhone_number() == null) {
+
+                    } else if(user.getPhone_number().equals(phone)){
                         unique = false;
                         Log.d(TAG, "we found a matching phone number");
                     }
                 } // there were no matching phone numbers
                 if(unique) {
                     savePhoneHelper(phone);
+                    Log.d(TAG, "Saved Phone Number");
                 } else {
+                    Toast.makeText(ChangeOtherSettings.this, "Could not save Phone Number", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Cannot change phone number " + phone);
                 }
             }
@@ -201,6 +207,7 @@ public class ChangeOtherSettings extends AppCompatActivity {
      */
     private void savePhoneHelper(String phone) {
         Log.d(TAG, "The phone number can be changed" + phone);
+        Toast.makeText(ChangeOtherSettings.this, "Saved Phone Number", Toast.LENGTH_SHORT).show();
         mFirebaseMethods.updatePhoneNumber(phone);
     }
 
