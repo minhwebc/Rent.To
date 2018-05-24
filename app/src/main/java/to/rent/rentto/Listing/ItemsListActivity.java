@@ -257,8 +257,9 @@ public class ItemsListActivity extends AppCompatActivity {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             try {
+                String zipCode = getZipcode(location.getLatitude(), location.getLongitude());
                 Toast.makeText(ItemsListActivity.this, "Location found", Toast.LENGTH_SHORT).show();
-                return getZipcode(location.getLatitude(), location.getLongitude());
+                return zipCode;
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(ItemsListActivity.this, "Location not found, using default zip", Toast.LENGTH_SHORT).show();
