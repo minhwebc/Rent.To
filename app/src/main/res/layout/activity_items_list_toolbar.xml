@@ -26,6 +26,16 @@
                     android:layout_marginStart="5dp"
                     android:id="@+id/listingName"/>
 
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:iconifiedByDefault="false"
+                    android:queryHint="Search"
+                    android:layout_marginRight="20dp"
+                    android:visibility="visible"
+                    android:layout_toLeftOf="@id/textView6"/>
+
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
@@ -33,6 +43,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="14dp"
+
                     android:text="Filter" />
 
             </RelativeLayout>
