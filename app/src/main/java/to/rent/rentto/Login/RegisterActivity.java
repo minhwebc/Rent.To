@@ -217,38 +217,40 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                         if (deviceExisted) {
                             Toast.makeText(mContext, "Device has been seen before, you can't register more account on this device", Toast.LENGTH_SHORT).show();
+                            mProgressBar.setVisibility(View.GONE);
                             return;
                         } else {
-                            mAuth.createUserWithEmailAndPassword(email, password)
-                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                                            // If sign in fails, display a message to the user. If sign in succeeds
-                                            // the auth state listener will be notified and logic to handle the
-                                            // signed in user can be handled in the listener.
-                                            if (!task.isSuccessful()) {
-                                                Toast.makeText(mContext, "Error registering users", Toast.LENGTH_SHORT).show();
-                                            }
-                                            else if(task.isSuccessful()){
-                                                //send verificaton email
-                                                final String userID = mAuth.getCurrentUser().getUid();
-                                                mAuth.getCurrentUser().sendEmailVerification();
-                                                Log.d(TAG, "onComplete: Authstate changed: " + userID);
-                                                reference.child("seen_phone_numbers").child(deviceIDHelper.getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            reference.child("seen_phone_numbers").child(deviceIDHelper.getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Boolean phoneExisted = true;
+                                    if (dataSnapshot.exists()) {
+                                        phoneExisted = dataSnapshot.getValue(Boolean.class);
+                                    } else {
+                                        phoneExisted = false;
+                                    }
+                                    if (phoneExisted) {
+                                        Toast.makeText(mContext, "Phone number have been registered before, you cant register more account on this device", Toast.LENGTH_SHORT).show();
+                                        mProgressBar.setVisibility(View.GONE);
+                                        return;
+                                    } else {
+                                        mAuth.createUserWithEmailAndPassword(email, password)
+                                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                                     @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        Boolean phoneExisted = true;
-                                                        if(dataSnapshot.exists()){
-                                                            phoneExisted = dataSnapshot.getValue(Boolean.class);
-                                                        } else {
-                                                            phoneExisted = false;
-                                                        }
-                                                        if (phoneExisted) {
-                                                            Toast.makeText(mContext, "Phone number have been registered before, you can register more account on this device", Toast.LENGTH_SHORT).show();
-                                                            return;
-                                                        }else {
+                                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                                                        // If sign in fails, display a message to the user. If sign in succeeds
+                                                        // the auth state listener will be notified and logic to handle the
+                                                        // signed in user can be handled in the listener.
+                                                        if (!task.isSuccessful()) {
+                                                            Toast.makeText(mContext, "Error registering users", Toast.LENGTH_SHORT).show();
+                                                            mProgressBar.setVisibility(View.GONE);
+                                                        } else if (task.isSuccessful()) {
+                                                            //send verificaton email
+                                                            final String userID = mAuth.getCurrentUser().getUid();
+                                                            mAuth.getCurrentUser().sendEmailVerification();
+                                                            Log.d(TAG, "onComplete: Authstate changed: " + userID);
                                                             reference.child("seen_device_ids").child(deviceIDHelper.getDeviceID()).setValue(true, new DatabaseReference.CompletionListener() {
                                                                 @Override
                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -275,7 +277,6 @@ public class RegisterActivity extends AppCompatActivity {
                                                                             reference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see").push().setValue("welcomeMessage", new DatabaseReference.CompletionListener() {
                                                                                 @Override
                                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                                                    //pd.dismiss();
                                                                                     mProgressBar.setVisibility(View.GONE);
                                                                                     Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
                                                                                     mAuth.signOut();
@@ -287,21 +288,23 @@ public class RegisterActivity extends AppCompatActivity {
                                                             });
                                                         }
                                                     }
-
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
-
-                                                    }
                                                 });
-                                            }
+                                    }
+                                }
 
-                                        }
-                                    });
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d(TAG, "Error checking phone number : " + databaseError.getDetails());
+                                }
+                            });
+
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "Error checking device id : " + databaseError.getDetails());
+                        mProgressBar.setVisibility(View.GONE);
 
                     }
                 });
@@ -309,7 +312,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d(TAG, "Error checking for username existence : " + databaseError.getDetails());
+                mProgressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -361,6 +365,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+
     }
 
     @Override
@@ -369,5 +374,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+        mProgressBar.setVisibility(View.GONE);
+
     }
 }
