@@ -141,7 +141,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
                 .into(authorAvatarPic);
         notifyDataSetChanged();
     }
-    
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater messageInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);

@@ -61,7 +61,7 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             Log.d(TAG, "child listener " + dataSnapshot.getKey());
-            
+
             if(!dataSnapshot.getKey().equals("post")) {
                 Message message = dataSnapshot.getValue(Message.class);
                 if (message.getAuthorID().equals(myUser.getUser_id())) {
@@ -212,12 +212,13 @@ public class ChatActivity extends AppCompatActivity {
         query1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //System.out.println("This is the user : " + dataSnapshot.getValue());
+                System.out.println("This is the user : " + dataSnapshot.getValue());
                 myUser = dataSnapshot.getValue(User.class);
                 Log.d(TAG, myUser.getUsername());
                 Query query = mReference.child("messages").child(messageID);
                 //query.addListenerForSingleValueEvent(listener);
                 messageAdapter.messages.clear();
+                query.addChildEventListener(childEventListener);
             }
 
             @Override
