@@ -248,7 +248,8 @@ public class ItemsListActivity extends AppCompatActivity {
                             String keyID = singleSnapShot.getKey(); //photoIDs
                             Item mItem = singleSnapShot.getValue(Item.class);
                             String photo_path = mItem.imageURL;
-                            if(!(mItem.userUID.equals(mAuth.getCurrentUser().getUid())) && !mItem.sold && mItem.title.toLowerCase().contains(queryString)){
+                            if(mItem == null || mItem.userUID == null) {
+                            } else if(!(mItem.userUID.equals(mAuth.getCurrentUser().getUid())) && !mItem.sold && mItem.title.toLowerCase().contains(queryString)){
                                 if (filter != null) {
                                     if (filter.equals(mItem.category)) {
                                         mImageUrls.add(photo_path);
@@ -295,9 +296,14 @@ public class ItemsListActivity extends AppCompatActivity {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             try {
-                String zipCode = getZipcode(location.getLatitude(), location.getLongitude());
-                Toast.makeText(ItemsListActivity.this, "Location found", Toast.LENGTH_SHORT).show();
-                return zipCode;
+                if(location != null) {
+                    String zipCode = getZipcode(location.getLatitude(), location.getLongitude());
+                    Toast.makeText(ItemsListActivity.this, "Location found", Toast.LENGTH_SHORT).show();
+                    return zipCode;
+                } else {
+                    Log.d(TAG, "Could not get location, using 98105");
+                    return "98105";
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(ItemsListActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
