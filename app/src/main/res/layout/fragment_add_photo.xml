@@ -8,49 +8,16 @@
     tools:context="to.rent.rentto.Camera.CameraActivity">
 
 
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout1">
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/white_grey_border_bottom"
-            >
-            <android.support.v7.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/listingToolBar">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:layout_toRightOf="@+id/backArrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="Post your item"
-                        android:textSize="20sp"
-                        android:textColor="@color/white"
-                        android:layout_marginStart="5dp"
-                        android:id="@+id/listingName"/>
-                </RelativeLayout>
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.AppBarLayout>
-    </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <!-- Middle section (body) -->
         <RelativeLayout
             android:id="@+id/relLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="40dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true">
 
@@ -65,18 +32,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
-                android:id="@+id/post_rent_paid_simple"
+                android:layout_marginTop="42dp"
                 android:text="Post. Rent. Paid. Simple"
                 android:textSize="26dp" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/post_rent_paid_simple"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="100dp"
@@ -86,79 +56,47 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
                     android:layout_alignStart="@+id/tips"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_below="@id/tips"
-                    android:id="@+id/boldtext"
                     android:text="Let us help make use of them"
                     android:textStyle="bold" />
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/boldtext"
-                    android:layout_centerHorizontal="true"
-                    android:id="@+id/buttonLeft"
-                    android:layout_marginTop="40dp"
-                    android:drawableLeft="@android:drawable/ic_menu_gallery"
-                    android:onClick="launchCameraRoll"
-                    android:background="@color/colorAccent"
-                    android:theme="@style/Widget.AppCompat.Button.Colored"
-                    android:text="  Select Photo"
-                    android:paddingLeft="35dp"
-                    android:paddingRight="35dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"/>
+            </LinearLayout>
 
             <Button
-                android:layout_width="wrap_content"
+                android:id="@+id/buttonLeft"
+                android:layout_width="269dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/buttonLeft"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/buttonRight"
-                android:layout_marginTop="50dp"
-                android:drawableLeft="@android:drawable/ic_menu_camera"
-                android:onClick="launchCamera"
+                android:layout_marginTop="238dp"
+                android:drawableLeft="@android:drawable/ic_menu_gallery"
+                android:onClick="launchCameraRoll"
+                android:padding="16dp"
+                android:textColor="@color/white"
                 android:background="@color/colorAccent"
                 android:theme="@style/Widget.AppCompat.Button.Colored"
-                android:text="  Take Photo"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"/>
+                android:text="Select Photo" />
 
 
-            <!--<Button-->
-                <!--android:id="@+id/buttonLeft"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:layout_marginTop="200dp"-->
-                <!--android:drawableLeft="@android:drawable/ic_menu_gallery"-->
-                <!--android:onClick="launchCameraRoll"-->
-                <!--android:padding="16dp"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:background="@color/colorAccent"-->
-                <!--android:theme="@style/Widget.AppCompat.Button.Colored"-->
-                <!--android:text="Select Photo" />-->
+            <Button
+                android:id="@+id/buttonRight"
+                android:layout_width="267dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="140dp"
+                android:drawableLeft="@android:drawable/ic_menu_camera"
+                android:onClick="launchCamera"
+                android:padding="16dp"
+                android:textColor="@color/white"
+                android:background="@color/colorAccent"
+
+                android:text="Take Photo" />
 
 
-            <!--<Button-->
-                <!--android:id="@+id/buttonRight"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:layout_below="@id/buttonLeft"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:layout_marginBottom="140dp"-->
-                <!--android:layout_marginTop="130dp"-->
-                <!--android:background="@color/colorAccent"-->
-                <!--android:drawableLeft="@android:drawable/ic_menu_camera"-->
-                <!--android:onClick="launchCamera"-->
-                <!--android:padding="16dp"-->
-                <!--android:text="Take Photo"-->
-                <!--android:textColor="@color/white" />-->
         </RelativeLayout>
 
 
