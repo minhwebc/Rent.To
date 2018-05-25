@@ -64,6 +64,10 @@ public class NotificationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume called");
+        messageIDList.clear();
+        data.clear();
+        arrayAdapter.notifyDataSetChanged();
         loadMessages();
     }
 
@@ -101,7 +105,7 @@ public class NotificationActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        loadMessages();
+//        loadMessages();
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
