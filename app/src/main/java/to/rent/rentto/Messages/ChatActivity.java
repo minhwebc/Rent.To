@@ -282,26 +282,28 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 MessagePost post = dataSnapshot.getValue(MessagePost.class);
-                if(post == null) {
-                    finish();
+                if(post == null || post.getTitle() == null) {
+                    Log.d(TAG, "post was null, finishing chatactivity");
                     Toast.makeText(getApplicationContext(), "Could not get Messages. This item may have been deleted", Toast.LENGTH_SHORT);
-                }
-                addToTitle(post.getTitle());
-                if (post.getUserUID() != null) {
-                    Query userQuery = mReference.child("users").child(post.getUserUID());
-                    userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            currentUser = dataSnapshot.getValue(User.class);
-                            addToTitle(currentUser.getUsername());
-                        }
+                    finish();
+                } else {
+                    Log.d(TAG, "Post was not null");
+                    addToTitle(post.getTitle());
+                    if (post.getUserUID() != null) {
+                        Query userQuery = mReference.child("users").child(post.getUserUID());
+                        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                currentUser = dataSnapshot.getValue(User.class);
+                                addToTitle(currentUser.getUsername());
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-
+                            }
+                        });
+                    }
                 }
             }
 
