@@ -82,11 +82,13 @@ public class HomeActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid()).child("notificationTokens").child(token).setValue(true);
             Intent intent = new Intent(getApplicationContext(), ItemsListActivity.class);
             startActivity(intent);
+            finish();
         } else {
             Log.d(TAG, "user not sign in");
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
+            finish();
         }
         //updateUI(currentUser);
     }
