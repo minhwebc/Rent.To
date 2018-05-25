@@ -284,7 +284,7 @@ public class ChatActivity extends AppCompatActivity {
                 MessagePost post = dataSnapshot.getValue(MessagePost.class);
                 if(post == null || post.getTitle() == null) {
                     Log.d(TAG, "post was null, finishing chatactivity");
-                    Toast.makeText(getApplicationContext(), "Could not get Messages. This item may have been deleted", Toast.LENGTH_SHORT);
+                    Toast.makeText(ChatActivity.this, "Could not get Messages. This item may have been deleted", Toast.LENGTH_SHORT);
                     finish();
                 } else {
                     Log.d(TAG, "Post was not null");

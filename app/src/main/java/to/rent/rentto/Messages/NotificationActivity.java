@@ -1,5 +1,6 @@
 package to.rent.rentto.Messages;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -144,6 +145,12 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void loadMessages(){
+        final ProgressDialog dialog=new ProgressDialog(NotificationActivity.this);
+        dialog.setMessage("Fetching your messages");
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(false);
+        dialog.show();
+
         Query query = mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("messages_this_user_can_see");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -237,6 +244,7 @@ public class NotificationActivity extends AppCompatActivity {
 
                     });
                 }
+                dialog.dismiss();
             }
 
             @Override
