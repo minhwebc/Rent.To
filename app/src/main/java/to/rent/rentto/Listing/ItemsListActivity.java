@@ -1,7 +1,7 @@
 package to.rent.rentto.Listing;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,9 +17,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Display;
@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,10 +49,6 @@ import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
-import to.rent.rentto.Utils.DeviceID;
-
-import static android.widget.GridLayout.HORIZONTAL;
-import static android.widget.GridLayout.VERTICAL;
 
 /**
  * Created by Sora on 2/15/2018.
@@ -81,6 +76,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private ArrayList<Boolean> clickable = new ArrayList<>();
     private FirebaseAuth mAuth;
     BottomNavigationViewEx bottomNavigationViewEx;
+    private String queryString = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -144,6 +140,48 @@ public class ItemsListActivity extends AppCompatActivity {
             editor.putBoolean("hasSeenFilterTooltip", true);
             editor.apply();
         }
+
+        //setting up search view
+        final SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Log.d(TAG, "on close");
+                findViewById(R.id.listingName).setVisibility(View.INVISIBLE);
+                queryString = "";
+                initRecyclerView();
+                initImageBitMaps();
+                return false;
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b)  {
+                    findViewById(R.id.listingName).setVisibility(View.INVISIBLE);
+                } else
+                {                    searchView.setIconified(true);
+                    findViewById(R.id.listingName).setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, query);
+                queryString = query.toLowerCase();
+                initRecyclerView();
+                initImageBitMaps();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
     }
 
     private void showFilterTooltip() {
@@ -210,7 +248,8 @@ public class ItemsListActivity extends AppCompatActivity {
                             String keyID = singleSnapShot.getKey(); //photoIDs
                             Item mItem = singleSnapShot.getValue(Item.class);
                             String photo_path = mItem.imageURL;
-                            if(!(mItem.userUID.equals(mAuth.getCurrentUser().getUid())) && !mItem.sold){
+                            if(mItem == null || mItem.userUID == null) {
+                            } else if(!(mItem.userUID.equals(mAuth.getCurrentUser().getUid())) && !mItem.sold && mItem.title.toLowerCase().contains(queryString)){
                                 if (filter != null) {
                                     if (filter.equals(mItem.category)) {
                                         mImageUrls.add(photo_path);
@@ -257,9 +296,14 @@ public class ItemsListActivity extends AppCompatActivity {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             try {
-                String zipCode = getZipcode(location.getLatitude(), location.getLongitude());
-                Toast.makeText(ItemsListActivity.this, "Location found", Toast.LENGTH_SHORT).show();
-                return zipCode;
+                if(location != null) {
+                    String zipCode = getZipcode(location.getLatitude(), location.getLongitude());
+                    Toast.makeText(ItemsListActivity.this, "Location found", Toast.LENGTH_SHORT).show();
+                    return zipCode;
+                } else {
+                    Log.d(TAG, "Could not get location, using 98105");
+                    return "98105";
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(ItemsListActivity.this, "Location not found", Toast.LENGTH_SHORT).show();

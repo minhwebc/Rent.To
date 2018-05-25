@@ -19,6 +19,7 @@ android:layout_height="match_parent">
         android:layout_marginBottom="23dp"
         android:layout_weight="10"
         android:hint="Name of Item"
+        android:singleLine="true"
         android:textAlignment="center" />
 
 

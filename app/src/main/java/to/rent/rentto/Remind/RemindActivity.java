@@ -125,6 +125,8 @@ public class RemindActivity extends AppCompatActivity {
         takeBackID.clear();
         remindReturnListArray.clear();
         remindTakeListArray.clear();
+        adapterR.notifyDataSetChanged();
+        adapterT.notifyDataSetChanged();
         mReference.child("users").child(mAuth.getCurrentUser().getUid()).child("return_remind_message_user_can_see").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {

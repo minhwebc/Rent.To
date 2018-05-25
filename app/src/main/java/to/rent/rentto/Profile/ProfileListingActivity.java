@@ -188,6 +188,8 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
                                                     @Override
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         Toast.makeText(mContext, "Item deleted", Toast.LENGTH_SHORT).show();
+                                                        Log.d(TAG, "Finishing activity, item deleted");
+                                                        finish();
                                                     }
                                                 });
                                             }
@@ -299,6 +301,8 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
                                                                                                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                                                                                                     if(databaseError == null) {
                                                                                                                                         Toast.makeText(mContext, "Rating submitted", Toast.LENGTH_SHORT).show();
+                                                                                                                                        Log.d(TAG, "Finishing activity, rating submitted");
+                                                                                                                                        finish();
                                                                                                                                     }
                                                                                                                                 }
                                                                                                                             });
@@ -355,6 +359,8 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                         Toast.makeText(mContext, "Item has been marked rented", Toast.LENGTH_SHORT).show();
+                                        Log.d(TAG, "Finishing activity, marked as rented");
+                                        finish();
                                     }
                                 });
                             }
@@ -377,6 +383,8 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
             builder.show();
         }else{
             Toast.makeText(mContext, "Item has already been marked rented", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Finishing activity, already rented");
+            finish();
         }
     }
 

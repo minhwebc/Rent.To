@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -281,22 +282,28 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 MessagePost post = dataSnapshot.getValue(MessagePost.class);
-                addToTitle(post.getTitle());
-                if (post.getUserUID() != null) {
-                    Query userQuery = mReference.child("users").child(post.getUserUID());
-                    userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            currentUser = dataSnapshot.getValue(User.class);
-                            addToTitle(currentUser.getUsername());
-                        }
+                if(post == null || post.getTitle() == null) {
+                    Log.d(TAG, "post was null, finishing chatactivity");
+                    Toast.makeText(ChatActivity.this, "Could not get Messages. This item may have been deleted", Toast.LENGTH_SHORT);
+                    finish();
+                } else {
+                    Log.d(TAG, "Post was not null");
+                    addToTitle(post.getTitle());
+                    if (post.getUserUID() != null) {
+                        Query userQuery = mReference.child("users").child(post.getUserUID());
+                        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                currentUser = dataSnapshot.getValue(User.class);
+                                addToTitle(currentUser.getUsername());
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-
+                            }
+                        });
+                    }
                 }
             }
 
