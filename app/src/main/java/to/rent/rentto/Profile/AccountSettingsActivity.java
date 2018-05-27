@@ -101,7 +101,7 @@ public class AccountSettingsActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: navigating to fragment#: " + position);
                 if(position == 1) {
-                    listView.setOnClickListener(null); // prevent spam click logout
+                    listView.setOnItemClickListener(null); // prevent spam click logout
                     String token = FirebaseInstanceId.getInstance().getToken();
                     FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("notificationTokens").child(token).setValue(null, new DatabaseReference.CompletionListener() {
                         @Override
