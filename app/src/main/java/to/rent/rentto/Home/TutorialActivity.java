@@ -53,6 +53,7 @@ public class TutorialActivity extends IntroActivity {
         if (introductionCompletedPreviously()) {
             final Intent nextActivity = new Intent(this, HomeActivity.class);
             startActivity(nextActivity);
+            finish();
         }
         configureTransformer();
         //configureBackground();

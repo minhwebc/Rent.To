@@ -83,7 +83,8 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name=".Home.TutorialActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
 
         <service
             android:name=".Messages.MyFirebaseMessagingService"
