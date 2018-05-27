@@ -316,13 +316,33 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Adds a string for the title bar inside of chatactivity
+     * Format should be "{title of post} - {Author Username}"
+     * Limits length of title to 28 characters to prevent long title from bleeding over
+     * @param str
+     */
     private void addToTitle(String str) {
         if (this.ToolBarText.length() == 0) {
             this.ToolBarText = str;
         } else {
             this.ToolBarText += " - " + str;
         }
-        this.textView.setText(this.ToolBarText);
+        String input = limitStringLength(this.ToolBarText, 28);
+        this.textView.setText(input);
+    }
+
+    /**
+     * Limits the length of the given string to the limit, if it is above the limit
+     * @param string
+     * @param limit
+     */
+    private String limitStringLength(String string, int limit) {
+        if(string == null || limit < 5 || string.length() <= limit) {
+            return string;
+        } else {
+            return string.substring(0, limit) + "...";
+        }
     }
 
     protected void onPause() {
