@@ -240,6 +240,7 @@ public class ItemsListActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String currCity = findCurrentCity();
                 mImageUrls.clear();
+                thumbnailUrls.clear();
                 iDs.clear();
                 zipcodes.clear();
                 mItems.clear();
