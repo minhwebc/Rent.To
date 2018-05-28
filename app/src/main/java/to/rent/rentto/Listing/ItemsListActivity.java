@@ -64,6 +64,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private android.support.v4.app.FragmentManager fragmentManager;
     private Context mContext;
     private ArrayList<String> mImageUrls = new ArrayList<>();
+    private ArrayList<String> thumbnailUrls = new ArrayList<>();
     private ArrayList<String> iDs = new ArrayList<>();
     private ArrayList<String> zipcodes = new ArrayList<>();
     private DatabaseReference mReference;
@@ -248,17 +249,20 @@ public class ItemsListActivity extends AppCompatActivity {
                             String keyID = singleSnapShot.getKey(); //photoIDs
                             Item mItem = singleSnapShot.getValue(Item.class);
                             String photo_path = mItem.imageURL;
+                            String thumbnail_path = mItem.thumbnailURL;
                             if(mItem == null || mItem.userUID == null) {
                             } else if(!(mItem.userUID.equals(mAuth.getCurrentUser().getUid())) && !mItem.sold && mItem.title.toLowerCase().contains(queryString)){
                                 if (filter != null) {
                                     if (filter.equals(mItem.category)) {
                                         mImageUrls.add(photo_path);
+                                        thumbnailUrls.add(thumbnail_path);
                                         iDs.add(keyID);
                                         mItems.add(mItem);
                                         zipcodes.add(zips.getKey());
                                     }
                                 } else {
                                     mImageUrls.add(photo_path);
+                                    thumbnailUrls.add(thumbnail_path);
                                     iDs.add(keyID);
                                     mItems.add(mItem);
                                     zipcodes.add(zips.getKey());
@@ -372,7 +376,7 @@ public class ItemsListActivity extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         staggeredRecyclerViewAdapter =
-                new RecyclerViewAdapter(this, iDs, mImageUrls, findCurrentCity(), zipcodes, mItems, clickable);
+                new RecyclerViewAdapter(this, iDs, mImageUrls, thumbnailUrls, findCurrentCity(), zipcodes, mItems, clickable);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(staggeredRecyclerViewAdapter);

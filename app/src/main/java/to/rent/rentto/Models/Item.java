@@ -6,6 +6,7 @@ package to.rent.rentto.Models;
 
 public class Item {
     public String imageURL;
+    public String thumbnailURL;
     public String rate;
     public String title;
     public String category;
@@ -19,9 +20,10 @@ public class Item {
 
     }
 
-    public Item(String imageURL, String rate, String description, String title, String category, String condition, String userUID, String zip, Boolean sold) {
+    public Item(String imageURL, String thumbnailURL, String rate, String description, String title, String category, String condition, String userUID, String zip, Boolean sold) {
         this.rate = rate;
         this.imageURL = imageURL;
+        this.thumbnailURL = thumbnailURL;
         this.description = description;
         this.title = title;
         this.category = category;
