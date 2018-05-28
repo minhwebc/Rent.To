@@ -244,9 +244,10 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
                     }
                 }
                 //calculation
-                Double latestRating = ratingNumber + newRating;
+                Double prevRatingTotal = ratingNumber * totalRating;
+                Double latestRatingTotal = prevRatingTotal + newRating;
                 totalRating = totalRating + 1;
-                Double newAverageRating = latestRating / totalRating;
+                Double newAverageRating = latestRatingTotal / totalRating;
                 newAverageRating = Math.round(newAverageRating * 100.0) / 100.0;
                 final int finalTotalRating = totalRating;
                 mReference.child("users").child(offerUserID).child("rating").setValue(newAverageRating, new DatabaseReference.CompletionListener() {
@@ -394,7 +395,7 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
                 .setNegativeButtonText("Cancel")
                 .setNeutralButtonText("Later")
                 .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
-                .setDefaultRating(2)
+                .setDefaultRating(5)
                 .setTitle("How would you rate this person")
                 .setDescription("Please select some stars and give a reminder below")
                 .setStarColor(R.color.colorAccent)
