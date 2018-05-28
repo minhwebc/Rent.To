@@ -143,7 +143,7 @@ public class RemindActivity extends AppCompatActivity implements RatingDialogLis
                                     System.out.println("The item id is " + itemID);
                                     Intent rateIntent = new Intent(mContext, RatingActivity.class);
                                     rateIntent.putExtra("userid_to_be_rated", lenderID);
-                                    rateIntent.putExtra("postid", "");
+                                    rateIntent.putExtra("postid", itemID);
                                     startActivity(rateIntent);
 
                                 }

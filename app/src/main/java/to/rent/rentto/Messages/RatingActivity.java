@@ -47,17 +47,31 @@ public class RatingActivity extends AppCompatActivity implements RatingDialogLis
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean seen = false;
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    Log.d(TAG, "ds.getKey is " + ds.getKey());
+                    Log.d(TAG, "uniqueID is " + uniqueID);
+                    Log.d(TAG, "" + ds.getKey().equals(uniqueID));
                     if(ds.getKey().equals(uniqueID)){
                         rated[0] = ds.getValue(boolean.class);
+                        if(!ds.getValue(boolean.class)) {
+                            Log.d(TAG, "It was false, trying to show dialog");
+                            seen = true;
+                            showDialog();
+                        } else {
+                            Log.d(TAG, "it was true");
+                        }
+//                        if(!rated[0]){
+//                            showDialog();
+//                        }
                     }
-                    if(!rated[0]){
-                        showDialog();
-                    } else {
-                        Toast.makeText(RatingActivity.this, "You have both rated each other. Thank you", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(RatingActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                    }
+                }
+                if(seen) {
+                    Log.d(TAG, "The post was seen");
+                } else {
+                    Toast.makeText(RatingActivity.this, "You have both rated each other. Thank you", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(RatingActivity.this, HomeActivity.class);
+                    startActivity(intent);
                 }
             }
 
