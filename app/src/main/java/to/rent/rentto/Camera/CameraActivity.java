@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -193,6 +195,26 @@ public class CameraActivity extends AppCompatActivity {
             //Get the photo
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap) extras.get("data");
+
+            ExifInterface exif = null;
+            int orientation = ExifInterface.ORIENTATION_NORMAL;
+
+            if (exif != null)
+                orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    photo = rotateBitmap(photo, 90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    photo = rotateBitmap(photo, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    photo = rotateBitmap(photo, 270);
+                    break;
+            }
+
             uploadable = photo;
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -202,6 +224,11 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+    public static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
     /**
      * Sets up the bottom navigation view
