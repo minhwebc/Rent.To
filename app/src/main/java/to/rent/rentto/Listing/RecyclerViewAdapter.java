@@ -77,6 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Glide.with(mContext)
                 .load(mImageUrls.get(position))
                 .apply(requestOptions)
+                .thumbnail(.5f)
                 .into(holder.imageView);
         if(mItems.get(position).sold) {
             holder.soldInfo.setVisibility(View.VISIBLE);
