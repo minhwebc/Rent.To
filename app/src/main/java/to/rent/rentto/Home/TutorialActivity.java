@@ -53,6 +53,7 @@ public class TutorialActivity extends IntroActivity {
         if (introductionCompletedPreviously()) {
             final Intent nextActivity = new Intent(this, HomeActivity.class);
             startActivity(nextActivity);
+            finish();
         }
         configureTransformer();
         //configureBackground();
@@ -112,7 +113,7 @@ public class TutorialActivity extends IntroActivity {
      */
     private boolean introductionCompletedPreviously() {
         final SharedPreferences sp = getSharedPreferences(DISPLAY_ONCE_PREFS, MODE_PRIVATE);
-        return false && sp.getBoolean(DISPLAY_ONCE_KEY, false);
+        return sp.getBoolean(DISPLAY_ONCE_KEY, false);
     }
 
     /**

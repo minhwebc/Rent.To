@@ -2,6 +2,7 @@ package to.rent.rentto.Messages;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,9 +15,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +37,7 @@ import java.util.Date;
 import java.util.Random;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+import to.rent.rentto.Listing.ListingActivity;
 import to.rent.rentto.Models.Message;
 import to.rent.rentto.Models.MessagePost;
 import to.rent.rentto.Models.User;
@@ -54,6 +58,10 @@ public class ChatActivity extends AppCompatActivity {
     private String messageUID;
     private TextView textView;
     private String ToolBarText;
+    private String previewImageURL;
+    private String previewPostUID;
+    private String previewPostZipcode;
+    private ImageView previewPostImageView;
     public ChatActivity() {
 
     }
@@ -182,6 +190,7 @@ public class ChatActivity extends AppCompatActivity {
             editText.setHint("Disabled");
         }
         getListingName();
+        previewPostImageView = (ImageView) findViewById(R.id.itemPicturePreview);
         findViewById(R.id.messages_view).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -276,6 +285,36 @@ public class ChatActivity extends AppCompatActivity {
         return sb.toString().substring(0, 7);
     }
 
+    /**
+     * Sets fields for imageURL, postUID, and zipcode
+     * Shows post image preview in top toolbar
+     * Adds onClickListener to item image ImageView to show item details in ListingActivity
+     * @param imageURL
+     * @param postUID
+     * @param postZip
+     */
+    public void setPostDetails(String imageURL, String postUID, String postZip) {
+        this.previewImageURL = imageURL;
+        this.previewPostUID = postUID;
+        this.previewPostZipcode = postZip;
+        Glide.with(mContext)
+                .load(previewImageURL)
+                .into(previewPostImageView);
+        Log.d(TAG, "postUID is" + postUID);
+        Log.d(TAG, "zipcode is " + postZip);
+        previewPostImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, ListingActivity.class);
+                Bundle args = new Bundle();
+                args.putString("ITEM_ID", previewPostUID);
+                args.putString("CITY", previewPostZipcode);
+                intent.putExtras(args);
+                startActivity(intent);
+            }
+        });
+    }
+
     private void getListingName() {
         Query query = mReference.child("messages").child(messageID).child("post");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -289,6 +328,10 @@ public class ChatActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "Post was not null");
                     addToTitle(post.getTitle());
+                    String imageURL = post.getImageURL();
+                    String postUID = post.getPostID();
+                    String postZip = post.getZipcode();
+                    setPostDetails(imageURL, postUID, postZip);
                     if (post.getUserUID() != null) {
                         Query userQuery = mReference.child("users").child(post.getUserUID());
                         userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -316,13 +359,33 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Adds a string for the title bar inside of chatactivity
+     * Format should be "{title of post} - {Author Username}"
+     * Limits length of title to 28 characters to prevent long title from bleeding over
+     * @param str
+     */
     private void addToTitle(String str) {
         if (this.ToolBarText.length() == 0) {
             this.ToolBarText = str;
         } else {
             this.ToolBarText += " - " + str;
         }
-        this.textView.setText(this.ToolBarText);
+        String input = limitStringLength(this.ToolBarText, 28);
+        this.textView.setText(input);
+    }
+
+    /**
+     * Limits the length of the given string to the limit, if it is above the limit
+     * @param string
+     * @param limit
+     */
+    private String limitStringLength(String string, int limit) {
+        if(string == null || limit < 5 || string.length() <= limit) {
+            return string;
+        } else {
+            return string.substring(0, limit) + "...";
+        }
     }
 
     protected void onPause() {

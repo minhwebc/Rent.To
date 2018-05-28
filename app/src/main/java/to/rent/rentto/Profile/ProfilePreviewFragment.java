@@ -260,6 +260,11 @@ public class ProfilePreviewFragment extends Fragment {
         if(website == null || website.length() < 1) {
             website = "No Website Listed";
         }
+        String description = settings.getDescription();
+        if(description == null || description.length() == 0) {
+            description = "No Description";
+        }
+        mDescription.setText(description);
         mWebsite.setText(website);
         Log.d(TAG, "displayname is " + settings.getUsername() + " username is " + settings.getUsername() + " rating is " + (float) rating);
     }

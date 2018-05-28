@@ -2,7 +2,8 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/parent">
 
     <include layout="@layout/layout_center_viewpager"/>
     <RelativeLayout
@@ -26,7 +27,7 @@
 
             <include layout="@layout/layout_center_accountsettings"/>
         </RelativeLayout>
-        <include layout="@layout/layout_bottom_navigation_view"/>
+        <!-- Don't include bottom navbar on settings <include layout="@layout/layout_bottom_navigation_view"/> -->
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

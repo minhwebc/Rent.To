@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,6 +27,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
 
+import to.rent.rentto.Help.HowToPostFragment;
 import to.rent.rentto.Home.HomeActivity;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
@@ -54,8 +57,8 @@ public class AccountSettingsActivity extends AppCompatActivity{
         mRelativeLayout = (RelativeLayout) findViewById(R.id.relLayout1);
 
         setupSettingsList();
-        setupBottomNavigationView();
-        setupFragments();
+//        setupBottomNavigationView();
+//        setupFragments();
 
         ImageView backArrow = (ImageView) findViewById(R.id.backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -67,23 +70,23 @@ public class AccountSettingsActivity extends AppCompatActivity{
         });
     }
 
-    private void setupFragments(){
-        pagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new EditProfileFragment(), getString(R.string.edit_profile_fragment)); //fragment 0
+//    private void setupFragments(){
+//        pagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
+//        pagerAdapter.addFragment(new EditProfileFragment(), getString(R.string.edit_profile_fragment)); //fragment 0
 //        pagerAdapter.addFragment(new SignOutFragment(), getString(R.string.sign_out_fragment)); //fragment 1
 //        pagerAdapter.addFragment(new HelpFragment(), getString(R.string.help_fragment)); //fragment 2
-    }
-
-    private void setViewPager(int fragmentNumber) {
-        mRelativeLayout.setVisibility(View.GONE);
-        Log.d(TAG, "setViewPager: navigating to fragment #: " + fragmentNumber);
-        mViewPager.setAdapter(pagerAdapter);
-        mViewPager.setCurrentItem(fragmentNumber);
-    }
+//    }
+//
+//    private void setViewPager(int fragmentNumber) {
+//        mRelativeLayout.setVisibility(View.GONE);
+//        Log.d(TAG, "setViewPager: navigating to fragment #: " + fragmentNumber);
+//        mViewPager.setAdapter(pagerAdapter);
+//        mViewPager.setCurrentItem(fragmentNumber);
+//    }
 
     private void setupSettingsList() {
         Log.d(TAG,"setupSettingsList: initializing 'AccountSettings' list.");
-        ListView listView =(ListView) findViewById(R.id.lvAccountSettings);
+        final ListView listView =(ListView) findViewById(R.id.lvAccountSettings);
 
         ArrayList<String> options = new ArrayList<>();
         options.add(getString(R.string.edit_profile_fragment)); //fragment 0
@@ -98,6 +101,7 @@ public class AccountSettingsActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: navigating to fragment#: " + position);
                 if(position == 1) {
+                    listView.setOnItemClickListener(null); // prevent spam click logout
                     String token = FirebaseInstanceId.getInstance().getToken();
                     FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("notificationTokens").child(token).setValue(null, new DatabaseReference.CompletionListener() {
                         @Override
@@ -111,19 +115,28 @@ public class AccountSettingsActivity extends AppCompatActivity{
                         }
                     });
                 } else {
-                    setViewPager(position);
+                    if(position == 0) {
+//                        Fragment fragment = new HelpFragment();
+                        FragmentManager manager = getSupportFragmentManager();
+                        manager.beginTransaction().replace(R.id.parent, new EditProfileFragment()).addToBackStack(null).commit();
+                    } else if(position == 2) {
+                        Fragment fragment = new EditProfileFragment();
+                        FragmentManager manager = getSupportFragmentManager();
+                        manager.beginTransaction().replace(R.id.parent, new HelpFragment()).addToBackStack(null).commit();
+                    }
+//                    setViewPager(position);
                 }
             }
         });
     }
 
-    private void setupBottomNavigationView(){
-        Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
-        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
-    }
+//    private void setupBottomNavigationView(){
+//        Log.d(TAG, "setupBottomNavigationView: setting up bottomnavigationview");
+//        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+//        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+//        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+//        Menu menu = bottomNavigationViewEx.getMenu();
+//        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+//        menuItem.setChecked(true);
+//    }
 }
