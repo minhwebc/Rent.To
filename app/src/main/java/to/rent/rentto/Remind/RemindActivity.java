@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,18 +22,23 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.stepstone.apprating.AppRatingDialog;
+import com.stepstone.apprating.listener.RatingDialogListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import to.rent.rentto.Messages.RatingActivity;
 import to.rent.rentto.Models.Item;
 import to.rent.rentto.Models.RemindMessageItem;
 import to.rent.rentto.Models.User;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
-public class RemindActivity extends AppCompatActivity {
+public class RemindActivity extends AppCompatActivity implements RatingDialogListener {
 
     private static final String TAG = "RemindActivity";
     private Context mContext = RemindActivity.this;
@@ -46,9 +52,12 @@ public class RemindActivity extends AppCompatActivity {
     private ArrayList<String> messageR = new ArrayList<>();
     private ArrayList<String> messageT = new ArrayList<>();
     private ArrayList<String> takeBackID = new ArrayList<>();
+    private ArrayList<String> returnID = new ArrayList<>();
     private RemindViewAdapter adapterR;
     private RemindViewAdapter adapterT;
     private SwipeRefreshLayout swipeLayout;
+    private String lenderID = "";
+    private String itemID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +101,65 @@ public class RemindActivity extends AppCompatActivity {
                                     pd.dismiss();
                                 }
                             });
+                        }
+                    }
+                });
+                builder.show();
+                return;
+            }
+        });
+
+        remindReturnList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int index, long id) {
+                Log.d(TAG, "in onLongClick");
+                final String str = remindReturnList.getItemAtPosition(index).toString();
+                final String messageID = returnID.get(index);
+                Log.d(TAG, "this is message ID :" + messageID);
+                final CharSequence options[] = new CharSequence[] {"Rate the user"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                builder.setTitle("Action");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (which == 0) {
+                            Query query = mReference.child("remind_messages").child(messageID).child("item");
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        if(ds.getKey().equals("lender")){
+                                            lenderID = ds.getValue().toString();
+
+                                        }
+                                        if(ds.getKey().equals("itemID")){
+                                            itemID = ds.getValue().toString();
+
+                                        }
+                                    }
+                                    System.out.println("The lender id is " + lenderID);
+                                    System.out.println("The item id is " + itemID);
+                                    Intent rateIntent = new Intent(mContext, RatingActivity.class);
+                                    rateIntent.putExtra("userid_to_be_rated", lenderID);
+                                    rateIntent.putExtra("postid", "");
+                                    startActivity(rateIntent);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+//                            {
+//                                @Override
+//                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//                                    Toast.makeText(mContext, "Deleted", Toast.LENGTH_SHORT).show();
+//                                    updateMessages();
+//                                }
+//                            });
                         }
                     }
                 });
@@ -163,6 +231,7 @@ public class RemindActivity extends AppCompatActivity {
                                                         if(dataSnapshot.exists()) {
                                                             if (mItem[0] != null) {
                                                                 messageR.add(messageID);
+                                                                returnID.add(messageID);
                                                                 mItem[0] = dataSnapshot.getValue(Item.class);
                                                                 RemindMessageItem newRemindItem = new RemindMessageItem(mItem[0].title, lender[0].getUsername(), borrower[0].getUsername(), mItem[0].imageURL, item.reminder, "");
                                                                 Log.d(TAG, "This is the borrower name: " + newRemindItem.borrower);
@@ -290,7 +359,7 @@ public class RemindActivity extends AppCompatActivity {
                         }
                     });
                 }
-        }
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -324,5 +393,20 @@ public class RemindActivity extends AppCompatActivity {
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);
+    }
+
+    @Override
+    public void onPositiveButtonClicked(int i, String s) {
+
+    }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
+    }
+
+    @Override
+    public void onNeutralButtonClicked() {
+
     }
 }

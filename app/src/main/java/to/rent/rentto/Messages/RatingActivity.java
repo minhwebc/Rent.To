@@ -74,7 +74,7 @@ public class RatingActivity extends AppCompatActivity implements RatingDialogLis
                 .setNegativeButtonText("Cancel")
                 .setNeutralButtonText("Later")
                 .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
-                .setDefaultRating(2)
+                .setDefaultRating(5)
                 .setTitle("How would you rate this person")
                 .setDescription("Please select some stars and give your feedback")
                 .setStarColor(R.color.colorAccent)
