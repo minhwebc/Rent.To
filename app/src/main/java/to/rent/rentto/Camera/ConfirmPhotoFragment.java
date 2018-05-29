@@ -38,10 +38,10 @@ public class ConfirmPhotoFragment extends android.support.v4.app.Fragment {
         } else {
             String imagePath = getArguments().getString("Image");
             Uri uri = Uri.parse(imagePath);
-            Glide.with(getContext())
-                    .load(uri)
-                    .into(imageView);
-//            imageView.setImageURI(uri);
+//            Glide.with(getContext()) // Do not use glide, weird image caching on reselect photo
+//                    .load(uri)
+//                    .into(imageView);
+            imageView.setImageURI(uri);
         }
     }
 }
