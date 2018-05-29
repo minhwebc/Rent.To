@@ -96,7 +96,7 @@ public class RemindActivity extends AppCompatActivity implements RatingDialogLis
                             mReference.child("remind_messages").child(messageID).setValue(null, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    Toast.makeText(mContext, "Deleted", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "Reminder deleted", Toast.LENGTH_SHORT).show();
                                     updateMessages();
                                     pd.dismiss();
                                 }

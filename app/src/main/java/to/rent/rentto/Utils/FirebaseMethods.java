@@ -147,7 +147,7 @@ public class FirebaseMethods {
                             if(task.isSuccessful()){
 
                             }else{
-                                Toast.makeText(mContext, "couldn't send verification email.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "Could not send verification email.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -174,13 +174,13 @@ public class FirebaseMethods {
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
                             if (!task.isSuccessful()) {
-                                Toast.makeText(mContext, "Error registering users", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "Error registering user", Toast.LENGTH_SHORT).show();
                             } else if (task.isSuccessful()) {
                                 //send verificaton email
                                 sendVerificationEmail();
 
                                 userID = mAuth.getCurrentUser().getUid();
-                                Toast.makeText(mContext, "Register successfully",
+                                Toast.makeText(mContext, "Success",
                                         Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "onComplete: Authstate changed: " + userID);
                             }
