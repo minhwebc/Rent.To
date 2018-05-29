@@ -102,13 +102,14 @@ public class LoginActivity extends AppCompatActivity {
         mContext = LoginActivity.this;
         Log.d(TAG, "onCreate: started.");
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, VideoActivity.class);
-                startActivity(intent);
-            }
-        });
+        floatingActionButton.setVisibility(View.GONE);
+//        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(LoginActivity.this, VideoActivity.class);
+//                startActivity(intent);
+//            }
+//        });
         mPleaseWait.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.GONE);
         setupFirebaseAuth();
