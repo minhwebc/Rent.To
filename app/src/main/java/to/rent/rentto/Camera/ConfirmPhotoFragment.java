@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+
 import to.rent.rentto.R;
 
 public class ConfirmPhotoFragment extends android.support.v4.app.Fragment {
@@ -37,7 +40,10 @@ public class ConfirmPhotoFragment extends android.support.v4.app.Fragment {
         } else {
             String imagePath = getArguments().getString("Image");
             Uri uri = Uri.parse(imagePath);
-            imageView.setImageURI(uri);
+            Glide.with(getContext())
+                    .load(uri)
+                    .into(imageView);
+//            imageView.setImageURI(uri);
         }
     }
 }
