@@ -206,7 +206,7 @@ public class EditProfileFragment extends Fragment {
                 if(!dataSnapshot.exists()) {
                     //add the username
                     mFirebaseMethods.updateUsername(username);
-                    Toast.makeText(getActivity(), "saved username.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Saved username.", Toast.LENGTH_LONG).show();
                 }
                 for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
                     if(singleSnapshot.exists()) {

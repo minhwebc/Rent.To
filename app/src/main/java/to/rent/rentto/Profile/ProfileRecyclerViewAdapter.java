@@ -207,7 +207,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                                                     @Override
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         pd.dismiss();
-                                                        Toast.makeText(mContext, "Item has been marked rented", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(mContext, "Item has been marked as rented", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
                                             }
@@ -229,7 +229,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                             });
                             builder.show();
                         }else{
-                            Toast.makeText(mContext, "Item has already been marked rented", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Item has already been marked as rented", Toast.LENGTH_SHORT).show();
                         }
                     } else if(which == 1){
                         Log.d("ViewHolder", "delete item here");
@@ -254,7 +254,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
                                                     myRef.child("messages").child(ds.getValue(String.class)).setValue(null, new DatabaseReference.CompletionListener() {
                                                         @Override
                                                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                            Toast.makeText(mContext, "Message deleted", Toast.LENGTH_SHORT).show();
+//                                                            Toast.makeText(mContext, "Message deleted", Toast.LENGTH_SHORT).show();
                                                         }
                                                     });
                                                 }

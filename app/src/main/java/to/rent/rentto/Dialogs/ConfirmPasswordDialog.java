@@ -40,7 +40,7 @@ public class ConfirmPasswordDialog extends android.support.v4.app.DialogFragment
                     mOnConfirmPasswordListener.onConfirmPassword(password);
                     getDialog().dismiss();
                 }else{
-                    Toast.makeText(getActivity(), "you must enter a password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "You must enter a password", Toast.LENGTH_SHORT).show();
                 }
 
             }

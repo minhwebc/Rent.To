@@ -177,7 +177,7 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
                                             mReference.child("messages").child(ds.getValue(String.class)).setValue(null, new DatabaseReference.CompletionListener() {
                                                 @Override
                                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                    Toast.makeText(mContext, "Message deleted", Toast.LENGTH_SHORT).show();
+//                                                    Toast.makeText(mContext, "Message deleted", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                         }
@@ -359,7 +359,7 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
                                 mReference.child("user_items").child(mAuth.getCurrentUser().getUid()).child(ITEM_ID).child("sold").setValue(true, new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        Toast.makeText(mContext, "Item has been marked rented", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, "Item has been marked as rented", Toast.LENGTH_SHORT).show();
                                         Log.d(TAG, "Finishing activity, marked as rented");
                                         finish();
                                     }
@@ -383,7 +383,7 @@ public class ProfileListingActivity extends AppCompatActivity implements RatingD
             });
             builder.show();
         }else{
-            Toast.makeText(mContext, "Item has already been marked rented", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Item has already been marked as rented", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Finishing activity, already rented");
             finish();
         }
