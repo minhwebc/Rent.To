@@ -79,6 +79,9 @@ public class CameraActivity extends AppCompatActivity {
     Bitmap uploadable;
     boolean gotPicture;
     private ProgressDialog pd;
+    UploadTask uploadTask;
+    UploadTask uploadTask2;
+    Uri downloadUri2;
 
     /**
      * Hooks up buttons from camera fragment, Asks for permissions for camera and location
@@ -432,21 +435,38 @@ public class CameraActivity extends AppCompatActivity {
         String result = String.format("title=%s;category=%s;description=%s;price=%s,location=%s", title, category, description, price, zip);
         Log.d(TAG,"Attempting to post: " + result);
         StorageReference postRef = storageReference.child("items/" + UUID.randomUUID());
-        UploadTask uploadTask;
+        StorageReference postRef2 = storageReference.child("items/" + UUID.randomUUID());
         if(imageUri == null) { // photo was from camera
             Bitmap bitmap = uploadable;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
+            if(data.length > 100000) {// if larger than 1mb
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos2);
+            } else if (data.length > 1500000) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos2);
+            } else {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos2);
+            }
+            byte[] data2 = baos2.toByteArray();
             uploadTask = postRef.putBytes(data);
+            uploadTask2 = postRef2.putBytes(data2);
         } else { // photo was from camera roll
             uploadTask = postRef.putFile(imageUri);
+            uploadTask2 = postRef2.putFile(imageUri);
         }
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        uploadTask2.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri downloadUri = taskSnapshot.getDownloadUrl();
-                addDatabasePost(downloadUri);
+                downloadUri2 = taskSnapshot.getDownloadUrl();
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Uri downloadUri = taskSnapshot.getDownloadUrl();
+                        addDatabasePost(downloadUri, downloadUri2);
+                    }
+                });
             }
         });
     }
@@ -457,13 +477,14 @@ public class CameraActivity extends AppCompatActivity {
      * user_items-> userUID-> postUID[city, imageURL]
      * @param downloadUri   The url of the image that accompanies this post.
      */
-    private void addDatabasePost(Uri downloadUri) {
+    private void addDatabasePost(Uri downloadUri, Uri downloadUri2) {
         String userUid = mAuth.getCurrentUser().getUid();
         Map<String, Object>  postValues = new HashMap<>();
         postValues.put("userUID", userUid);
         postValues.put("title", title);
         postValues.put("rate", "" + price + " per " + timeType);
         postValues.put("imageURL", downloadUri.toString());
+        postValues.put("thumbnailURL", downloadUri2.toString());
         postValues.put("description", description);
         postValues.put("condition", condition);
         postValues.put("category", category);
@@ -477,6 +498,7 @@ public class CameraActivity extends AppCompatActivity {
         userItemsPostValues.put("title", title);
         userItemsPostValues.put("rate", "" + price + " per " + timeType);
         userItemsPostValues.put("imageURL", downloadUri.toString());
+        userItemsPostValues.put("thumbnailURL", downloadUri2.toString());
         userItemsPostValues.put("description", description);
         userItemsPostValues.put("condition", condition);
         userItemsPostValues.put("category", category);
