@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 Log.e(TAG, "Error signing in with email link: "
                                         + task.getException().getMessage());
-                                Toast.makeText(mContext,  "Failed loging in with email", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext,  "Failed logging in with email", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -286,7 +286,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                 mAuth.signOut();
                                                                 Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage());
                                                             }
-                                                            Toast.makeText(mContext, userPhoneNumber, Toast.LENGTH_SHORT).show();
+//                                                            Toast.makeText(mContext, userPhoneNumber, Toast.LENGTH_SHORT).show();
                                                             Log.d(TAG, "phone's number: " + getPhoneNumber());
                                                             Log.d(TAG, "user phone number " + userPhoneNumber);
                                                             if (!userPhoneNumber.equals(getPhoneNumber())) {
@@ -305,14 +305,14 @@ public class LoginActivity extends AppCompatActivity {
                                                                             mAuth.signOut();
                                                                             Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage());
                                                                         }
-                                                                        Toast.makeText(mContext, userDeviceID, Toast.LENGTH_SHORT).show();
+//                                                                        Toast.makeText(mContext, userDeviceID, Toast.LENGTH_SHORT).show();
                                                                         if (!userDeviceID.equals(getDeviceID())) {
                                                                             Toast.makeText(mContext, "Device ID of this phone is not associated with this account", Toast.LENGTH_SHORT).show();
                                                                             mProgressBar.setVisibility(View.GONE);
                                                                             mPleaseWait.setVisibility(View.GONE);
                                                                             mAuth.signOut();
                                                                         } else {
-                                                                            Toast.makeText(mContext, "Login Successfully", Toast.LENGTH_SHORT).show();
+//                                                                            Toast.makeText(mContext, "Login Successfully", Toast.LENGTH_SHORT).show();
                                                                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                                                             startActivity(intent);
                                                                             finish();
@@ -333,7 +333,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         }
                                                     });
                                                 }else{
-                                                    Toast.makeText(mContext, "Email is not verified \n check your email inbox. We are sending you a new verified link", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(mContext, "Email is not verified \n check your email inbox. We are sending you a new verification link", Toast.LENGTH_SHORT).show();
                                                     mProgressBar.setVisibility(View.GONE);
                                                     mPleaseWait.setVisibility(View.GONE);
                                                     mAuth.getCurrentUser().sendEmailVerification();
