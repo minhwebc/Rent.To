@@ -1,6 +1,5 @@
 package to.rent.rentto.Camera;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import to.rent.rentto.R;
 
 public class ConfirmPhotoFragment extends android.support.v4.app.Fragment {
@@ -31,8 +31,9 @@ public class ConfirmPhotoFragment extends android.support.v4.app.Fragment {
         ImageView imageView = view.findViewById(R.id.confirmImageView);
         boolean cameraRoll = getArguments().getBoolean("CameraRoll");
         if(cameraRoll) {
-            byte[] imageByteArray = getArguments().getByteArray("ImageByteArray");
-            Bitmap bmp = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length);
+            //[] imageByteArray = getArguments().getByteArray("Bitmap");
+            //Bitmap bmp = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length);
+            Bitmap bmp = getArguments().getParcelable("Bitmap");
             imageView.setImageBitmap(bmp);
         } else {
             String imagePath = getArguments().getString("Image");

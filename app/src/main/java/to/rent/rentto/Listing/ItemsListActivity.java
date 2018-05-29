@@ -78,6 +78,7 @@ public class ItemsListActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     BottomNavigationViewEx bottomNavigationViewEx;
     private String queryString = "";
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -86,7 +87,10 @@ public class ItemsListActivity extends AppCompatActivity {
         clickable.add(true);
         setContentView(R.layout.activity_items_list);
         mAuth = FirebaseAuth.getInstance();
-
+        dialog = new ProgressDialog(ItemsListActivity.this);
+        dialog.setMessage("Loading");
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(false);
 
         //Debug.startMethodTracing("startup");
         mContext = ItemsListActivity.this;
@@ -225,12 +229,12 @@ public class ItemsListActivity extends AppCompatActivity {
 
 
     private void initImageBitMaps(){
-        final ProgressDialog dialog=new ProgressDialog(ItemsListActivity.this);
-        dialog.setMessage("Loading");
-        dialog.setCancelable(false);
-        dialog.setInverseBackgroundForced(false);
         dialog.show();
-
+        if(dialog.isShowing()) {
+            Log.d(TAG, "is showing");
+        } else {
+            Log.d(TAG, "not showing");
+        }
         //grabs all the photos back
         Log.d(TAG, "initimagebitmaps");
         Query query = mReference.child(mContext.getString(R.string.dbname_items));
@@ -274,7 +278,7 @@ public class ItemsListActivity extends AppCompatActivity {
                     }
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
-                dialog.hide();
+                dialog.dismiss();
             }
 
             @Override
@@ -400,7 +404,7 @@ public class ItemsListActivity extends AppCompatActivity {
     }
 
     public void launchFilter(View view) {
-        Intent intent = new Intent(getApplicationContext(), FilterActivity.class);
+        Intent intent = new Intent(mContext, FilterActivity.class);
         startActivityForResult(intent, REQUEST_CATEGORY_CODE);
     }
 
@@ -426,6 +430,13 @@ public class ItemsListActivity extends AppCompatActivity {
     }
 
     private void getDistanceFromZip(String zip1, String zip2){
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dialog.dismiss();
 
     }
 }

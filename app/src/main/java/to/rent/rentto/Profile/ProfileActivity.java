@@ -60,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity implements RatingDialogLi
         Log.d(TAG, "init: inflating " + getString(R.string.profile_fragment));
 
         ProfileFragment fragment = new ProfileFragment();
-        FragmentTransaction transaction = ProfileActivity.this.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
         transaction.commit();
     }

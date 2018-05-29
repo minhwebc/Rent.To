@@ -49,6 +49,7 @@ public class BottomNavigationViewHelper {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()) {
                     case R.id.ic_home:
+                        Log.d(TAG, context.getPackageCodePath());
                         Intent intent1 = new Intent(context, ItemsListActivity.class); //ACTIVITY_NUM = 0
                         intent1.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent1);
@@ -71,8 +72,10 @@ public class BottomNavigationViewHelper {
                         break;
 
                     case R.id.ic_profile:
+                        Log.d(TAG, context.getPackageCodePath());
                         Intent intent5 = new Intent(context, ProfileActivity.class); //ACTIVITY_NUM = 2
                         intent5.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        intent5.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         context.startActivity(intent5);
                         Activity something4 = (Activity) context;
                         something4.overridePendingTransition(0,0); //0 for no animation

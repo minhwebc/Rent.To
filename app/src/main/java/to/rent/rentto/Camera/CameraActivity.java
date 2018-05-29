@@ -12,10 +12,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -44,6 +46,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +54,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import to.rent.rentto.BuildConfig;
 import to.rent.rentto.R;
 import to.rent.rentto.Utils.BottomNavigationViewHelper;
 
@@ -82,6 +86,8 @@ public class CameraActivity extends AppCompatActivity {
     UploadTask uploadTask;
     UploadTask uploadTask2;
     Uri downloadUri2;
+    Bitmap photoBitmap;
+    private File output=null;
 
     /**
      * Hooks up buttons from camera fragment, Asks for permissions for camera and location
@@ -135,8 +141,15 @@ public class CameraActivity extends AppCompatActivity {
 
             dialog.show();
         } else { // App has camera permission
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            Intent i=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File dir=
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+
+            output=new File(dir, "image.jpeg");
+            i.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(CameraActivity.this,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    output));
+            startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
         }
     }
 
@@ -169,6 +182,7 @@ public class CameraActivity extends AppCompatActivity {
                 args.putString("Image", imageUri.toString());
             } else {
                 args.putByteArray("ImageByteArray", imageByteArray);
+                args.putParcelable("Bitmap", photoBitmap);
             }
             confirmPhotoFragment.setArguments(args);
             changeFragment("photo", confirmPhotoFragment, "confirm");
@@ -194,11 +208,18 @@ public class CameraActivity extends AppCompatActivity {
         }
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             //Get the photo
-            Bundle extras = data.getExtras();
-            Bitmap photo = (Bitmap) extras.get("data");
+            //Bundle extras = data.getExtras();
+            Bitmap photo = null;
+            Uri imageUri = Uri.fromFile(output);
+            try {
+                photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             uploadable = photo;
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            //photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            photoBitmap = photo;
             imageByteArray = stream.toByteArray();
         } else if(requestCode == REQUEST_CAMERA_ROLL && resultCode == RESULT_OK) {
             imageUri = data.getData();

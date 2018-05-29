@@ -18,6 +18,8 @@ public class WelcomeActivity extends AppCompatActivity {
     private final String camera = Manifest.permission.CAMERA;
     private final String location = Manifest.permission.ACCESS_FINE_LOCATION;
     private final String phone = Manifest.permission.READ_PHONE_STATE;
+    private final String file = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +30,9 @@ public class WelcomeActivity extends AppCompatActivity {
 //        startActivity(intent);
 //        finish();
         // Gets Permissions
-        if(checkSelfPermission(camera) != granted || checkSelfPermission(location) != granted || checkSelfPermission(phone) != granted) {
+        if(checkSelfPermission(camera) != granted || checkSelfPermission(location) != granted || checkSelfPermission(phone) != granted || checkSelfPermission(file) != granted) {
             Log.d(TAG,"Trying to get permission");
-            ActivityCompat.requestPermissions(this, new String[]{camera, location, phone}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{camera, location, phone, file}, 1);
         } else {
             start();
         }
