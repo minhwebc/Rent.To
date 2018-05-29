@@ -30,6 +30,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private ArrayList<String> mIDs = new ArrayList<>();
     private ArrayList<String> mImageUrls = new ArrayList<>();
+    private ArrayList<String> thumbnailUrls = new ArrayList<>();
     private String[] mData = new String[0];
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -39,7 +40,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<Item> mItems;
     private ArrayList<Boolean> clickable;
 
-    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, String city, ArrayList<String> zipcodes, ArrayList<Item> mItems, ArrayList<Boolean> clickable){
+    public RecyclerViewAdapter(ItemsListActivity context, ArrayList<String> ids, ArrayList<String> imageUrls, ArrayList<String> thumbnailUrls, String city, ArrayList<String> zipcodes, ArrayList<Item> mItems, ArrayList<Boolean> clickable){
         Log.d(TAG, "constructor: called.");
         this.zips = zipcodes;
         this.city = city;
@@ -48,6 +49,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Log.d(TAG, mIDs.size()+"");
         mIDs = ids;
         mImageUrls = imageUrls;
+        this.thumbnailUrls = thumbnailUrls;
         this.mItems = mItems;
         this.clickable = clickable;
     }
@@ -75,9 +77,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .placeholder(R.drawable.ic_launcher_background);
         holder.imageView.layout(0,0,0,0);
         Glide.with(mContext)
-                .load(mImageUrls.get(position))
+                .load(thumbnailUrls.get(position))
                 .apply(requestOptions)
-                .thumbnail(.5f)
                 .into(holder.imageView);
         if(mItems.get(position).sold) {
             holder.soldInfo.setVisibility(View.VISIBLE);
