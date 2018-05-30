@@ -70,6 +70,7 @@ public class ProfilePreviewFragment extends Fragment {
 
     //From ItemListActivity
     private ArrayList<String> mImageUrls = new ArrayList<>();
+    private ArrayList<String> thumbnailUrls = new ArrayList<>();
     private ArrayList<String> iDs = new ArrayList<>();
     private ArrayList<String> zips = new ArrayList<>();
     private ArrayList<Boolean> rented = new ArrayList<>();
@@ -177,6 +178,7 @@ public class ProfilePreviewFragment extends Fragment {
                 zips.clear();
                 rented.clear();
                 mImageUrls.clear();
+                thumbnailUrls.clear();
                 for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
 
                     String keyID = singleSnapshot.getKey(); //photoIDs
@@ -189,7 +191,9 @@ public class ProfilePreviewFragment extends Fragment {
                     else
                         rented.add(false);
                     String photo_path = mItem.imageURL;
+                    String thumbnail_path = mItem.thumbnailURL;
                     mImageUrls.add(photo_path);
+                    thumbnailUrls.add(thumbnail_path);
                     Log.d(TAG, mItem.sold + " something");
                 }
                 staggeredRecyclerViewAdapter.notifyDataSetChanged();
@@ -212,7 +216,7 @@ public class ProfilePreviewFragment extends Fragment {
         Log.d(TAG, "initRecyclerView staggered view");
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.profilerecyclerView);
         staggeredRecyclerViewAdapter =
-                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, zips, rented, false);
+                new ProfileRecyclerViewAdapter(this.mContext, iDs, mImageUrls, thumbnailUrls, zips, rented, false);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         if(recyclerView == null) {
             Log.d(TAG, "RecyclerView is null");

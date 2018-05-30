@@ -45,6 +45,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
 
     private ArrayList<String> mIDs = new ArrayList<>();
     private ArrayList<String> mImageUrls = new ArrayList<>();
+    private ArrayList<String> thumbnailUrls = new ArrayList<>();
     private ArrayList<String> zips = new ArrayList<>();
     private ArrayList<Boolean> rented = new ArrayList<>();
     private String[] mData = new String[0];
@@ -57,11 +58,11 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
     private boolean longClickable;
 
 
-    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, ArrayList<String> zips, ArrayList<Boolean> rented) {
-        this(context, ids, imageUrls, zips, rented, true);
+    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, ArrayList<String> thumbnailUrls, ArrayList<String> zips, ArrayList<Boolean> rented) {
+        this(context, ids, imageUrls, thumbnailUrls, zips, rented, true);
     }
 
-    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, ArrayList<String> zips, ArrayList<Boolean> rented, boolean longClickable){
+    public ProfileRecyclerViewAdapter(Context context, ArrayList<String> ids, ArrayList<String> imageUrls, ArrayList<String> thumbnailUrls, ArrayList<String> zips, ArrayList<Boolean> rented, boolean longClickable){
         Log.d(TAG, "constructor: called.");
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -74,6 +75,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
         this.rented = rented;
         mImageUrls = imageUrls;
         this.longClickable = longClickable;
+        this.thumbnailUrls = thumbnailUrls;
     }
 
     @Override
@@ -96,7 +98,7 @@ public class ProfileRecyclerViewAdapter extends RecyclerView.Adapter<ProfileRecy
             holder.soldInfo.setVisibility(View.GONE);
         }
         Glide.with(mContext)
-                .load(mImageUrls.get(position))
+                .load(thumbnailUrls.get(position))
                 .apply(requestOptions)
                 .into(holder.imageView);
 
