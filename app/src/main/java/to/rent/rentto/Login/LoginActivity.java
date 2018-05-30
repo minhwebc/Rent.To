@@ -3,8 +3,10 @@ package to.rent.rentto.Login;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -61,15 +63,27 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
         String emailLink = "";
+        btnLogin = (Button) findViewById(R.id.btn_login);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mPleaseWait = (TextView) findViewById(R.id.pleaseWait);
+        mEmail = (EditText) findViewById(R.id.input_email);
+        mPassword = (EditText) findViewById(R.id.input_password);
+        linkSignUp = (TextView) findViewById(R.id.link_signup);
+        mContext = LoginActivity.this;
+        Log.d(TAG, "onCreate: started.");
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton.setVisibility(View.GONE);
+
         if(intent.getData() != null) {
             emailLink = intent.getData().toString();
         }
 
         // Confirm the link is a sign-in with email link.
         if (auth.isSignInWithEmailLink(emailLink)) {
-            String email; // retrieve this from wherever you stored it
-            // The client SDK will parse the code from the link for you.
-            auth.signInWithEmailLink("sazeng@uw.edu", emailLink)
+            mProgressBar.setVisibility(View.VISIBLE);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String email = preferences.getString("Email", "");
+            auth.signInWithEmailLink(email, emailLink)
                     .addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
@@ -82,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                                 // You can check if the user is new or existing:
                                 // result.getAdditionalUserInfo().isNewUser()
                                 Log.d(TAG, "user id : " + mAuth.getCurrentUser().getUid());
+                                mProgressBar.setVisibility(View.GONE);
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -93,23 +108,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
         }
-        btnLogin = (Button) findViewById(R.id.btn_login);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mPleaseWait = (TextView) findViewById(R.id.pleaseWait);
-        mEmail = (EditText) findViewById(R.id.input_email);
-        mPassword = (EditText) findViewById(R.id.input_password);
-        linkSignUp = (TextView) findViewById(R.id.link_signup);
-        mContext = LoginActivity.this;
-        Log.d(TAG, "onCreate: started.");
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        floatingActionButton.setVisibility(View.GONE);
-//        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivity.this, VideoActivity.class);
-//                startActivity(intent);
-//            }
-//        });
         mPleaseWait.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.GONE);
         setupFirebaseAuth();
@@ -177,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                                 .build();
 
                 FirebaseAuth auth = FirebaseAuth.getInstance();
-                String email = mEmail.getText().toString();
+                final String email = mEmail.getText().toString();
                 if(email.isEmpty()) {
                     Toast.makeText(mContext, "Please enter in your email to the email input", Toast.LENGTH_SHORT).show();
                     return;
@@ -187,6 +185,10 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
+                                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                                    SharedPreferences.Editor editor = preferences.edit();
+                                    editor.putString("Email",email);
+                                    editor.apply();
                                     Toast.makeText(mContext, "Email link sent", Toast.LENGTH_SHORT).show();
                                 }
                             }
