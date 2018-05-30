@@ -182,13 +182,7 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessage();
             }
         });
-
-
-
-        if(messageID.equals("welcomeMessage")) {
-            editText.setEnabled(false);
-            editText.setHint("Disabled");
-        }
+        
         getListingName();
         previewPostImageView = (ImageView) findViewById(R.id.itemPicturePreview);
         findViewById(R.id.messages_view).setOnTouchListener(new View.OnTouchListener() {
@@ -202,6 +196,11 @@ public class ChatActivity extends AppCompatActivity {
                 return false;
             }
         });
+        if(messageID.equals("welcomeMessage")) {
+            editText.setEnabled(false);
+            editText.setHint("Disabled");
+            previewPostImageView.setVisibility(View.GONE);
+        }
         //scrollToBottom();
     }
 
