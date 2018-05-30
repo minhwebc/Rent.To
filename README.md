@@ -23,24 +23,25 @@ Rent.to helps you rent items to and from people in your neighborhood. It makes l
 ## The Prototype
 Click the image below to see the original prototype in action
 
-[<img target="_blank" src="https://github.com/minhwebc/Rent.To/blob/master/app/src/main/res/drawable/login_activity.png">](https://projects.invisionapp.com/share/2XFNC45S6WF)
+[<img target="_blank" src="https://github.com/minhwebc/Rent.To/blob/master/app/src/main/res/drawable/login_activity.png" width=400px>](https://projects.invisionapp.com/share/2XFNC45S6WF)
 
 
 <a name="application"></a>
 ## The Application (Beta)
 
-<b>Post a new item</b>
+### Post a new item
 
+<img target="_blank" src="https://raw.githubusercontent.com/minhwebc/Rent.To/0bb5da0cbb4388d18932a0fbb25588d0327d3d3a/app/src/main/res/drawable/cameraactivitypicture.png" width=400px>
 
-<b>Browse other items</b>
+### Browse other items
 
-<img target="_blank" src="https://minhwebc.github.io/img/scr-img/Screenshot_20180502-230808.jpg">
+<img target="_blank" src="https://minhwebc.github.io/img/scr-img/Screenshot_20180502-230808.jpg" width=400px>
 
-<b>Message anonymously in real time</b>
+### Message anonymously in real time
 
-<img target="_blank" src="https://minhwebc.github.io/img/scr-img/Screenshot_20180502-232057.jpg">
+<img target="_blank" src="https://minhwebc.github.io/img/scr-img/Screenshot_20180502-232057.jpg" width=400px>
 
-[Get Started: Download Rent.to](https://play.google.com/store/apps?hl=en)
+### [Get Started: Download Rent.to](https://play.google.com/store/apps?hl=en)
 
 <a name="technology"></a>
 ## The Technology
