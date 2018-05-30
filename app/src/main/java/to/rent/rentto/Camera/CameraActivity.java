@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -47,7 +48,9 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -474,8 +477,25 @@ public class CameraActivity extends AppCompatActivity {
             uploadTask = postRef.putBytes(data);
             uploadTask2 = postRef2.putBytes(data2);
         } else { // photo was from camera roll
-            uploadTask = postRef.putFile(imageUri);
-            uploadTask2 = postRef2.putFile(imageUri);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data = baos.toByteArray();
+                if(data.length > 100000) {// if larger than 1mb
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos2);
+                } else if (data.length > 1500000) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos2);
+                } else {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos2);
+                }
+                byte[] data2 = baos2.toByteArray();
+                uploadTask = postRef.putBytes(data);
+                uploadTask2 = postRef2.putBytes(data2);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         uploadTask2.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -548,4 +568,5 @@ public class CameraActivity extends AppCompatActivity {
             }
         }
     };
+
 }
