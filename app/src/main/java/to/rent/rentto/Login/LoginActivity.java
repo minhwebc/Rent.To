@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         if (auth.isSignInWithEmailLink(emailLink)) {
             String email; // retrieve this from wherever you stored it
             // The client SDK will parse the code from the link for you.
-            auth.signInWithEmailLink("minhwebc90@gmail.com", emailLink)
+            auth.signInWithEmailLink("sazeng@uw.edu", emailLink)
                     .addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
