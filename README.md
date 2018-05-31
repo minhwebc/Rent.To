@@ -41,7 +41,7 @@ Click the image below to see the original prototype in action
 
 <img target="_blank" src="https://github.com/minhwebc/Rent.To/blob/master/app/src/main/res/drawable/chatactivity.png" width=400px>
 
-### [Get Started: Download Rent.to](https://play.google.com/store/apps?hl=en)
+### [Get Started: Download Rent.to](https://play.google.com/store/apps/details?id=to.rent.rentto)
 
 <a name="technology"></a>
 ## The Technology
@@ -54,16 +54,19 @@ We decided to build our application using Java and the Android SDK. We chose thi
 
 <a name="team"></a>
 ## The Team
-
+<img target="_blank" src="https://github.com/minhwebc/minhwebc.github.io/blob/master/img/team-img/Brandon.jpg" width=255px height=170px>
 ### Brandon Chen | chenb777@uw.edu
 Project Manager
 
+<img target="_blank" src="https://github.com/minhwebc/minhwebc.github.io/blob/master/img/team-img/Allen.jpg" width=255px height=170px>
 ### Allen Cho | allencho@uw.edu
 Designer
 
+<img target="_blank" src="https://github.com/minhwebc/minhwebc.github.io/blob/master/img/team-img/Quan_Nguyen_Wall.png" width=255px height=170px>
 ### Quan Nguyen | qn611996@uw.edu
 Developer
 
+<img target="_blank" src="https://github.com/minhwebc/minhwebc.github.io/blob/master/img/team-img/Sam.jpg" width=255px height=170px>
 ### Sam Zeng | sazeng@uw.edu
 Developer
 
