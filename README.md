@@ -27,7 +27,7 @@ Click the image below to see the original prototype in action
 
 
 <a name="application"></a>
-## The Application (Beta)
+## The Application
 
 ### Post a new item
 
