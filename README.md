@@ -21,7 +21,7 @@ Rent.to helps you rent items to and from people in your neighborhood. It makes l
 **Don't buy, just rent.**
 
 <a name="poster"></a>
-##Poster
+## Poster
 
 <img target="_blank" src="https://github.com/minhwebc/Rent.To/blob/master/app/src/main/res/drawable/poster_final.jpg" width=400px>
 
