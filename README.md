@@ -4,10 +4,11 @@
 
 ## Table of Contents
 1. [Overview](#overview)
-2. [Prototype](#prototype)
-3. [The Application](#application)
-4. [The Techonology](#technology)
-5. [The Team](#team)
+2. [Poster](#poster)
+3. [Prototype](#prototype)
+4. [The Application](#application)
+5. [The Techonology](#technology)
+6. [The Team](#team)
 
 <a name="overview"></a>
 ## Overview
@@ -18,6 +19,11 @@ Rent.to helps you rent items to and from people in your neighborhood. It makes l
 **Earn money, save the environment, rent to others**
 
 **Don't buy, just rent.**
+
+<a name="poster"></a>
+##Poster
+
+<img target="_blank" src="https://github.com/minhwebc/Rent.To/blob/master/app/src/main/res/drawable/poster_final.jpg" width=400px>
 
 <a name="prototype"></a>
 ## The Prototype
